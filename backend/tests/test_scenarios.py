@@ -54,3 +54,16 @@ def test_goal_shot_beats_the_keeper():
             assert gap > 1.5, f"ball passes through the keeper at t={f['t']} ({gap:.1f} m)"
     end = scenario["frames"][-1]["ball"]
     assert end["x"] >= 105 and 30.34 < end["y"] < 37.66, "ball must finish inside the goal"
+
+
+def test_passes_do_not_go_through_opponents():
+    scenario = _load_generator().build()
+    events = scenario["events"]
+    passes = [(e["t"], next(r["t"] for r in events if r["type"] == "RECEIVE" and r["t"] > e["t"]))
+              for e in events if e["type"] == "PASS"]
+    for f in scenario["frames"]:
+        if any(t0 < f["t"] < t1 for t0, t1 in passes):
+            for p in f["players"]:
+                if p["team"] == "AWAY":
+                    gap = math.hypot(f["ball"]["x"] - p["x"], f["ball"]["y"] - p["y"])
+                    assert gap > 1.5, f"pass in flight runs through {p['id']} at t={f['t']} ({gap:.1f} m)"
