@@ -6,6 +6,13 @@ const PAD = 3
 // SVG y grows downward; flip so pitch y=0 is the bottom touchline.
 const sy = (y) => W - y
 
+// Label placement per highlighted role, chosen so the three tags do not collide.
+const TAG_POS = {
+  runner: { x: 0, y: -2.3, anchor: 'middle' },
+  marker: { x: 0, y: 3.4, anchor: 'middle' },
+  receiver: { x: 1.9, y: 0.55, anchor: 'start' },
+}
+
 function Markings() {
   const line = { fill: 'none', stroke: 'var(--line)', strokeWidth: 0.25 }
   const box = (x, w, h) => <rect x={x} y={(W - h) / 2} width={w} height={h} {...line} />
@@ -41,12 +48,13 @@ export default function Pitch({ state, focus = {}, defs, children }) {
       <g transform={`translate(0 ${W}) scale(1 -1)`}>{children}</g>
       {state.players.map((p) => {
         const role = focus[p.id]
+        const tag = TAG_POS[role] ?? TAG_POS.runner
         return (
           <g key={p.id} transform={`translate(${p.x} ${sy(p.y)})`} className={`player ${p.team} ${role ?? ''}`}>
             <circle r={role ? 1.5 : 1.15} />
             <text y={0.45}>{p.id.slice(1)}</text>
             {role && (
-              <text className="tag" y={role === 'marker' ? 3.4 : -2.3}>
+              <text className="tag" x={tag.x} y={tag.y} style={{ textAnchor: tag.anchor }}>
                 {p.id}
               </text>
             )}
