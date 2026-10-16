@@ -72,10 +72,17 @@ AWAY = {
     "A11": [(0, 66, 41), (2, 66.5, 41.5), (6, 67, 41), (10, 70.5, 40)],
 }
 
-PASS_1_T, RECEIVE_1_T = 0.6, 1.4
 PASS_T, RECEIVE_T, SHOT_T, GOAL_T = 6.0, 7.4, 8.2, 8.9
 TARGET = (89.0, 41.0)
 GOAL_POINT = (106.0, 31.2)  # low, across the keeper, inside the far post (y=30.34)
+
+# Ball possession plan: (passer, pass t, receiver, receive t, end point or None for the receiver's feet).
+# Between passes the ball sits at the current holder's feet.
+PASSES = [
+    ("H6", 0.6, "H8", 1.4, None),
+    ("H8", PASS_T, "H11", RECEIVE_T, TARGET),
+]
+SHOT = ("H11", SHOT_T, GOAL_T, GOAL_POINT)  # shooter, shot t, goal t, where the ball ends
 FOOT = 0.7  # ball sits just ahead of a player's feet
 
 
@@ -110,19 +117,17 @@ def at_feet(pid, t):
 
 
 def ball_at(t):
-    if t <= PASS_1_T:
-        return at_feet("H6", t)
-    if t <= RECEIVE_1_T:
-        return lerp(at_feet("H6", PASS_1_T), at_feet("H8", RECEIVE_1_T), (t - PASS_1_T) / (RECEIVE_1_T - PASS_1_T))
-    if t <= PASS_T:
-        return at_feet("H8", t)
-    if t <= RECEIVE_T:
-        return lerp(at_feet("H8", PASS_T), TARGET, (t - PASS_T) / (RECEIVE_T - PASS_T))
-    if t <= SHOT_T:
-        return at_feet("H11", t)
-    if t <= GOAL_T:
-        return lerp(at_feet("H11", SHOT_T), GOAL_POINT, (t - SHOT_T) / (GOAL_T - SHOT_T))
-    return GOAL_POINT
+    for passer, t_pass, receiver, t_recv, end in PASSES:
+        if t <= t_pass:
+            return at_feet(passer, t)
+        if t <= t_recv:
+            return lerp(at_feet(passer, t_pass), end or at_feet(receiver, t_recv), (t - t_pass) / (t_recv - t_pass))
+    shooter, t_shot, t_goal, goal = SHOT
+    if t <= t_shot:
+        return at_feet(shooter, t)
+    if t <= t_goal:
+        return lerp(at_feet(shooter, t_shot), goal, (t - t_shot) / (t_goal - t_shot))
+    return goal
 
 
 def _pt(p):
@@ -148,18 +153,19 @@ def build():
         bx, by = ball_at(t)
         frames.append({"t": t, "ball": {"x": round(bx, 2), "y": round(by, 2)}, "players": players})
 
-    shot_from = at_feet("H11", SHOT_T)
-    events = [
-        {"t": PASS_1_T, "type": "PASS", "team": "HOME", "playerId": "H6", "targetPlayerId": "H8",
-         "start": _pt(at_feet("H6", PASS_1_T)), "end": _pt(at_feet("H8", RECEIVE_1_T)), "outcome": "COMPLETE"},
-        {"t": RECEIVE_1_T, "type": "RECEIVE", "team": "HOME", "playerId": "H8",
-         "location": _pt(at_feet("H8", RECEIVE_1_T))},
-        {"t": PASS_T, "type": "PASS", "team": "HOME", "playerId": "H8", "targetPlayerId": "H11",
-         "start": _pt(at_feet("H8", PASS_T)), "end": _pt(TARGET), "outcome": "COMPLETE"},
-        {"t": RECEIVE_T, "type": "RECEIVE", "team": "HOME", "playerId": "H11", "location": _pt(TARGET)},
-        {"t": SHOT_T, "type": "SHOT", "team": "HOME", "playerId": "H11", "location": _pt(shot_from),
+    events = []
+    for passer, t_pass, receiver, t_recv, end in PASSES:
+        end = end or at_feet(receiver, t_recv)
+        events += [
+            {"t": t_pass, "type": "PASS", "team": "HOME", "playerId": passer, "targetPlayerId": receiver,
+             "start": _pt(at_feet(passer, t_pass)), "end": _pt(end), "outcome": "COMPLETE"},
+            {"t": t_recv, "type": "RECEIVE", "team": "HOME", "playerId": receiver, "location": _pt(end)},
+        ]
+    shooter, t_shot, t_goal, _ = SHOT
+    events += [
+        {"t": t_shot, "type": "SHOT", "team": "HOME", "playerId": shooter, "location": _pt(at_feet(shooter, t_shot)),
          "outcome": "GOAL"},
-        {"t": GOAL_T, "type": "GOAL", "team": "HOME", "playerId": "H11"},
+        {"t": t_goal, "type": "GOAL", "team": "HOME", "playerId": shooter},
     ]
 
     return {
