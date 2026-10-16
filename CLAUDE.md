@@ -1,0 +1,64 @@
+# CLAUDE.md
+
+Context for Claude Code sessions working in this repo.
+
+## Project
+
+**Beyond the Ball**: an entry for the Microsoft x Premier League **"Inside the Game"** developer hackathon.
+It explains the off-ball football that stats miss (decoy runs, pressing, where a chance really began) using
+**synthetic** tracking and event data. All clubs, players and data are fictional.
+
+Pipeline:
+
+```
+scenarios/generate_*.py   -> scenarios/*.json            (frames + events, no labels)
+backend/analysis/*.py     -> insights JSON               (deterministic, with numeric evidence)
+Microsoft Foundry agents  -> explanations / personalisation (planned; explain only, never invent claims)
+frontend/ (Vite + React)  -> pitch replay highlighting the insight
+```
+
+## Hackathon constraints
+
+- **Deadline:** submissions close **Oct 27, 2026, 11:59pm Pacific**.
+- Must use the featured Microsoft tech (**Microsoft Foundry, Agent Framework, Azure**) to pass Stage One.
+  Python and React are allowed alongside it. Foundry integration is not built yet and is required.
+- Submission needs: a **public GitHub repo** (github.com/agbowilf/beyond-the-ball), a **demo video under 2 minutes**,
+  and **working judge access** (a deployed or easily runnable demo).
+
+## Working rules
+
+- **Commits:** small, meaningful, Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`).
+  The git history is part of the submission, so one logical change per commit.
+- **Never push** without asking the user first.
+- Detectors read only `frames` and `events`, never scenario metadata or labels. Thresholds live as module constants
+  and are documented in `docs/detection-rules.md`; keep the two in sync.
+- The AI layer only phrases findings that already carry numeric evidence. Football reasoning stays in Python.
+- The frontend does not re-implement detection; it renders scenario JSON plus insights produced by the backend.
+
+## Layout
+
+| Path | What |
+|---|---|
+| `docs/data-model.md` | Schema: 105 x 68 m pitch, HOME attacks +x, 5 Hz frames, events, insight output shape |
+| `docs/detection-rules.md` | Space Creator rules, thresholds, confidence formula, known limits |
+| `docs/architecture.md` | Pipeline and principles |
+| `scenarios/generate_decoy_run.py` | Seeded generator for `scenarios/01_decoy_run.json` (10 s, 51 frames, H8 -> H11 pass at t=6.0, goal) |
+| `backend/analysis/space_creator.py` | Space Creator detector; finds **H10** dragging marker **A6**, confidence **0.92** |
+| `backend/run_analysis.py` | Runs all detectors on a scenario, prints insights JSON |
+| `backend/tests/` | pytest suite |
+| `frontend/` | Vite + React pitch replay |
+
+## Commands
+
+```bash
+python scenarios/generate_decoy_run.py                       # regenerate scenario JSON
+python backend/run_analysis.py scenarios/01_decoy_run.json   # print insights
+pytest backend/tests                                         # run tests
+cd frontend && npm install && npm run dev                    # pitch replay
+```
+
+## Status
+
+Done: data model, decoy-run generator, Space Creator detector + tests.
+Next: React pitch replay, Pressing Contributor / Sequence Origin / Match Shift detectors, Foundry agent that explains insights,
+Azure deployment for judge access, demo video.
