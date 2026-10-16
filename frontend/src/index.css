@@ -179,6 +179,10 @@ main {
 .tick.GOAL {
   color: var(--accent);
 }
+.tick.RECEIVE {
+  top: 10px;
+  opacity: 0.6;
+}
 
 .clock {
   flex: none;

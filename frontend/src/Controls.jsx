@@ -27,7 +27,8 @@ export default function Controls({ replay, marks = [] }) {
               onClick={() => seek(e.t)}
               title={`${LABELS[e.type] ?? e.type} · ${e.playerId} · ${e.t.toFixed(1)}s`}
             >
-              <span>{LABELS[e.type] ?? e.type}</span>
+              {/* Every pass implies a receive, so receives get a tick but no label. */}
+              {e.type !== 'RECEIVE' && <span>{LABELS[e.type] ?? e.type}</span>}
             </button>
           ))}
         </div>
