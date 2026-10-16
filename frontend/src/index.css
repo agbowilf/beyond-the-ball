@@ -1,0 +1,191 @@
+:root {
+  --bg: #0e1116;
+  --surface: #161b22;
+  --border: #2a313c;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --grass: #1f5130;
+  --grass-stripe: #23593a;
+  --line: rgba(255, 255, 255, 0.75);
+  --home: #e5484d;
+  --away: #3e8ef7;
+  --accent: #f5d90a;
+  --space: #46d39a;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+.app {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 20px 16px 32px;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 16px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.teams {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.vs {
+  margin: 0 8px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+.swatch.HOME {
+  background: var(--home);
+}
+.swatch.AWAY {
+  background: var(--away);
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.stage {
+  min-width: 0;
+}
+
+.pitch {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.player circle {
+  stroke: #fff;
+  stroke-width: 0.2;
+}
+.player.HOME circle {
+  fill: var(--home);
+}
+.player.AWAY circle {
+  fill: var(--away);
+}
+.player text {
+  fill: #fff;
+  font-size: 1.15px;
+  font-weight: 700;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.ball {
+  fill: #fff;
+  stroke: #111;
+  stroke-width: 0.2;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.play {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.timeline {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding-top: 22px;
+}
+
+.timeline input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.marks {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 22px;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+.tick::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 8px;
+  margin: 2px auto 0;
+  background: currentColor;
+}
+.tick.GOAL {
+  color: var(--accent);
+}
+
+.clock {
+  flex: none;
+  width: 44px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  text-align: right;
+}
+
+select {
+  flex: none;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px;
+}
