@@ -32,10 +32,14 @@ HOME = {
     "H3": [(0, 63, 60), (3, 65, 61), (6, 68, 61), (10, 72, 61)],       # right back pushes on
     "H4": [(0, 50, 26), (6, 54, 27), (10, 58, 28)],
     "H5": [(0, 50, 42), (6, 54, 41), (10, 58, 40)],
-    "H6": [(0, 58, 30), (0.6, 58.3, 30.2), (3, 61, 31), (6, 63, 31), (10, 67, 32)],  # passes to H8 at 0.6
+    # Starts the move, then supports H8 from the side for the one-two
+    "H6": [(0, 58, 30), (0.6, 58.3, 30.2), (2, 63.5, 29.5), (2.8, 65.6, 29.6), (3.1, 66, 29.7), (4.5, 66.5, 30),
+           (6, 67, 30.5), (10, 70, 31.5)],
     "H7": [(0, 80, 63), (3, 81.5, 63), (6, 82.5, 62.5), (8, 86.5, 60.5), (10, 89.5, 60)],  # holds the width
-    # Carries from t=1.4 and plays the through ball at t=6
-    "H8": [(0, 61.5, 40.5), (1.4, 64, 36), (3, 66, 35.5), (4.5, 68, 35.5), (6, 70, 35), (7, 71, 35), (10, 76, 36)],
+    # Squeezed by A10, lays off to H6 and spins past A10's shoulder for the return, then
+    # shifts the ball once away from A8 and threads the through ball at t=6 under pressure
+    "H8": [(0, 61.5, 40.5), (1.4, 64, 36), (2, 65.3, 36.2), (2.4, 66, 36.5), (2.8, 67.5, 38.2), (3.4, 69.8, 38.2),
+           (3.9, 71.8, 37), (4.6, 72.2, 36.2), (5.2, 72.5, 37), (6, 72.8, 37.4), (7, 73.8, 37.5), (10, 77, 38)],
     # Striker holds A5 from its outside shoulder, staying a stride onside, then attacks the far post after the pass
     "H9": [(0, 83, 23.5), (2, 83.5, 22.5), (4, 84, 21.5), (6, 85, 21.5), (7.4, 89.5, 25.5), (9, 93.5, 28.5), (10, 94.5, 29.5)],
     # Decoy runner: drifts in the pocket, checks toward the ball, then spins into the right channel
@@ -63,13 +67,16 @@ AWAY = {
     "A3": [(0, 84, 58), (3, 84.5, 60), (6, 85, 61.5), (8, 89, 59), (10, 92, 57)],  # stays wide with H7
     # Midfield four steps up and narrows on the ball, then sprints back. A4 shades toward H2's overlap
     "A4": [(0, 74, 19), (3, 73.5, 20.5), (6, 74.5, 19), (8, 78, 22), (10, 82, 26)],
-    "A8": [(0, 74, 30), (2, 72.5, 31.5), (4, 72, 32.5), (6, 73, 32.5), (8, 77, 33), (10, 81, 33)],
-    "A10": [(0, 75, 41), (1.5, 73, 39.5), (3, 71.5, 38), (4.5, 72, 37), (6, 72.5, 36.5), (8, 76, 37),
-            (10, 80, 38)],                                              # presses H8
+    # Screening midfielder steps across to block H8 after the one-two
+    "A8": [(0, 74, 30), (2, 72.5, 31.5), (3.9, 73, 33), (5, 73.8, 34.6), (6, 74.6, 35), (8, 77.5, 34), (10, 81, 33.5)],
+    # Presses H8 tight, turns to follow the lay-off and is bypassed by the return, then chases
+    "A10": [(0, 75, 41), (1.4, 72, 39), (2.4, 68.8, 37), (2.8, 67.8, 35.2), (3.4, 66.2, 33.2), (4.5, 68.8, 34.3),
+            (6, 71, 35.3), (8, 74.5, 34.5), (10, 78.5, 35)],
     "A7": [(0, 74, 52), (3, 74, 50), (6, 75, 48.5), (8, 79, 47), (10, 83, 46)],
-    # Front two: A9 presses H6, A11 screens H8's side, then both drop
-    "A9": [(0, 62.5, 26.5), (0.6, 60.5, 28.5), (2, 62.5, 29.5), (6, 66, 30), (10, 70, 31)],
-    "A11": [(0, 66, 41), (2, 66.5, 41.5), (6, 67, 41), (10, 70.5, 40)],
+    # Front two: A9 presses H6 and follows H6's support run
+    "A9": [(0, 62.5, 26.5), (0.6, 60.5, 28.5), (2, 61, 26.8), (3.1, 64, 27.5), (6, 66, 28.5), (10, 69, 29.5)],
+    # A11 screens H8's side, then closes H8 down after the return
+    "A11": [(0, 66, 41), (2, 66.5, 41.5), (4.5, 69, 40.5), (6, 71, 39.8), (10, 72, 40)],
 }
 
 PASS_T, RECEIVE_T, SHOT_T, GOAL_T = 6.0, 7.4, 8.2, 8.9
@@ -80,6 +87,8 @@ GOAL_POINT = (106.0, 31.2)  # low, across the keeper, inside the far post (y=30.
 # Between passes the ball sits at the current holder's feet.
 PASSES = [
     ("H6", 0.6, "H8", 1.4, None),
+    ("H8", 2.4, "H6", 2.8, None),  # one-two: lay-off under A10's pressure...
+    ("H6", 3.1, "H8", 3.9, None),  # ...and first-time return into H8's run past A10
     ("H8", PASS_T, "H11", RECEIVE_T, TARGET),
 ]
 SHOT = ("H11", SHOT_T, GOAL_T, GOAL_POINT)  # shooter, shot t, goal t, where the ball ends
