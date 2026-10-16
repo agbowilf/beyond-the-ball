@@ -30,6 +30,7 @@ frontend/ (Vite + React)  -> pitch replay highlighting the insight
 - **Commits:** small, meaningful, Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`, `refactor:`).
   The git history is part of the submission, so one logical change per commit.
 - **Never push** without asking the user first.
+- Work on a feature branch per issue (`feat/...`) and merge through a PR that references it; CI must be green.
 - Detectors read only `frames` and `events`, never scenario metadata or labels. Thresholds live as module constants
   and are documented in `docs/detection-rules.md`; keep the two in sync.
 - The AI layer only phrases findings that already carry numeric evidence. Football reasoning stays in Python.
@@ -44,10 +45,12 @@ frontend/ (Vite + React)  -> pitch replay highlighting the insight
 | `docs/architecture.md` | Pipeline and principles |
 | `scenarios/generate_decoy_run.py` | Seeded generator for `scenarios/01_decoy_run.json` (10 s, 51 frames, H8 -> H11 pass at t=6.0, goal) |
 | `backend/analysis/space_creator.py` | Space Creator detector; finds **H10** dragging marker **A6**, confidence **0.90** |
+| `backend/analysis/sequence_origin.py` | Sequence Origin detector; finds the **H8-H6 one-two** at 2.4 s taking out A10 and A11, confidence **0.78** |
 | `backend/run_analysis.py` | Runs all detectors on a scenario, prints insights JSON |
 | `backend/tests/` | pytest suite |
 | `scenarios/01_decoy_run.insights.json` | Committed detector output the frontend renders; regenerate when detectors change |
-| `frontend/src/` | `data.js` (loads JSON, interpolates frames), `Pitch`, `Highlight` (trails + free-space ring), `EvidencePanel`, `Controls` + `useReplay` |
+| `frontend/src/` | `data.js` (loads JSON, interpolates frames), `Pitch`, `EvidencePanel` (shared), `Controls` + `useReplay`, `OffsideLine` |
+| `frontend/src/views/` | One view per insight type (overlay, panel body, wording) registered in `views/index.js`; `?insight=N&t=S` opens a tab at a time |
 
 ## Commands
 
@@ -62,6 +65,9 @@ cd frontend && npm run lint && npm run build
 
 ## Status
 
-Done: data model, decoy-run generator, Space Creator detector + tests, React pitch replay with evidence panel.
-Next: Pressing Contributor / Sequence Origin / Match Shift detectors, Foundry agent that explains insights,
-Azure deployment for judge access, demo video.
+Done (v0.1, tagged): realistic decoy-run scenario, Space Creator detector, React replay with evidence panel, CI.
+Done on `feat/sequence-origin` (#1): Sequence Origin detector, tests, and a replay tab for it.
+
+Roadmap is tracked in GitHub issues: #2 Foundry agents that explain insights, #3 Pressing Contributor detector,
+#4 Azure deployment for judge access. Match Shift is post-hackathon (needs match-length data); README roadmap only.
+Then README, pitch and demo video before the deadline.
