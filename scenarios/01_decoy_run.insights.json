@@ -16,5 +16,26 @@
       "nearestDefenderToTargetEndM": 11.1,
       "shotSecondsAfterPass": 2.2
     }
+  },
+  {
+    "type": "SEQUENCE_ORIGIN",
+    "t": 2.4,
+    "team": "HOME",
+    "playerId": "H8",
+    "partnerId": "H6",
+    "pattern": "ONE_TWO",
+    "bypassedIds": [
+      "A10",
+      "A11"
+    ],
+    "confidence": 0.78,
+    "evidence": {
+      "opponentsBypassed": 2,
+      "lineBreakingPassT": 3.1,
+      "passesToShot": 3,
+      "progressionM": 24.0,
+      "secondsBeforeFinalPass": 3.6,
+      "secondsBeforeShot": 5.8
+    }
   }
 ]
