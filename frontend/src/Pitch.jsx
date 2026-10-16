@@ -10,7 +10,7 @@ const sy = (y) => W - y
 const TAG_POS = {
   runner: { x: 0, y: -2.3, anchor: 'middle' },
   marker: { x: 0, y: 3.4, anchor: 'middle' },
-  receiver: { x: 1.9, y: 0.55, anchor: 'start' },
+  receiver: { x: -1.9, y: 0.55, anchor: 'end' },
 }
 
 function Markings() {
