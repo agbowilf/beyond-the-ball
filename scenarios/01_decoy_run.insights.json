@@ -1,0 +1,20 @@
+[
+  {
+    "type": "SPACE_CREATOR",
+    "t": 6.0,
+    "team": "HOME",
+    "playerId": "H10",
+    "markerId": "A6",
+    "confidence": 0.92,
+    "evidence": {
+      "runnerDisplacementM": 15.1,
+      "markerDisplacementM": 10.2,
+      "markerFollowCosine": 0.95,
+      "markerDistanceToTargetStartM": 7.7,
+      "markerDistanceToTargetEndM": 14.7,
+      "nearestDefenderToTargetStartM": 7.7,
+      "nearestDefenderToTargetEndM": 13.4,
+      "shotSecondsAfterPass": 2.2
+    }
+  }
+]
