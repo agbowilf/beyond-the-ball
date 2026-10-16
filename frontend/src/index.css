@@ -505,3 +505,55 @@ select {
   border-color: var(--accent);
   color: var(--text);
 }
+
+/* Sequence Origin */
+.player.origin circle {
+  stroke: var(--accent);
+  stroke-width: 0.45;
+}
+.player.partner circle {
+  stroke: var(--space);
+  stroke-width: 0.45;
+}
+.player.partner .tag {
+  fill: var(--space);
+}
+.player.bypassed circle {
+  stroke: #fff;
+  stroke-width: 0.4;
+  stroke-dasharray: 0.5 0.35;
+}
+.player.bypassed .tag {
+  fill: #fff;
+}
+.highlight .chain {
+  stroke: var(--accent);
+  stroke-width: 0.25;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 0.8 0.5;
+}
+.highlight .chain.break {
+  stroke-width: 0.45;
+  stroke-opacity: 1;
+  stroke-dasharray: none;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.chip {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px dashed var(--muted);
+  font-weight: 700;
+  font-size: 12px;
+}
+.chip-note {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 12px;
+}

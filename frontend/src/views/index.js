@@ -1,4 +1,6 @@
-import { LOOKBACK_S, passFor, shotT } from '../data.js'
+import { LOOKBACK_S, passFor, scenario, shotT } from '../data.js'
+import SequenceOriginBody from './SequenceOriginBody.jsx'
+import SequenceOriginOverlay from './SequenceOriginOverlay.jsx'
 import SpaceCreatorGauges from './SpaceCreatorGauges.jsx'
 import SpaceCreatorOverlay from './SpaceCreatorOverlay.jsx'
 
@@ -33,6 +35,56 @@ const spaceCreator = {
   Body: SpaceCreatorGauges,
 }
 
+const receivedAt = (t) => scenario.events.find((e) => e.type === 'RECEIVE' && e.t > t)?.t ?? t
+
+const sequenceOrigin = {
+  label: 'Sequence Origin',
+  source: 'backend/analysis/sequence_origin.py',
+  headline: (i) =>
+    i.pattern === 'ONE_TWO'
+      ? `The chance began with ${i.playerId} and ${i.partnerId}'s one-two, ${i.evidence.secondsBeforeFinalPass} s before the assist`
+      : `The chance began with ${i.playerId}'s pass that took out ${i.evidence.opponentsBypassed} opponents`,
+  focus: (i) => ({
+    [i.playerId]: 'origin',
+    [i.partnerId]: 'partner',
+    ...Object.fromEntries(i.bypassedIds.map((id) => [id, 'bypassed'])),
+  }),
+  marks: (i) => [{ key: 'chain', from: i.t, to: shotT, label: 'From origin to shot' }],
+  jumps: (i) =>
+    i.pattern === 'ONE_TWO'
+      ? [
+          { label: 'One-two', t: i.t },
+          { label: 'Line broken', t: i.evidence.lineBreakingPassT },
+          { label: 'Shot', t: shotT },
+        ]
+      : [
+          { label: 'Origin', t: i.t },
+          { label: 'Shot', t: shotT },
+        ],
+  phase(t, i) {
+    const breakT = i.evidence.lineBreakingPassT
+    const out = i.bypassedIds.join(' and ')
+    if (t < i.t) return 'Build-up'
+    if (i.pattern === 'ONE_TWO' && t < breakT) return `${i.playerId} lays it off to ${i.partnerId}`
+    if (t < receivedAt(breakT)) {
+      const passer = i.pattern === 'ONE_TWO' ? i.partnerId : i.playerId
+      return `${passer}'s pass takes ${out} out of play`
+    }
+    return null
+  },
+  labels: {
+    opponentsBypassed: ['Opponents taken out', '', 0],
+    lineBreakingPassT: ['Line-breaking pass at', 's', 1],
+    passesToShot: ['Passes from origin to shot', '', 0],
+    progressionM: ['Ground gained to the shot', 'm', 1],
+    secondsBeforeFinalPass: ['Began before the assist', 's', 1],
+    secondsBeforeShot: ['Began before the shot', 's', 1],
+  },
+  Overlay: SequenceOriginOverlay,
+  Body: SequenceOriginBody,
+}
+
 export const VIEWS = {
   SPACE_CREATOR: spaceCreator,
+  SEQUENCE_ORIGIN: sequenceOrigin,
 }
