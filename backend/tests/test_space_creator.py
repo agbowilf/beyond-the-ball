@@ -34,10 +34,11 @@ def test_no_insight_when_marker_does_not_follow():
     scenario = _load_generator().build()
     scenario = copy.deepcopy(scenario)
     # Freeze A6 at its starting position in every frame: nobody tracks the run.
+    start = next(p for p in scenario["frames"][0]["players"] if p["id"] == "A6")
     for f in scenario["frames"]:
         for p in f["players"]:
             if p["id"] == "A6":
-                p["x"], p["y"] = 82.0, 41.0
+                p["x"], p["y"] = start["x"], start["y"]
     assert detect_space_creators(scenario) == []
 
 
