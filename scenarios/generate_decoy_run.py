@@ -26,7 +26,9 @@ SWAY_M = 0.25  # slow idle drift so nobody stands perfectly still
 # Keyframes: player -> list of (t, x, y). Smooth (Catmull-Rom) interpolation through keyframes.
 HOME = {
     "H1": [(0, 40, 34), (6, 43, 34), (10, 46, 34)],
-    "H2": [(0, 63, 8), (3, 66, 8), (6, 69, 9), (10, 74, 10)],          # left back pushes on
+    # Left back overlaps outside H11 to give A2 a second problem
+    "H2": [(0, 66, 8), (1.2, 71, 7), (2.4, 75.5, 6), (3.6, 79.5, 5.5), (4.8, 82, 5.5), (6, 83, 6), (8, 84.5, 7),
+           (10, 86, 9)],
     "H3": [(0, 63, 60), (3, 65, 61), (6, 68, 61), (10, 72, 61)],       # right back pushes on
     "H4": [(0, 50, 26), (6, 54, 27), (10, 58, 28)],
     "H5": [(0, 50, 42), (6, 54, 41), (10, 58, 40)],
@@ -35,29 +37,32 @@ HOME = {
     # Carries from t=1.4 and plays the through ball at t=6
     "H8": [(0, 61.5, 40.5), (1.4, 64, 36), (3, 66, 35.5), (4.5, 68, 35.5), (6, 70, 35), (7, 71, 35), (10, 76, 36)],
     # Striker holds A5 from its outside shoulder, staying a stride onside, then attacks the far post after the pass
-    "H9": [(0, 83, 25.5), (2, 83.5, 25), (4, 84, 25), (6, 85, 25.5), (7.4, 89.5, 27), (9, 93.5, 29.5), (10, 94.5, 30)],
+    "H9": [(0, 83, 23.5), (2, 83.5, 22.5), (4, 84, 21.5), (6, 85, 21.5), (7.4, 89.5, 25.5), (9, 93.5, 28.5), (10, 94.5, 29.5)],
     # Decoy runner: drifts in the pocket, checks toward the ball, then spins into the right channel
     "H10": [(0, 79, 42), (1, 80, 43.5), (2, 78.5, 45), (3, 80, 48), (4, 82.5, 52), (5, 84, 55.5),
             (6, 84.8, 57), (8, 88, 55.5), (10, 91, 53)],
-    # Left winger: blindside run across A2 into the gap A6 leaves, onside at the pass, receives at t=7.4
-    "H11": [(0, 78, 13), (1.5, 78.5, 14), (3, 80, 18), (4.5, 81.5, 24), (6, 85, 32.5), (7.4, 89, 41),
-            (8.2, 90, 41.5), (10, 92, 42)],
+    # Left winger: checks short to pull A2 out, then spins in behind A2 into the gap A6 leaves,
+    # onside at the pass, receives at t=7.4
+    "H11": [(0, 78, 13), (1.2, 76.5, 11.5), (2.4, 77.3, 12), (3.4, 79.8, 17), (4.6, 82.4, 24.5), (6, 85, 32.5),
+            (7.4, 89, 41), (8.2, 90, 41.5), (10, 92, 42)],
 }
 AWAY = {
     # Keeper comes out to narrow the near-post angle, then dives across too late for the far corner
     "A1": [(0, 100, 34), (6, 99.5, 35), (7.4, 101, 37.5), (8.2, 102.3, 36.8), (8.8, 103.3, 34.5),
            (10, 103.4, 34.3)],
-    # Back four: holds about 84 m, edges back as H8 advances, then turns and retreats after the pass
-    "A2": [(0, 84.5, 12.5), (1.5, 84.5, 13.5), (3, 84, 16.5), (4.5, 84.8, 19.5), (6, 85.3, 22),
-           (7.4, 87, 23.5), (10, 92, 27)],                                # loses H11 on the blind side
-    "A5": [(0, 84, 28), (2, 84.3, 28), (4, 85, 27.5), (6, 85.8, 28), (7.4, 88, 35), (8.2, 89.5, 38.5),
-           (10, 92, 38)],                                               # held by H9, closes too late
+    # Back four: holds about 84 m, edges back as H8 advances, then turns and retreats after the pass.
+    # Full-back follows H11's check, hesitates over H2's overlap, then chases H11's spin a step behind
+    "A2": [(0, 84.5, 12.5), (1.2, 82, 12.5), (2.4, 81, 11.5), (3.4, 81.6, 14), (4.6, 81.8, 21.5),
+           (5.3, 82.7, 26.3), (6, 84, 30), (7.4, 87.5, 38), (8.2, 89, 39.6), (10, 90.5, 40)],
+    # Held by H9, then tracks H9's far-post run
+    "A5": [(0, 84, 27), (2, 84.4, 26), (4, 85.4, 24.5), (6, 86.2, 24), (7.4, 88, 28), (8.2, 90, 29.5),
+           (10, 92.5, 32)],
     # Right centre-back: reacts to H10's check, follows the run a beat late, then lets H10 go wide
     "A6": [(0, 84, 42), (1, 84, 42.5), (2, 83, 44), (3, 83.5, 46.5), (4, 84.5, 49), (5, 85.3, 50.5),
            (6, 86, 51.5), (7.4, 88, 50), (10, 89.5, 49)],
     "A3": [(0, 84, 58), (3, 84.5, 60), (6, 85, 61.5), (8, 89, 59), (10, 92, 57)],  # stays wide with H7
-    # Midfield four steps up and narrows on the ball, then sprints back
-    "A4": [(0, 74, 19), (3, 73, 22), (6, 73.5, 24), (8, 78, 26), (10, 82, 28)],
+    # Midfield four steps up and narrows on the ball, then sprints back. A4 shades toward H2's overlap
+    "A4": [(0, 74, 19), (3, 73.5, 20.5), (6, 74.5, 19), (8, 78, 22), (10, 82, 26)],
     "A8": [(0, 74, 30), (2, 72.5, 31.5), (4, 72, 32.5), (6, 73, 32.5), (8, 77, 33), (10, 81, 33)],
     "A10": [(0, 75, 41), (1.5, 73, 39.5), (3, 71.5, 38), (4.5, 72, 37), (6, 72.5, 36.5), (8, 76, 37),
             (10, 80, 38)],                                              # presses H8
