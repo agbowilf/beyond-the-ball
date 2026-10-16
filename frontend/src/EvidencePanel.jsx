@@ -97,7 +97,7 @@ export default function EvidencePanel({ t, state, insight, pass, onSeek }) {
           <div key={k}>
             <dt>{LABELS[k]?.[0] ?? k}</dt>
             <dd>
-              {v}
+              {LABELS[k]?.[1] ? v.toFixed(1) : v.toFixed(2)}
               {LABELS[k]?.[1] && <small> {LABELS[k][1]}</small>}
             </dd>
           </div>
