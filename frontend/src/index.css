@@ -474,3 +474,34 @@ select {
   fill-opacity: 0.6;
   font-size: 1.4px;
 }
+
+/* Insight tabs */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: -4px 0 14px;
+}
+.tabs button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+.tabs button small {
+  font-weight: 400;
+  font-size: 11px;
+}
+.tabs button[aria-selected='true'] {
+  border-color: var(--accent);
+  color: var(--text);
+}

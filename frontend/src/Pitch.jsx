@@ -31,7 +31,7 @@ function Markings() {
   )
 }
 
-export default function Pitch({ state, focus = {}, defs, children }) {
+export default function Pitch({ state, focus = {}, children }) {
   return (
     <svg
       className="pitch"
@@ -39,7 +39,11 @@ export default function Pitch({ state, focus = {}, defs, children }) {
       role="img"
       aria-label="Pitch replay"
     >
-      {defs}
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" />
+        </marker>
+      </defs>
       <rect x={-PAD} y={-PAD} width={L + 2 * PAD} height={W + 2 * PAD} fill="var(--grass)" />
       {Array.from({ length: 10 }, (_, i) => (
         <rect key={i} x={i * (L / 10)} y={0} width={L / 20} height={W} fill="var(--grass-stripe)" />

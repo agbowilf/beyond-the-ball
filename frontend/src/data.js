@@ -50,3 +50,18 @@ export const LOOKBACK_S = 5
 export function passFor(insight) {
   return scenario.events.find((e) => e.type === 'PASS' && e.t === insight.t && e.team === insight.team)
 }
+
+export const shotT = scenario.events.find((e) => e.type === 'SHOT')?.t ?? DURATION
+
+// Plain description of the most recent event at time t, for the phase caption.
+export function lastEventText(t) {
+  const e = [...scenario.events].reverse().find((ev) => ev.t <= t)
+  if (!e) return null
+  const verbs = {
+    PASS: `passes to ${e.targetPlayerId}`,
+    RECEIVE: 'receives',
+    SHOT: 'shoots',
+    GOAL: 'scores',
+  }
+  return `${e.playerId} ${verbs[e.type] ?? e.type.toLowerCase()}`
+}
