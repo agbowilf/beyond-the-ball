@@ -24,7 +24,7 @@ function Markings() {
   )
 }
 
-export default function Pitch({ state, focus = {}, children }) {
+export default function Pitch({ state, focus = {}, defs, children }) {
   return (
     <svg
       className="pitch"
@@ -32,6 +32,7 @@ export default function Pitch({ state, focus = {}, children }) {
       role="img"
       aria-label="Pitch replay"
     >
+      {defs}
       <rect x={-PAD} y={-PAD} width={L + 2 * PAD} height={W + 2 * PAD} fill="var(--grass)" />
       {Array.from({ length: 10 }, (_, i) => (
         <rect key={i} x={i * (L / 10)} y={0} width={L / 20} height={W} fill="var(--grass-stripe)" />
@@ -45,7 +46,7 @@ export default function Pitch({ state, focus = {}, children }) {
             <circle r={role ? 1.5 : 1.15} />
             <text y={0.45}>{p.id.slice(1)}</text>
             {role && (
-              <text className="tag" y={-2.3}>
+              <text className="tag" y={role === 'marker' ? 3.4 : -2.3}>
                 {p.id}
               </text>
             )}

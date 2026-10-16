@@ -189,3 +189,81 @@ select {
   border-radius: 6px;
   padding: 6px;
 }
+
+/* Insight highlight */
+.player.runner circle,
+.player.marker circle {
+  stroke: var(--accent);
+  stroke-width: 0.45;
+}
+.player.receiver circle {
+  stroke: var(--space);
+  stroke-width: 0.45;
+}
+.player .tag {
+  fill: var(--accent);
+  font-size: 1.6px;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.6);
+  stroke-width: 0.35;
+}
+.player.receiver .tag {
+  fill: var(--space);
+}
+
+.highlight .space {
+  fill: var(--space);
+  fill-opacity: 0.18;
+  stroke: var(--space);
+  stroke-width: 0.3;
+  stroke-dasharray: 1 0.8;
+}
+.highlight .gap {
+  stroke: var(--space);
+  stroke-width: 0.2;
+  stroke-dasharray: 0.6 0.6;
+}
+.highlight .target {
+  fill: none;
+  stroke: var(--space);
+  stroke-width: 0.35;
+}
+.highlight .trail {
+  fill: none;
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1.2 0.7;
+}
+.highlight .trail.HOME {
+  stroke: var(--home);
+}
+.highlight .trail.AWAY {
+  stroke: var(--away);
+}
+.highlight .ghost {
+  fill-opacity: 0.25;
+  stroke: #fff;
+  stroke-opacity: 0.5;
+  stroke-width: 0.15;
+  stroke-dasharray: 0.4 0.3;
+}
+.highlight .ghost.HOME {
+  fill: var(--home);
+}
+.highlight .ghost.AWAY {
+  fill: var(--away);
+}
+.highlight .pass {
+  stroke: var(--accent);
+  stroke-width: 0.35;
+}
+
+.band {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.55;
+}

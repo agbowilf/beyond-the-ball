@@ -33,3 +33,20 @@ export function player(state, id) {
 }
 
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y)
+
+// Goalkeepers (shirt 1) are excluded, matching the backend detectors.
+export function nearestOutfield(state, team, point) {
+  return state.players
+    .filter((p) => p.team === team && p.id.slice(1) !== '1')
+    .reduce((best, p) => {
+      const d = dist(p, point)
+      return best && best.d <= d ? best : { player: p, d }
+    }, null)
+}
+
+// Detectors compare positions over [t_pass - 5 s, t_pass]; see docs/detection-rules.md.
+export const LOOKBACK_S = 5
+
+export function passFor(insight) {
+  return scenario.events.find((e) => e.type === 'PASS' && e.t === insight.t && e.team === insight.team)
+}
