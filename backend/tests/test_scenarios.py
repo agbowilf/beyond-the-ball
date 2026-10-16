@@ -41,3 +41,16 @@ def test_every_player_moves():
     first, last = scenario["frames"][0]["players"], scenario["frames"][-1]["players"]
     for p, q in zip(first, last):
         assert math.hypot(q["x"] - p["x"], q["y"] - p["y"]) >= 3.0, f"{p['id']} barely moves"
+
+
+def test_goal_shot_beats_the_keeper():
+    scenario = _load_generator().build()
+    shot = next(e for e in scenario["events"] if e["type"] == "SHOT" and e["outcome"] == "GOAL")
+    goal = next(e for e in scenario["events"] if e["type"] == "GOAL")
+    for f in scenario["frames"]:
+        if shot["t"] < f["t"] <= goal["t"]:
+            keeper = next(p for p in f["players"] if p["id"] == "A1")
+            gap = math.hypot(f["ball"]["x"] - keeper["x"], f["ball"]["y"] - keeper["y"])
+            assert gap > 1.5, f"ball passes through the keeper at t={f['t']} ({gap:.1f} m)"
+    end = scenario["frames"][-1]["ball"]
+    assert end["x"] >= 105 and 30.34 < end["y"] < 37.66, "ball must finish inside the goal"
