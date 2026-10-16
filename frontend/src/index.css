@@ -458,3 +458,15 @@ select {
     height: 12px;
   }
 }
+
+.offside line {
+  stroke: #fff;
+  stroke-opacity: 0.45;
+  stroke-width: 0.2;
+  stroke-dasharray: 0.8 0.8;
+}
+.offside text {
+  fill: #fff;
+  fill-opacity: 0.6;
+  font-size: 1.4px;
+}

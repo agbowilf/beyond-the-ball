@@ -1,6 +1,7 @@
 import Controls from './Controls.jsx'
 import EvidencePanel from './EvidencePanel.jsx'
 import Highlight, { ArrowDef } from './Highlight.jsx'
+import OffsideLine from './OffsideLine.jsx'
 import Pitch from './Pitch.jsx'
 import { insights, LOOKBACK_S, passFor, scenario, stateAt } from './data.js'
 import { useReplay } from './useReplay.js'
@@ -26,6 +27,7 @@ export default function App() {
       <main>
         <section className="stage">
           <Pitch state={state} focus={focus} defs={<ArrowDef />}>
+            <OffsideLine state={state} until={pass.t} />
             <Highlight t={replay.t} state={state} insight={insight} pass={pass} />
           </Pitch>
           <Controls replay={replay} marks={marks} />
