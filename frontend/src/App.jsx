@@ -1,4 +1,5 @@
 import Controls from './Controls.jsx'
+import EvidencePanel from './EvidencePanel.jsx'
 import Highlight, { ArrowDef } from './Highlight.jsx'
 import Pitch from './Pitch.jsx'
 import { insights, LOOKBACK_S, passFor, scenario, stateAt } from './data.js'
@@ -29,6 +30,7 @@ export default function App() {
           </Pitch>
           <Controls replay={replay} marks={marks} />
         </section>
+        <EvidencePanel t={replay.t} state={state} insight={insight} pass={pass} onSeek={replay.seek} />
       </main>
     </div>
   )
