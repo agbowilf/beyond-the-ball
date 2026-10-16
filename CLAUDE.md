@@ -43,7 +43,7 @@ frontend/ (Vite + React)  -> pitch replay highlighting the insight
 | `docs/detection-rules.md` | Space Creator rules, thresholds, confidence formula, known limits |
 | `docs/architecture.md` | Pipeline and principles |
 | `scenarios/generate_decoy_run.py` | Seeded generator for `scenarios/01_decoy_run.json` (10 s, 51 frames, H8 -> H11 pass at t=6.0, goal) |
-| `backend/analysis/space_creator.py` | Space Creator detector; finds **H10** dragging marker **A6**, confidence **0.92** |
+| `backend/analysis/space_creator.py` | Space Creator detector; finds **H10** dragging marker **A6**, confidence **0.90** |
 | `backend/run_analysis.py` | Runs all detectors on a scenario, prints insights JSON |
 | `backend/tests/` | pytest suite |
 | `scenarios/01_decoy_run.insights.json` | Committed detector output the frontend renders; regenerate when detectors change |

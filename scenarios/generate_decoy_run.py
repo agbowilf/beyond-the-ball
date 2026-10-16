@@ -4,6 +4,12 @@ This script only emits raw tracking frames and events. It contains no detection 
 insight labels; the analysis engine has to find the pattern on its own.
 
 Pitch: 105 x 68 m. HOME attacks toward +x.
+
+Story: HOME work the ball from H6 to H8, who carries it at a 4-4-2 AWAY block. H10, in the pocket in
+front of centre-back A6, checks toward the ball and then spins out into the right channel. A6 follows a
+beat late, which empties the gap between the centre-backs. H9 holds A5 in place and H11 makes a blindside
+run from the left into that gap, timed to stay onside, and scores. Every attacker is level with or behind
+the AWAY back line until the final pass.
 """
 import json
 import math
@@ -14,59 +20,112 @@ from pathlib import Path
 HZ = 5
 DURATION = 10.0  # seconds
 SEED = 7
-NOISE_M = 0.12
+NOISE_M = 0.06
+SWAY_M = 0.25  # slow idle drift so nobody stands perfectly still
 
-# Keyframes: player -> list of (t, x, y). Linear interpolation between keyframes.
-# Players with a single keyframe hold position (plus small noise).
+# Keyframes: player -> list of (t, x, y). Smooth (Catmull-Rom) interpolation through keyframes.
 HOME = {
-    "H1": [(0, 38, 34)],
-    "H2": [(0, 56, 10)],
-    "H3": [(0, 56, 58)],
-    "H4": [(0, 58, 30)],
-    "H5": [(0, 54, 27)],
-    "H6": [(0, 54, 41)],
-    "H7": [(0, 76, 60)],
-    "H8": [(0, 64, 34), (6.0, 66, 34), (10, 66, 34)],  # ball carrier, passes at t=6
-    "H9": [(0, 92, 30)],
-    # Decoy runner: starts the diagonal run toward the right touchline at t=1
-    "H10": [(0, 76, 41), (1.0, 76, 41), (5.0, 85, 53), (10, 85, 53)],
-    # Late runner from the left, receives at t=7.4
-    "H11": [(0, 72, 14), (2.0, 72, 14), (3.5, 78, 22), (5.5, 85, 31), (7.4, 88, 36), (8.2, 89, 36), (10, 89, 36)],
+    "H1": [(0, 40, 34), (6, 43, 34), (10, 46, 34)],
+    "H2": [(0, 63, 8), (3, 66, 8), (6, 69, 9), (10, 74, 10)],          # left back pushes on
+    "H3": [(0, 63, 60), (3, 65, 61), (6, 68, 61), (10, 72, 61)],       # right back pushes on
+    "H4": [(0, 50, 26), (6, 54, 27), (10, 58, 28)],
+    "H5": [(0, 50, 42), (6, 54, 41), (10, 58, 40)],
+    "H6": [(0, 58, 30), (0.6, 58.3, 30.2), (3, 61, 31), (6, 63, 31), (10, 67, 32)],  # passes to H8 at 0.6
+    "H7": [(0, 80, 63), (3, 81.5, 63), (6, 82.5, 62.5), (8, 87, 59), (10, 89, 57)],  # holds the width
+    # Carries from t=1.4 and plays the through ball at t=6
+    "H8": [(0, 62, 38), (1.4, 64, 36), (3, 66, 35.5), (4.5, 68, 35.5), (6, 70, 35), (7, 71, 35), (10, 76, 36)],
+    # Striker pins A5, staying a stride onside of the line, then attacks the far post after the pass
+    "H9": [(0, 83, 30), (2, 83.5, 29.5), (4, 84, 29), (6, 85, 28.5), (7.4, 89, 30), (9, 93, 31), (10, 94, 31)],
+    # Decoy runner: drifts in the pocket, checks toward the ball, then spins into the right channel
+    "H10": [(0, 79, 42), (1, 80, 43.5), (2, 78.5, 45), (3, 80, 48), (4, 82.5, 52), (5, 84, 55.5),
+            (6, 84.8, 57), (8, 87.5, 57.5), (10, 89, 57)],
+    # Left winger: blindside run across A2 into the gap A6 leaves, onside at the pass, receives at t=7.4
+    "H11": [(0, 78, 13), (1.5, 78.5, 14), (3, 80, 18), (4.5, 82.5, 25), (6, 85, 32.5), (7.4, 89, 41),
+            (8.2, 90, 41.5), (10, 92, 42)],
 }
 AWAY = {
-    "A1": [(0, 102, 34)],
-    "A2": [(0, 82, 12)],
-    "A3": [(0, 82, 58)],
-    "A4": [(0, 70, 22)],
-    "A5": [(0, 82, 24)],
-    # Right-sided centre-back follows the decoy runner
-    "A6": [(0, 82, 41), (1.0, 82, 41), (5.0, 85.5, 50.5), (10, 85.5, 50.5)],
-    "A7": [(0, 60, 46)],
-    "A8": [(0, 70, 34)],
-    "A9": [(0, 60, 22)],
-    "A10": [(0, 70, 46)],
-    "A11": [(0, 60, 34)],
+    "A1": [(0, 100, 34), (6, 99.5, 35), (7.4, 100.5, 38), (8.2, 101.5, 39), (8.8, 103, 37), (10, 103, 37)],
+    # Back four: holds about 84 m, edges back as H8 advances, then turns and retreats after the pass
+    "A2": [(0, 83.5, 13), (1.5, 83.5, 14), (3, 84, 17), (4.5, 85, 21), (6, 85.5, 25),
+           (7.4, 88, 31), (10, 92, 34)],                                # loses H11 on the blind side
+    "A5": [(0, 84, 28), (2, 84.3, 28), (4, 85, 27.5), (6, 85.8, 28), (7.4, 88, 35), (8.2, 89.5, 38.5),
+           (10, 92, 38)],                                               # held by H9, closes too late
+    # Right centre-back: reacts to H10's check, follows the run a beat late, then lets H10 go wide
+    "A6": [(0, 84, 42), (1, 84, 42.5), (2, 83, 44), (3, 83.5, 46.5), (4, 84.5, 49), (5, 85.3, 50.5),
+           (6, 86, 51.5), (7.4, 88, 49), (10, 91, 46)],
+    "A3": [(0, 84, 57), (3, 84.5, 58), (6, 85, 59), (8, 87.5, 57), (10, 90, 55)],  # stays with H7
+    # Midfield four steps up and narrows on the ball, then sprints back
+    "A4": [(0, 74, 19), (3, 73, 22), (6, 73.5, 24), (8, 78, 26), (10, 82, 28)],
+    "A8": [(0, 74, 30), (2, 72.5, 31.5), (4, 72, 32.5), (6, 73, 32.5), (8, 77, 33), (10, 81, 33)],
+    "A10": [(0, 75, 41), (1.5, 73, 39.5), (3, 71.5, 38), (4.5, 72, 37), (6, 72.5, 36.5), (8, 76, 37),
+            (10, 80, 38)],                                              # presses H8
+    "A7": [(0, 74, 52), (3, 74, 50), (6, 75, 48.5), (8, 79, 47), (10, 83, 46)],
+    # Front two press the first pass, then drop
+    "A9": [(0, 62, 27), (0.6, 61, 28.5), (2, 63, 30), (6, 66, 30), (10, 70, 31)],
+    "A11": [(0, 64, 39), (0.6, 62, 36), (2, 64, 38), (6, 67, 38), (10, 71, 38)],
 }
-BALL = [
-    (0, 64, 34), (6.0, 66, 34),      # carried by H8
-    (7.4, 88, 36),                   # pass to H11
-    (8.2, 89, 36),                   # H11 controls
-    (8.9, 105, 34), (10, 105, 34),   # shot into the net
-]
+
+PASS_1_T, RECEIVE_1_T = 0.6, 1.4
+PASS_T, RECEIVE_T, SHOT_T, GOAL_T = 6.0, 7.4, 8.2, 8.9
+TARGET = (89.0, 41.0)
+GOAL_POINT = (105.0, 37.0)
+FOOT = 0.7  # ball sits just ahead of a player's feet
 
 
 def interp(keys, t):
+    """Catmull-Rom through the keyframes: passes through each one with continuous velocity."""
     if len(keys) == 1 or t <= keys[0][0]:
         return keys[0][1], keys[0][2]
-    for (t0, x0, y0), (t1, x1, y1) in zip(keys, keys[1:]):
-        if t <= t1:
-            f = (t - t0) / (t1 - t0) if t1 > t0 else 1.0
-            return x0 + f * (x1 - x0), y0 + f * (y1 - y0)
-    return keys[-1][1], keys[-1][2]
+    if t >= keys[-1][0]:
+        return keys[-1][1], keys[-1][2]
+    i = next(i for i in range(len(keys) - 1) if t <= keys[i + 1][0])
+    p0, p1, p2, p3 = keys[max(i - 1, 0)], keys[i], keys[i + 1], keys[min(i + 2, len(keys) - 1)]
+    u = (t - p1[0]) / (p2[0] - p1[0])
+    # Scale tangents by segment duration so uneven keyframe spacing does not overshoot.
+    dt = p2[0] - p1[0]
+
+    def axis(k):
+        m1 = (p2[k] - p0[k]) / (p2[0] - p0[0]) * dt if p2[0] > p0[0] else 0.0
+        m2 = (p3[k] - p1[k]) / (p3[0] - p1[0]) * dt if p3[0] > p1[0] else 0.0
+        h00, h10, h01, h11 = 2 * u**3 - 3 * u**2 + 1, u**3 - 2 * u**2 + u, -2 * u**3 + 3 * u**2, u**3 - u**2
+        return h00 * p1[k] + h10 * m1 + h01 * p2[k] + h11 * m2
+
+    return axis(1), axis(2)
+
+
+def lerp(a, b, f):
+    return a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])
+
+
+def at_feet(pid, t):
+    x, y = interp(HOME[pid], t)
+    return x + FOOT, y
+
+
+def ball_at(t):
+    if t <= PASS_1_T:
+        return at_feet("H6", t)
+    if t <= RECEIVE_1_T:
+        return lerp(at_feet("H6", PASS_1_T), at_feet("H8", RECEIVE_1_T), (t - PASS_1_T) / (RECEIVE_1_T - PASS_1_T))
+    if t <= PASS_T:
+        return at_feet("H8", t)
+    if t <= RECEIVE_T:
+        return lerp(at_feet("H8", PASS_T), TARGET, (t - PASS_T) / (RECEIVE_T - PASS_T))
+    if t <= SHOT_T:
+        return at_feet("H11", t)
+    if t <= GOAL_T:
+        return lerp(at_feet("H11", SHOT_T), GOAL_POINT, (t - SHOT_T) / (GOAL_T - SHOT_T))
+    return GOAL_POINT
+
+
+def _pt(p):
+    return {"x": round(p[0], 1), "y": round(p[1], 1)}
 
 
 def build():
     rng = random.Random(SEED)
+    phase = {pid: (rng.uniform(0, 2 * math.pi), rng.uniform(0, 2 * math.pi))
+             for pid in list(HOME) + list(AWAY)}
     frames = []
     n = int(DURATION * HZ)
     for i in range(n + 1):
@@ -75,19 +134,25 @@ def build():
         for team, roster in (("HOME", HOME), ("AWAY", AWAY)):
             for pid, keys in roster.items():
                 x, y = interp(keys, t)
-                x += rng.uniform(-NOISE_M, NOISE_M)
-                y += rng.uniform(-NOISE_M, NOISE_M)
+                px, py = phase[pid]
+                x += SWAY_M * math.sin(0.9 * t + px) + rng.uniform(-NOISE_M, NOISE_M)
+                y += SWAY_M * math.sin(0.7 * t + py) + rng.uniform(-NOISE_M, NOISE_M)
                 players.append({"id": pid, "team": team, "x": round(x, 2), "y": round(y, 2)})
-        bx, by = interp(BALL, t)
+        bx, by = ball_at(t)
         frames.append({"t": t, "ball": {"x": round(bx, 2), "y": round(by, 2)}, "players": players})
 
+    shot_from = at_feet("H11", SHOT_T)
     events = [
-        {"t": 6.0, "type": "PASS", "team": "HOME", "playerId": "H8", "targetPlayerId": "H11",
-         "start": {"x": 66, "y": 34}, "end": {"x": 88, "y": 36}, "outcome": "COMPLETE"},
-        {"t": 7.4, "type": "RECEIVE", "team": "HOME", "playerId": "H11", "location": {"x": 88, "y": 36}},
-        {"t": 8.2, "type": "SHOT", "team": "HOME", "playerId": "H11", "location": {"x": 89, "y": 36},
+        {"t": PASS_1_T, "type": "PASS", "team": "HOME", "playerId": "H6", "targetPlayerId": "H8",
+         "start": _pt(at_feet("H6", PASS_1_T)), "end": _pt(at_feet("H8", RECEIVE_1_T)), "outcome": "COMPLETE"},
+        {"t": RECEIVE_1_T, "type": "RECEIVE", "team": "HOME", "playerId": "H8",
+         "location": _pt(at_feet("H8", RECEIVE_1_T))},
+        {"t": PASS_T, "type": "PASS", "team": "HOME", "playerId": "H8", "targetPlayerId": "H11",
+         "start": _pt(at_feet("H8", PASS_T)), "end": _pt(TARGET), "outcome": "COMPLETE"},
+        {"t": RECEIVE_T, "type": "RECEIVE", "team": "HOME", "playerId": "H11", "location": _pt(TARGET)},
+        {"t": SHOT_T, "type": "SHOT", "team": "HOME", "playerId": "H11", "location": _pt(shot_from),
          "outcome": "GOAL"},
-        {"t": 8.9, "type": "GOAL", "team": "HOME", "playerId": "H11"},
+        {"t": GOAL_T, "type": "GOAL", "team": "HOME", "playerId": "H11"},
     ]
 
     return {
