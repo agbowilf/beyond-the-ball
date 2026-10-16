@@ -46,7 +46,8 @@ frontend/ (Vite + React)  -> pitch replay highlighting the insight
 | `backend/analysis/space_creator.py` | Space Creator detector; finds **H10** dragging marker **A6**, confidence **0.92** |
 | `backend/run_analysis.py` | Runs all detectors on a scenario, prints insights JSON |
 | `backend/tests/` | pytest suite |
-| `frontend/` | Vite + React pitch replay |
+| `scenarios/01_decoy_run.insights.json` | Committed detector output the frontend renders; regenerate when detectors change |
+| `frontend/src/` | `data.js` (loads JSON, interpolates frames), `Pitch`, `Highlight` (trails + free-space ring), `EvidencePanel`, `Controls` + `useReplay` |
 
 ## Commands
 
@@ -54,11 +55,13 @@ frontend/ (Vite + React)  -> pitch replay highlighting the insight
 python scenarios/generate_decoy_run.py                       # regenerate scenario JSON
 python backend/run_analysis.py scenarios/01_decoy_run.json   # print insights
 pytest backend/tests                                         # run tests
-cd frontend && npm install && npm run dev                    # pitch replay
+python backend/run_analysis.py scenarios/01_decoy_run.json > scenarios/01_decoy_run.insights.json
+cd frontend && npm install && npm run dev                    # pitch replay (?t=6 jumps to the pass)
+cd frontend && npm run lint && npm run build
 ```
 
 ## Status
 
-Done: data model, decoy-run generator, Space Creator detector + tests.
-Next: React pitch replay, Pressing Contributor / Sequence Origin / Match Shift detectors, Foundry agent that explains insights,
+Done: data model, decoy-run generator, Space Creator detector + tests, React pitch replay with evidence panel.
+Next: Pressing Contributor / Sequence Origin / Match Shift detectors, Foundry agent that explains insights,
 Azure deployment for judge access, demo video.
