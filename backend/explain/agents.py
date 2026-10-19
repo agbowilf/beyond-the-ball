@@ -28,11 +28,16 @@ Rules:
 - Write a headline of at most 12 words and 2 to 4 claims. Each claim is one sentence stating one fact.
 - For every claim, list in `evidence` the exact field names it relies on, taken from the field definitions.
 - Quote numbers exactly as they appear in the insight, or rounded to a whole number. Never compute new numbers such as differences or totals.
-- Refer to players by their ids, for example H10 or A6."""
+- Be precise about who did what: attribute each action to the player and pass the field definitions say.
+- Refer to players by their ids, for example H10 or A6, and never with gendered pronouns. Never write field names
+  such as markerFollowCosine in the text.
+- Keep each time span's exact start and end as defined (for example, played versus received).
+- Write the headline in sentence case."""
 
 FACT_CHECKER_INSTRUCTIONS = """You fact-check a draft explanation of a football insight against the insight it describes.
 Approve only if every claim is fully supported by the fields it cites. List as an issue each claim that is unsupported,
-misreads a field, invents a detail, or speculates about intent or quality. Do not rewrite the draft."""
+misreads a field, attributes an action to the wrong player or pass, invents a detail, or speculates about intent or
+quality. Check attributions against the field definitions carefully. Do not rewrite the draft."""
 
 
 def brief(insight, context):

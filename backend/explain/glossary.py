@@ -24,18 +24,21 @@ FIELDS = {
             "markerDistanceToTargetEndM": "Marker's distance to where the pass was received, when the pass was played",
             "nearestDefenderToTargetStartM": "Nearest outfield defender to the receiving zone at run start, in metres",
             "nearestDefenderToTargetEndM": "Nearest outfield defender to the receiving zone when the pass was played",
-            "shotSecondsAfterPass": "Seconds from the pass to the shot",
+            "shotSecondsAfterPass": "Seconds from the moment the pass was played (not received) to the shot",
         },
     },
     "SEQUENCE_ORIGIN": {
         "summary": "The action where a chance really began: the earliest pass that broke a line, "
-                   "after which the attack kept moving forward to the shot.",
+                   "after which the attack kept moving forward to the shot. For a ONE_TWO, the origin is the "
+                   "first pass (playerId to partnerId) and the line-breaking pass is the partner's return "
+                   "(partnerId back to playerId); only the return took opponents out of play.",
         "fields": {
-            "playerId": "Who played the origin pass",
-            "partnerId": "The other player in the one-two, or the receiver of a single line-breaking pass",
+            "playerId": "Who played the origin pass (for a ONE_TWO, the first pass of the one-two)",
+            "partnerId": "The other player in the one-two, who played the line-breaking return pass; "
+                         "or the receiver of a single line-breaking pass",
             "pattern": "ONE_TWO or LINE_BREAKING_PASS",
-            "bypassedIds": "Opponents taken out of play by the line-breaking pass",
-            "opponentsBypassed": "Number of opponents taken out of play",
+            "bypassedIds": "Opponents taken out of play by the line-breaking pass, not by the origin pass",
+            "opponentsBypassed": "Number of opponents taken out of play by the line-breaking pass",
             "lineBreakingPassT": "When the line-breaking pass was played, in seconds",
             "passesToShot": "Passes from the origin to the shot, origin included",
             "progressionM": "Ground gained toward goal from the origin pass to the shot, in metres",
