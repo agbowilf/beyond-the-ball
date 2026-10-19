@@ -1,0 +1,5 @@
+# Runtime dependencies for the explanation agents (backend/explain).
+# The detectors themselves need only the standard library.
+agent-framework-foundry==1.15.0
+azure-identity==1.26.0
+pydantic==2.14.1
