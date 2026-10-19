@@ -2,11 +2,11 @@
   /* "Programme" palette: matchday-programme paper and ink, with a deep purple accent and lime highlights,
      in the spirit of English top-flight broadcast graphics (no league logos, names or typefaces). */
   --bg: #f3efe6;
-  --surface: #f6f1f8;
-  --surface-2: #ece3ef;
+  --surface: #efe7f3;
+  --surface-2: #e4d9ea;
   --border: rgba(20, 22, 26, 0.12);
   --text: #15171b;
-  --muted: #5f626a;
+  --muted: #585b63;
   --grass: #1b5a34;
   --grass-stripe: #1e6239;
   --line: rgba(255, 255, 255, 0.82);
