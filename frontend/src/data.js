@@ -1,7 +1,17 @@
 import scenario from '../../scenarios/01_decoy_run.json'
 import insights from '../../scenarios/01_decoy_run.insights.json'
+import explanations from '../../scenarios/01_decoy_run.explanations.json'
 
-export { scenario, insights }
+export { scenario, insights, explanations }
+
+export const AUDIENCES = ['fan', 'coach', 'analyst']
+
+// Approved agent explanation for an insight and audience, or null if none was approved.
+export function explanationFor(insight, audience) {
+  const index = insights.indexOf(insight)
+  const e = explanations.explanations.find((x) => x.insightIndex === index && x.audience === audience)
+  return e?.status === 'approved' ? e : null
+}
 
 export const DURATION = scenario.frames[scenario.frames.length - 1].t
 
