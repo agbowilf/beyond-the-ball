@@ -42,7 +42,6 @@ export default function Controls({ replay, marks = [] }) {
           aria-label="Replay time"
         />
       </div>
-      <span className="clock">{t.toFixed(1)}s</span>
       <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="Playback speed">
         <option value={0.25}>0.25×</option>
         <option value={0.5}>0.5×</option>

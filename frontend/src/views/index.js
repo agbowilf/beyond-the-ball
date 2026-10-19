@@ -1,12 +1,13 @@
 import { LOOKBACK_S, passFor, scenario, shotT } from '../data.js'
-import SequenceOriginBody from './SequenceOriginBody.jsx'
+import SequenceOriginHero from './SequenceOriginHero.jsx'
 import SequenceOriginOverlay from './SequenceOriginOverlay.jsx'
-import SpaceCreatorGauges from './SpaceCreatorGauges.jsx'
+import SpaceCreatorHero from './SpaceCreatorHero.jsx'
 import SpaceCreatorOverlay from './SpaceCreatorOverlay.jsx'
 
 // How each insight type is drawn and explained. Labels are [text, unit, decimals].
 const spaceCreator = {
   label: 'Space Creator',
+  icon: '⇢',
   source: 'backend/analysis/space_creator.py',
   headline: (i) => `${i.playerId}'s run dragged ${i.markerId} out of the zone ${passFor(i).targetPlayerId} received in`,
   focus: (i) => ({ [i.playerId]: 'runner', [i.markerId]: 'marker', [passFor(i).targetPlayerId]: 'receiver' }),
@@ -32,13 +33,14 @@ const spaceCreator = {
     shotSecondsAfterPass: ['Shot after pass', 's', 1],
   },
   Overlay: SpaceCreatorOverlay,
-  Body: SpaceCreatorGauges,
+  Hero: SpaceCreatorHero,
 }
 
 const receivedAt = (t) => scenario.events.find((e) => e.type === 'RECEIVE' && e.t > t)?.t ?? t
 
 const sequenceOrigin = {
   label: 'Sequence Origin',
+  icon: '⇄',
   source: 'backend/analysis/sequence_origin.py',
   headline: (i) =>
     i.pattern === 'ONE_TWO'
@@ -81,7 +83,7 @@ const sequenceOrigin = {
     secondsBeforeShot: ['Began before the shot', 's', 1],
   },
   Overlay: SequenceOriginOverlay,
-  Body: SequenceOriginBody,
+  Hero: SequenceOriginHero,
 }
 
 export const VIEWS = {
