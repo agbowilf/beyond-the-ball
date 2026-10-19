@@ -1,11 +1,13 @@
 # Architecture
 
 ```
-scenarios/generate_*.py  ->  scenarios/*.json   (frames + events)
-backend/analysis/        ->  structured insights (JSON with numeric evidence)
-Foundry agents (planned) ->  explanations and personalisation
-frontend/ (planned)      ->  pitch replay with highlighted insight
+scenarios/generate_*.py  ->  scenarios/*.json               (frames + events)
+backend/analysis/        ->  scenarios/*.insights.json      (insights with numeric evidence)
+backend/explain/         ->  scenarios/*.explanations.json  (checked explanations, per audience)
+frontend/                ->  pitch replay, insight tabs, evidence and explanations
 ```
+
+See `docs/agents.md` for how the Microsoft Foundry agents write and check explanations.
 
 ## Principles
 
