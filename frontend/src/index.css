@@ -1,28 +1,31 @@
 :root {
-  /* "Programme" palette: matchday-programme paper and ink, with an orange accent. */
+  /* "Programme" palette: matchday-programme paper and ink, with a deep purple accent and lime highlights,
+     in the spirit of English top-flight broadcast graphics (no league logos, names or typefaces). */
   --bg: #f3efe6;
-  --surface: #fffdf8;
-  --surface-2: #ece6d9;
+  --surface: #f6f1f8;
+  --surface-2: #ece3ef;
   --border: rgba(20, 22, 26, 0.12);
   --text: #15171b;
-  --muted: #6c6f77;
+  --muted: #5f626a;
   --grass: #1b5a34;
   --grass-stripe: #1e6239;
   --line: rgba(255, 255, 255, 0.82);
   --home: #e5484d;
   --away: #3e8ef7;
-  --accent: #ef5a24;
-  --space: #157a55;
+  --accent: #37003c;
+  --lime: #00ff85;
+  --on-lime: #37003c;
+  --space: #00824a;
   --on-accent: #ffffff;
   --on-text: #ffffff;
   --score-bg: #15171b;
   --on-score: #ffffff;
   --caption-bg: rgba(21, 23, 27, 0.92);
   --caption-text: #ffffff;
-  --bg-glow: rgba(239, 90, 36, 0.06);
+  --bg-glow: rgba(55, 0, 60, 0.06);
   /* On-pitch graphics get their own high-contrast colours: they sit on grass and on red and blue players. */
   --pitch-accent: #ffd23f;
-  --pitch-space: #8ee8ff;
+  --pitch-space: #04f5ff;
   --shadow: 0 12px 32px rgba(20, 22, 26, 0.16);
   --shadow-small: 0 4px 14px rgba(20, 22, 26, 0.14);
   --display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
@@ -214,8 +217,8 @@ main {
   display: flex;
   align-items: center;
   padding: 6px 12px;
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--lime);
+  color: var(--on-lime);
   font-size: 15px;
   font-weight: 800;
   white-space: nowrap;
@@ -464,6 +467,17 @@ select {
   font-size: 14px;
 }
 
+.panel-top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: -16px -16px 0;
+  padding: 14px 16px 16px;
+  border-radius: 13px 13px 0 0;
+  background: var(--accent);
+  color: #fff;
+}
+
 .tabs {
   display: flex;
   gap: 6px;
@@ -475,9 +489,9 @@ select {
   gap: 10px;
   padding: 9px 10px;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background: transparent;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
   font-weight: 600;
   text-align: left;
@@ -497,17 +511,17 @@ select {
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: var(--surface-2);
+  background: rgba(255, 255, 255, 0.1);
   font-size: 15px;
 }
 .tabs button[aria-selected='true'] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
-  color: var(--text);
+  border-color: var(--lime);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
 }
 .tabs button[aria-selected='true'] .tab-icon {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--lime);
+  color: var(--on-lime);
 }
 
 .lens {
@@ -516,14 +530,14 @@ select {
   gap: 4px;
   padding: 4px;
   border-radius: 999px;
-  background: var(--surface-2);
+  background: rgba(255, 255, 255, 0.1);
 }
 .lens > span {
   padding: 0 8px;
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
 }
 .lens button {
@@ -532,14 +546,14 @@ select {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
 .lens button[aria-pressed='true'] {
-  background: var(--text);
-  color: var(--on-text);
+  background: var(--lime);
+  color: var(--on-lime);
 }
 
 .kicker {
@@ -553,7 +567,7 @@ select {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--space);
+  color: var(--accent);
 }
 .kicker .conf {
   padding: 2px 8px;
@@ -574,41 +588,42 @@ select {
 }
 
 .hero-stat {
-  padding: 14px;
+  padding: 16px;
   border-radius: 12px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--space) 12%, transparent), color-mix(in srgb, var(--space) 2%, transparent));
-  border: 1px solid color-mix(in srgb, var(--space) 20%, transparent);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 78%, #7a1f86));
+  color: #fff;
+  box-shadow: var(--shadow-small);
 }
 .hero-label {
   font-size: 12px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.72);
 }
 .hero-numbers {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 4px 0 8px;
+  margin: 4px 0 10px;
   font-family: var(--display);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .hero-numbers .from {
   font-size: 30px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.55);
 }
 .hero-numbers .arrow {
   font-size: 26px;
-  color: var(--space);
+  color: var(--lime);
 }
 .hero-numbers .big {
   font-size: 56px;
   line-height: 0.9;
-  color: var(--text);
+  color: #fff;
 }
 .hero-numbers .unit {
   font-size: 20px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.6);
 }
 .hero-chips {
   display: flex;
@@ -619,7 +634,7 @@ select {
 .chip {
   padding: 3px 10px;
   border-radius: 999px;
-  border: 1px dashed color-mix(in srgb, var(--text) 50%, transparent);
+  border: 1px dashed rgba(255, 255, 255, 0.6);
   font-family: var(--display);
   font-size: 16px;
   font-weight: 700;
@@ -627,17 +642,17 @@ select {
 .hero-track {
   position: relative;
   height: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   border-radius: 3px;
-  background: color-mix(in srgb, var(--text) 8%, transparent);
+  background: rgba(255, 255, 255, 0.16);
 }
 .hero-track .fill {
   position: absolute;
   top: 0;
   bottom: 0;
   border-radius: 3px;
-  background: var(--space);
-  opacity: 0.5;
+  background: var(--lime);
+  opacity: 0.55;
 }
 .hero-track .dot {
   position: absolute;
@@ -645,16 +660,16 @@ select {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--space);
-  border: 2px solid var(--surface);
+  background: var(--lime);
+  border: 2px solid var(--accent);
   transform: translate(-50%, -50%);
 }
 .hero-sub {
   font-size: 12px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.72);
 }
 .hero-sub b {
-  color: var(--space);
+  color: var(--lime);
   font-variant-numeric: tabular-nums;
 }
 
