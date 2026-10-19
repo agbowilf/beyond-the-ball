@@ -1,22 +1,35 @@
 :root {
-  --bg: #07090d;
-  --surface: #0f141b;
-  --surface-2: #161d27;
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #eef2f6;
-  --muted: #8a96a6;
+  /* "Programme" palette: matchday-programme paper and ink, with an orange accent. */
+  --bg: #f3efe6;
+  --surface: #fffdf8;
+  --surface-2: #ece6d9;
+  --border: rgba(20, 22, 26, 0.12);
+  --text: #15171b;
+  --muted: #6c6f77;
   --grass: #1b5a34;
   --grass-stripe: #1e6239;
   --line: rgba(255, 255, 255, 0.82);
   --home: #e5484d;
   --away: #3e8ef7;
-  --accent: #f5d90a;
-  --space: #46d39a;
+  --accent: #ef5a24;
+  --space: #157a55;
+  --on-accent: #ffffff;
+  --on-text: #ffffff;
+  --score-bg: #15171b;
+  --on-score: #ffffff;
+  --caption-bg: rgba(21, 23, 27, 0.92);
+  --caption-text: #ffffff;
+  --bg-glow: rgba(239, 90, 36, 0.06);
+  /* On-pitch graphics get their own high-contrast colours: they sit on grass and on red and blue players. */
+  --pitch-accent: #ffd23f;
+  --pitch-space: #8ee8ff;
+  --shadow: 0 12px 32px rgba(20, 22, 26, 0.16);
+  --shadow-small: 0 4px 14px rgba(20, 22, 26, 0.14);
   --display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
   color: var(--text);
   background: var(--bg);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -27,7 +40,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(1200px 500px at 30% -10%, rgba(70, 211, 154, 0.08), transparent 70%),
+    radial-gradient(1200px 500px at 30% -10%, var(--bg-glow), transparent 70%),
     var(--bg);
 }
 
@@ -81,7 +94,7 @@ main {
   overflow: hidden;
   border-radius: 8px;
   background: var(--surface-2);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-small);
   font-family: var(--display);
   font-size: 20px;
   font-weight: 700;
@@ -128,8 +141,8 @@ main {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: #fff;
-  color: #0b0f14;
+  background: var(--score-bg);
+  color: var(--on-score);
   font-size: 22px;
   font-variant-numeric: tabular-nums;
   animation: goal-flash 0.9s ease-out;
@@ -143,7 +156,7 @@ main {
   align-items: center;
   padding: 6px 12px;
   background: var(--accent);
-  color: #0b0f14;
+  color: var(--on-accent);
   font-variant-numeric: tabular-nums;
   min-width: 68px;
   justify-content: center;
@@ -154,7 +167,7 @@ main {
     transform: scale(1.12);
   }
   100% {
-    background: #fff;
+    background: var(--score-bg);
     transform: scale(1);
   }
 }
@@ -175,7 +188,7 @@ main {
   position: relative;
   overflow: hidden;
   border-radius: 14px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow);
 }
 
 .pitch {
@@ -202,14 +215,15 @@ main {
   align-items: center;
   padding: 6px 12px;
   background: var(--accent);
-  color: #0b0f14;
+  color: var(--on-accent);
   font-size: 15px;
   font-weight: 800;
   white-space: nowrap;
 }
 .lt-text {
   padding: 6px 14px;
-  background: rgba(8, 11, 16, 0.86);
+  background: var(--caption-bg);
+  color: var(--caption-text);
   backdrop-filter: blur(6px);
   font-size: 22px;
   font-weight: 700;
@@ -245,7 +259,7 @@ main {
   pointer-events: none;
 }
 .player .tag {
-  fill: var(--accent);
+  fill: var(--pitch-accent);
   font-family: var(--display);
   font-size: 1.6px;
   font-weight: 800;
@@ -263,17 +277,17 @@ main {
 .player.runner circle,
 .player.marker circle,
 .player.origin circle {
-  stroke: var(--accent);
+  stroke: var(--pitch-accent);
   stroke-width: 0.45;
 }
 .player.receiver circle,
 .player.partner circle {
-  stroke: var(--space);
+  stroke: var(--pitch-space);
   stroke-width: 0.45;
 }
 .player.receiver .tag,
 .player.partner .tag {
-  fill: var(--space);
+  fill: var(--pitch-space);
 }
 .player.bypassed circle {
   stroke: #fff;
@@ -285,20 +299,20 @@ main {
 }
 
 .highlight .space {
-  fill: var(--space);
+  fill: var(--pitch-space);
   fill-opacity: 0.18;
-  stroke: var(--space);
+  stroke: var(--pitch-space);
   stroke-width: 0.3;
   stroke-dasharray: 1 0.8;
 }
 .highlight .gap {
-  stroke: var(--space);
+  stroke: var(--pitch-space);
   stroke-width: 0.2;
   stroke-dasharray: 0.6 0.6;
 }
 .highlight .target {
   fill: none;
-  stroke: var(--space);
+  stroke: var(--pitch-space);
   stroke-width: 0.35;
 }
 .highlight .trail {
@@ -328,11 +342,11 @@ main {
   fill: var(--away);
 }
 .highlight .pass {
-  stroke: var(--accent);
+  stroke: var(--pitch-accent);
   stroke-width: 0.35;
 }
 .highlight .chain {
-  stroke: var(--accent);
+  stroke: var(--pitch-accent);
   stroke-width: 0.25;
   stroke-opacity: 0.7;
   stroke-dasharray: 0.8 0.5;
@@ -370,10 +384,10 @@ main {
   border-radius: 50%;
   border: 0;
   background: var(--accent);
-  color: #0b0f14;
+  color: var(--on-accent);
   font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(245, 217, 10, 0.25);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .timeline {
@@ -488,12 +502,12 @@ select {
 }
 .tabs button[aria-selected='true'] {
   border-color: var(--accent);
-  background: rgba(245, 217, 10, 0.06);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
   color: var(--text);
 }
 .tabs button[aria-selected='true'] .tab-icon {
   background: var(--accent);
-  color: #0b0f14;
+  color: var(--on-accent);
 }
 
 .lens {
@@ -525,7 +539,7 @@ select {
 }
 .lens button[aria-pressed='true'] {
   background: var(--text);
-  color: #0b0f14;
+  color: var(--on-text);
 }
 
 .kicker {
@@ -544,7 +558,7 @@ select {
 .kicker .conf {
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(245, 217, 10, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
   color: var(--accent);
   font-size: 12px;
   font-weight: 600;
@@ -562,8 +576,8 @@ select {
 .hero-stat {
   padding: 14px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(70, 211, 154, 0.12), rgba(70, 211, 154, 0.02));
-  border: 1px solid rgba(70, 211, 154, 0.2);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--space) 12%, transparent), color-mix(in srgb, var(--space) 2%, transparent));
+  border: 1px solid color-mix(in srgb, var(--space) 20%, transparent);
 }
 .hero-label {
   font-size: 12px;
@@ -605,7 +619,7 @@ select {
 .chip {
   padding: 3px 10px;
   border-radius: 999px;
-  border: 1px dashed rgba(255, 255, 255, 0.5);
+  border: 1px dashed color-mix(in srgb, var(--text) 50%, transparent);
   font-family: var(--display);
   font-size: 16px;
   font-weight: 700;
@@ -615,7 +629,7 @@ select {
   height: 6px;
   margin-bottom: 8px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
 }
 .hero-track .fill {
   position: absolute;
@@ -746,7 +760,7 @@ select {
   border-top: 1px solid var(--border);
 }
 .evidence div.cited {
-  background: rgba(70, 211, 154, 0.12);
+  background: color-mix(in srgb, var(--space) 12%, transparent);
   border-radius: 4px;
 }
 .evidence dt {
@@ -821,3 +835,4 @@ select {
     animation: none;
   }
 }
+

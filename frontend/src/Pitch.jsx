@@ -44,7 +44,7 @@ export default function Pitch({ state, focus = {}, children }) {
     >
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" />
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--pitch-accent)" />
         </marker>
         {/* Floodlit look: brighter centre, darker edges. */}
         <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
