@@ -1,7 +1,7 @@
 {
   "scenarioId": "01_decoy_run",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-19T15:11:32+00:00",
+  "generatedAt": "2026-10-19T15:29:38+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -9,34 +9,58 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "fan",
-      "headline": "H10's run pulls A6 away creating space for a teammate",
+      "headline": "No. 10's run pulls defender away from teammate",
       "claims": [
         {
-          "text": "H10 moved 14.5 metres in the 5 seconds before the pass at 6 seconds.",
+          "text": "North London Red's No. 10 ran far, dragging the defender marking them well away.",
           "evidence": [
             "runnerDisplacementM",
-            "t"
+            "markerDisplacementM"
           ]
         },
         {
-          "text": "A6 followed H10\u2019s run closely, moving 9.6 metres in the same time and matching the direction almost exactly.",
+          "text": "This opened up a big space where the pass was received.",
           "evidence": [
+            "markerDistanceToTargetStartM",
+            "markerDistanceToTargetEndM"
+          ]
+        },
+        {
+          "text": "Just over two seconds after the pass, the teammate took a shot.",
+          "evidence": [
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    },
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H10",
+      "status": "approved",
+      "audience": "coach",
+      "headline": "The runner\u2019s movement pulled the marker away, creating space for a teammate",
+      "claims": [
+        {
+          "text": "H10 made a 14.5-metre run that caused marker A6 to follow over 9.6 metres with a very closely matched direction.",
+          "evidence": [
+            "runnerDisplacementM",
             "markerDisplacementM",
             "markerFollowCosine"
           ]
         },
         {
-          "text": "Because A6 moved away, the defender nearest the receiving spot was 5.0 metres away at the start and 11.1 metres away when the pass was played.",
+          "text": "A6\u2019s distance to the receiving zone increased from 5.0 to 11.1 metres between the start and the moment the ball was played.",
           "evidence": [
             "markerDistanceToTargetStartM",
-            "markerDistanceToTargetEndM",
-            "nearestDefenderToTargetStartM",
-            "nearestDefenderToTargetEndM"
+            "markerDistanceToTargetEndM"
           ]
         },
         {
-          "text": "A teammate had a shot just 2.2 seconds after the pass was made.",
+          "text": "This created a space where the nearest defender was 11.1 metres away when the pass was played, leading to a shot 2.2 seconds later.",
           "evidence": [
+            "nearestDefenderToTargetEndM",
             "shotSecondsAfterPass"
           ]
         }
@@ -48,77 +72,72 @@
       "type": "SPACE_CREATOR",
       "playerId": "H10",
       "status": "approved",
-      "audience": "coach",
-      "headline": "Off-ball run pulls defender away to create receiving space",
-      "claims": [
-        {
-          "text": "H10 moved 14.5 meters off-ball in the 5 seconds before the pass at 6.0 seconds.",
-          "evidence": [
-            "runnerDisplacementM",
-            "t",
-            "playerId"
-          ]
-        },
-        {
-          "text": "The defender A6 followed H10's run closely, moving 9.6 meters with a direction match of 0.99.",
-          "evidence": [
-            "markerDisplacementM",
-            "markerFollowCosine",
-            "markerId"
-          ]
-        },
-        {
-          "text": "A6 was 5.0 meters from the receiving zone at run start and increased to 11.1 meters when the pass was played, creating space for the teammate.",
-          "evidence": [
-            "markerDistanceToTargetStartM",
-            "markerDistanceToTargetEndM",
-            "markerId"
-          ]
-        },
-        {
-          "text": "The nearest defender to the receiving zone also moved from 5.0 to 11.1 meters between run start and pass play timing.",
-          "evidence": [
-            "nearestDefenderToTargetStartM",
-            "nearestDefenderToTargetEndM"
-          ]
-        }
-      ],
-      "attempts": 1
-    },
-    {
-      "insightIndex": 0,
-      "type": "SPACE_CREATOR",
-      "playerId": "H10",
-      "status": "approved",
       "audience": "analyst",
-      "headline": "Off-ball run by H10 creates space for teammate at 6 seconds",
+      "headline": "Runner H10 created space by dragging marker A6 from receiving zone",
       "claims": [
         {
-          "text": "Player H10 moved 14.5 metres in the 5 seconds before the pass at 6.0 seconds.",
+          "text": "At 6.0 seconds, player H10 moved 14.5 metres over the 5 seconds before the pass with 0.9 confidence from the detector.",
           "evidence": [
+            "t",
+            "playerId",
             "runnerDisplacementM",
-            "t"
+            "confidence"
           ]
         },
         {
-          "text": "Defender A6 followed H10's run over 9.6 metres with a cosine match of 0.99.",
+          "text": "The marker A6 moved 9.6 metres in the same period following H10 with a marker follow cosine of 0.99, indicating closely matched movement directions.",
           "evidence": [
+            "markerId",
             "markerDisplacementM",
             "markerFollowCosine"
           ]
         },
         {
-          "text": "A6's distance to the receiving zone increased from 5.0 to 11.1 metres when the pass was played.",
+          "text": "The marker\u2019s distance to the receiving zone increased from 5.0 metres at the run start to 11.1 metres when the pass was played, creating the space.",
           "evidence": [
             "markerDistanceToTargetStartM",
             "markerDistanceToTargetEndM"
           ]
         },
         {
-          "text": "The nearest defender to the receiving zone was 5.0 metres away at run start and 11.1 metres at pass time.",
+          "text": "The nearest defender to the receiving zone also moved from 5.0 metres to 11.1 metres during this time, and the shot occurred 2.2 seconds after the pass.",
           "evidence": [
             "nearestDefenderToTargetStartM",
-            "nearestDefenderToTargetEndM"
+            "nearestDefenderToTargetEndM",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H8",
+      "status": "approved",
+      "audience": "fan",
+      "headline": "No. 8 starts a quick one-two to unlock defence",
+      "claims": [
+        {
+          "text": "North London Red's No. 8 passed to No. 6 to begin the move.",
+          "evidence": [
+            "playerId",
+            "partnerId",
+            "team"
+          ]
+        },
+        {
+          "text": "No. 6 returned the ball past two South Coast Blue defenders shortly after.",
+          "evidence": [
+            "partnerId",
+            "bypassedIds"
+          ]
+        },
+        {
+          "text": "The sequence gained 24 metres and led to a shot within six seconds.",
+          "evidence": [
+            "progressionM",
+            "secondsBeforeShot"
           ]
         }
       ],
@@ -129,35 +148,28 @@
       "type": "SEQUENCE_ORIGIN",
       "playerId": "H8",
       "status": "approved",
-      "audience": "fan",
-      "headline": "H8 and H6's quick one-two breaks two defenders",
+      "audience": "coach",
+      "headline": "One-two pass sequence bypassed two opponents and advanced attack",
       "claims": [
         {
-          "text": "The chance began when H8 played the origin pass at 2.4 seconds for North London Red.",
+          "text": "Player H8 started the attack with a pass at 2.4 seconds, followed by player H6 returning a line-breaking pass at 3.1 seconds that bypassed two opponents, A10 and A11.",
           "evidence": [
             "t",
-            "team",
-            "playerId"
-          ]
-        },
-        {
-          "text": "H6 returned the line-breaking pass at 3.1 seconds, bypassing two South Coast Blue defenders A10 and A11.",
-          "evidence": [
+            "playerId",
             "partnerId",
             "lineBreakingPassT",
-            "bypassedIds",
-            "opponentsBypassed"
+            "bypassedIds"
           ]
         },
         {
-          "text": "The attack moved forward over 24 metres with a total of three passes leading to the shot.",
+          "text": "This one-two sequence involved three passes from the origin to the shot and progressed the ball 24 metres toward the goal.",
           "evidence": [
             "passesToShot",
             "progressionM"
           ]
         },
         {
-          "text": "The chance started 5.8 seconds before the shot and 3.6 seconds before the final pass.",
+          "text": "The chance began 5.8 seconds before the shot, with the key pass starting 3.6 seconds before the final assist.",
           "evidence": [
             "secondsBeforeShot",
             "secondsBeforeFinalPass"
@@ -171,74 +183,42 @@
       "type": "SEQUENCE_ORIGIN",
       "playerId": "H8",
       "status": "approved",
-      "audience": "coach",
-      "headline": "One-two pass breaks two opponents advancing 24 meters",
+      "audience": "analyst",
+      "headline": "One-two sequence initiated by H8 bypassed opponents and led to a shot",
       "claims": [
         {
-          "text": "Player H8 played the origin pass at 2.4 seconds in a one-two pattern.",
+          "text": "At 2.4 seconds, H8 played the origin pass of a one-two sequence with 0.78 confidence.",
           "evidence": [
             "t",
             "playerId",
-            "pattern"
+            "pattern",
+            "confidence"
           ]
         },
         {
-          "text": "Player H6 returned the line-breaking pass at 3.1 seconds bypassing opponents A10 and A11.",
+          "text": "The line-breaking return pass from H6 to H8 at 3.1 seconds bypassed two opponents, A10 and A11.",
           "evidence": [
-            "partnerId",
             "lineBreakingPassT",
+            "partnerId",
             "bypassedIds"
           ]
         },
         {
-          "text": "The sequence from the origin pass to the shot included three passes covering 24 meters forward.",
+          "text": "From the origin pass to the shot, the team made three passes and progressed 24.0 metres toward the goal.",
           "evidence": [
             "passesToShot",
             "progressionM"
           ]
-        }
-      ],
-      "attempts": 1
-    },
-    {
-      "insightIndex": 1,
-      "type": "SEQUENCE_ORIGIN",
-      "playerId": "H8",
-      "status": "approved",
-      "audience": "analyst",
-      "headline": "One-two pass by H8 and H6 initiated chance with 24 m progression",
-      "claims": [
-        {
-          "text": "The origin pass was played by H8 at 2.4 seconds.",
-          "evidence": [
-            "t",
-            "playerId"
-          ]
         },
         {
-          "text": "H6 played the line-breaking return pass at 3.1 seconds, bypassing 2 opponents A10 and A11.",
-          "evidence": [
-            "partnerId",
-            "lineBreakingPassT",
-            "bypassedIds",
-            "opponentsBypassed"
-          ]
-        },
-        {
-          "text": "The sequence included 3 passes from the origin to the shot.",
-          "evidence": [
-            "passesToShot"
-          ]
-        },
-        {
-          "text": "The chance began 5.8 seconds before the shot and progressed 24.0 metres from the origin pass to the shot.",
+          "text": "The chance started 5.8 seconds before the shot and 3.6 seconds before the final pass.",
           "evidence": [
             "secondsBeforeShot",
-            "progressionM"
+            "secondsBeforeFinalPass"
           ]
         }
       ],
-      "attempts": 1
+      "attempts": 2
     }
   ]
 }
