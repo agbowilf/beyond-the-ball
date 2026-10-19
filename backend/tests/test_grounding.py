@@ -35,13 +35,25 @@ def test_rounded_numbers_are_allowed():
 def test_invented_number_is_rejected():
     exp = _explanation(("A6 was dragged 20 m out of position.", ["markerDisplacementM"]))
     problems = check(SPACE, exp)
-    assert len(problems) == 1 and "20" in problems[0]
+    assert len(problems) == 1 and "Number 20" in problems[0]
 
 
 def test_derived_number_is_rejected():
     # 11.1 - 5.0 = 6.1 is true, but it is not a measured value, so it must not be quoted.
     exp = _explanation(("A6 ended 6.1 m further from the zone.", ["markerDistanceToTargetEndM"]))
     assert any("6.1" in p for p in check(SPACE, exp))
+
+
+def test_number_must_come_from_the_cited_fields():
+    # 11.1 is a real value (A6's distance at the pass), but not of the field this claim cites.
+    exp = _explanation(("H10 ran 11.1 m off the ball.", ["runnerDisplacementM"]))
+    assert any("11.1" in p and "fields this claim cites" in p for p in check(SPACE, exp))
+
+
+def test_numbers_from_a_cited_field_definition_are_allowed():
+    # The 5 s window is part of runnerDisplacementM's definition.
+    exp = _explanation(("H10 ran 14.5 m in the 5 seconds before the pass.", ["runnerDisplacementM"]))
+    assert check(SPACE, exp) == []
 
 
 def test_claim_without_evidence_is_rejected():

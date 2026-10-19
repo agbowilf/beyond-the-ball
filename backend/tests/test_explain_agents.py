@@ -65,7 +65,7 @@ def test_invented_number_triggers_a_revision_with_the_guard_problem():
     assert result["status"] == "approved" and result["attempts"] == 2
     revision_prompt = runner.calls[2][1]
     assert runner.calls[2][0] == "explainer"
-    assert "Number 20 is not in the insight" in revision_prompt
+    assert "Number 20 is not in the fields this claim cites" in revision_prompt
 
 
 def test_fact_checker_rejection_also_triggers_a_revision():
