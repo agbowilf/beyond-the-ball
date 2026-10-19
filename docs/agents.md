@@ -23,7 +23,7 @@ fields that claim cites         speculative
    |                                  |
    +----------------+-----------------+
                     |
-        any problem? -> Explainer revises once with the feedback
+        any problem? -> Explainer revises with the feedback (up to twice)
         still failing? -> explanation withheld, never shown
                     |
    scenarios/*.explanations.json  ->  reviewed by a person, then committed  ->  replay
@@ -35,6 +35,19 @@ fields that claim cites         speculative
   value of a field the claim cites (as stored, to one decimal, or rounded to a whole number), a cited confidence as a
   percentage, or part of a cited field's definition (such as the 5 s detection window). Derived numbers, such as a
   difference between two distances, are rejected even when true.
+- **Audience style rules** (`backend/explain/style.py`) keep the three versions clearly different, and are checked in
+  code like the guard:
+
+  | | Fan | Coach | Analyst |
+  |---|---|---|---|
+  | Numbers | at most one in total | at most two per sentence | at least one per sentence |
+  | Players | "North London Red's No. 10" | ids | ids |
+  | Vocabulary | no jargon (marker, receiving zone, bypass, cosine...) | coaching terms that fit the insight type | technical terms |
+  | Sentences | 2–3, under 22 words | exactly 3 | 3–4 |
+
+  For every audience: headlines quote no numbers, and there is no praise or criticism (clever, precise...), no player
+  positions (midfielder, defensive line...) and no raw field names or codes (markerFollowCosine, ONE_TWO). A shirt
+  number must belong to a player the insight names.
 - **Field definitions** (`backend/explain/glossary.py`) come from `docs/detection-rules.md`, so agents explain the
   numbers instead of guessing what they mean.
 
@@ -44,6 +57,17 @@ Generated explanations are read against the evidence before they are committed. 
 misquoted numbers, but not every meaning error. Reviewing the first live run found two the checks missed: the
 one-two's origin pass was credited with the line break, and the shot was timed from when the pass was received.
 Both were fixed by sharpening the field definitions and instructions, not by editing the output.
+
+Making the audiences distinct surfaced more of the same kind: invented locations ("near the line"), speeds
+("sprinted"), positions ("midfield duo"), praise ("precise timing") and a derived figure in a headline ("over 6
+metres of space"). Each was turned into a rule in the guard or style checks, so it cannot come back unnoticed.
+`backend/tests/test_explanations_file.py` re-checks every committed explanation against all current rules in CI.
+
+To regenerate one explanation without touching the others:
+
+```bash
+.venv/bin/python -m backend.explain scenarios/01_decoy_run.insights.json --only SEQUENCE_ORIGIN:coach
+```
 
 ## Running
 
