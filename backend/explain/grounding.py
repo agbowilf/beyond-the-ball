@@ -1,17 +1,29 @@
 """Deterministic grounding guard for agent-written explanations.
 
 The AI layer may only rephrase what the detectors measured. This guard rejects an explanation that
-cites a field the insight does not have, makes a claim with no cited field, or quotes a number that
-cannot be traced to the insight. It needs no model, so it is cheap, repeatable and testable.
+cites a field the insight does not have, makes a claim with no cited field, quotes a number that
+cannot be traced to the insight, or names a shirt number of a player the insight does not involve. It needs no model, so it is cheap, repeatable and testable.
 """
 import math
 import re
 
 from .glossary import COMMON_FIELDS, FIELDS, citable_fields
 
-# Player ids such as H10 or A6 contain digits but are not quantities.
+# Player ids such as H10 or A6, and shirt numbers such as "No. 10", contain digits but are not quantities.
 PLAYER_ID = re.compile(r"\b[HA]\d{1,2}\b")
+SHIRT = re.compile(r"\b(?:No\.|number|#)\s?(\d{1,2})\b", re.IGNORECASE)
 NUMBER = re.compile(r"\d+(?:\.\d+)?")
+
+
+def quantities(text):
+    """The numbers in `text` that state a quantity, ignoring player ids and shirt numbers."""
+    return NUMBER.findall(SHIRT.sub("", PLAYER_ID.sub("", text)))
+
+
+def involved_shirts(insight):
+    """Shirt numbers of every player the insight names."""
+    ids = [insight.get(k) for k in ("playerId", "markerId", "partnerId")] + insight.get("bypassedIds", [])
+    return {int(pid[1:]) for pid in ids if pid}
 
 
 def _whole(v):
@@ -45,7 +57,7 @@ def allowed_numbers(insight, fields):
 
 
 def _unsupported_numbers(text, allowed):
-    return [raw for raw in NUMBER.findall(PLAYER_ID.sub("", text)) if float(raw) not in allowed]
+    return [raw for raw in quantities(text) if float(raw) not in allowed]
 
 
 def check(insight, explanation):
@@ -65,7 +77,14 @@ def check(insight, explanation):
         for raw in _unsupported_numbers(claim.text, allowed_numbers(insight, claim.evidence)):
             problems.append(f'Number {raw} is not in the fields this claim cites: "{claim.text}"')
 
-    # The headline cites nothing, so its numbers may come from any field.
-    for raw in _unsupported_numbers(explanation.headline, allowed_numbers(insight, fields)):
-        problems.append(f'Number {raw} is not in the insight: "{explanation.headline}"')
+    # A shirt number must belong to a player the insight names.
+    shirts = involved_shirts(insight)
+    for text in [explanation.headline] + [c.text for c in explanation.claims]:
+        for raw in SHIRT.findall(text):
+            if int(raw) not in shirts:
+                problems.append(f'No. {raw} is not a player in this insight: "{text}"')
+
+    # The headline cites nothing, so it may not quote numbers; they belong in cited claims.
+    if quantities(explanation.headline):
+        problems.append(f'The headline may not quote numbers; put them in a cited claim: "{explanation.headline}"')
     return problems

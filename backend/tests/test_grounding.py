@@ -56,6 +56,23 @@ def test_numbers_from_a_cited_field_definition_are_allowed():
     assert check(SPACE, exp) == []
 
 
+def test_shirt_numbers_of_involved_players_are_not_quantities():
+    exp = _explanation(("North London Red's No. 10 ran 14.5 m and No. 6 followed.",
+                        ["runnerDisplacementM", "markerId"]), headline="No. 10 opens the space")
+    assert check(SPACE, exp) == []
+
+
+def test_shirt_number_of_an_uninvolved_player_is_rejected():
+    exp = _explanation(("No. 7 ran 14.5 m off the ball.", ["runnerDisplacementM"]))
+    assert any("No. 7 is not a player in this insight" in p for p in check(SPACE, exp))
+
+
+def test_headline_may_not_quote_numbers():
+    # 6 matches the 6.0 s timestamp, but "6 metres of space" is a derived figure; headlines cite nothing.
+    exp = _explanation(("H10 ran 14.5 m.", ["runnerDisplacementM"]), headline="H10's run created over 6 metres of space")
+    assert any("headline may not quote numbers" in p for p in check(SPACE, exp))
+
+
 def test_claim_without_evidence_is_rejected():
     exp = _explanation(("H10 is the best runner in the league.", []))
     assert any("cites no evidence" in p for p in check(SPACE, exp))
