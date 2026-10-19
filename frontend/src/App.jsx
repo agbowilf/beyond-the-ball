@@ -1,19 +1,41 @@
+import { useState } from 'react'
 import Controls from './Controls.jsx'
 import EvidencePanel from './EvidencePanel.jsx'
-import Highlight, { ArrowDef } from './Highlight.jsx'
 import OffsideLine from './OffsideLine.jsx'
 import Pitch from './Pitch.jsx'
-import { insights, LOOKBACK_S, passFor, scenario, stateAt } from './data.js'
+import { insights, scenario, stateAt } from './data.js'
 import { useReplay } from './useReplay.js'
+import { VIEWS } from './views/index.js'
+
+// Only insight types the replay knows how to draw.
+const shown = insights.filter((i) => VIEWS[i.type])
+const finalPassT = Math.max(...scenario.events.filter((e) => e.type === 'PASS').map((e) => e.t))
+
+// Optional ?insight=1 in the URL opens that tab.
+const initialIndex = () => {
+  const v = Number(new URLSearchParams(window.location.search).get('insight'))
+  return Number.isInteger(v) && v >= 0 && v < shown.length ? v : 0
+}
 
 export default function App() {
   const replay = useReplay()
+  const [index, setIndex] = useState(initialIndex)
   const state = stateAt(replay.t)
   const { HOME, AWAY } = scenario.teams
-  const insight = insights[0]
-  const pass = passFor(insight)
-  const focus = { [insight.playerId]: 'runner', [insight.markerId]: 'marker', [pass.targetPlayerId]: 'receiver' }
-  const marks = [{ key: 'window', from: insight.t - LOOKBACK_S, to: insight.t, label: 'Off-ball run window' }]
+  const insight = shown[index]
+  const view = VIEWS[insight.type]
+  const Overlay = view.Overlay
+
+  const tabs = shown.length > 1 && (
+    <div className="tabs" role="tablist">
+      {shown.map((i, k) => (
+        <button key={`${i.type}-${i.t}`} role="tab" aria-selected={k === index} onClick={() => setIndex(k)}>
+          {VIEWS[i.type].label}
+          <small>{i.playerId}</small>
+        </button>
+      ))}
+    </div>
+  )
 
   return (
     <div className="app">
@@ -26,13 +48,20 @@ export default function App() {
       </header>
       <main>
         <section className="stage">
-          <Pitch state={state} focus={focus} defs={<ArrowDef />}>
-            <OffsideLine state={state} until={pass.t} />
-            <Highlight t={replay.t} state={state} insight={insight} pass={pass} />
+          <Pitch state={state} focus={view.focus(insight)}>
+            <OffsideLine state={state} until={finalPassT} />
+            <Overlay t={replay.t} state={state} insight={insight} />
           </Pitch>
-          <Controls replay={replay} marks={marks} />
+          <Controls replay={replay} marks={view.marks(insight)} />
         </section>
-        <EvidencePanel t={replay.t} state={state} insight={insight} pass={pass} onSeek={replay.seek} />
+        <EvidencePanel
+          t={replay.t}
+          state={state}
+          insight={insight}
+          view={view}
+          onSeek={replay.seek}
+          tabs={tabs}
+        />
       </main>
     </div>
   )

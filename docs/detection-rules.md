@@ -58,3 +58,68 @@ Weights are a v0.1 starting point and will be tuned against more scenarios.
 - One marker per runner (nearest at window start). Zonal marking is not modelled.
 - Goalkeepers are excluded from marker and nearest-defender checks.
 - Only chances ending in a shot are considered.
+
+## Sequence Origin (v0.1)
+
+Goal: find the action where a chance really began. That is often well before the assist: the pass that
+first broke a line of the opponent's shape, after which the attack kept moving toward goal.
+
+### Possession chain
+
+Starting from a `SHOT`, walk back through completed `PASS` events by the same team: the pass whose
+`targetPlayerId` is the current holder, then the pass to that pass's `playerId`, and so on, looking back at
+most **15 s** before the shot. Each pass is received at the receiver's next `RECEIVE` event.
+
+### Opponents bypassed
+
+For each pass, an opposing outfield player is **goal-side** if they are nearer the attacked goal than the ball
+(for HOME, `x` greater than the ball's `x`). A player is **bypassed** if goal-side in the frame when the pass is
+played and not goal-side in the frame when it is received.
+
+### Origin
+
+The origin is the **earliest** pass in the chain that:
+
+1. bypasses at least **2** opponents (it breaks a line), and
+2. is followed only by passes that do not go backward by more than **2 m**, so the attack keeps progressing
+   to the shot.
+
+If that pass is the return of a wall pass (the previous pass in the chain went from its receiver to its
+passer, within **2 s**), the origin is the first pass of that **one-two**, since the lay-off set it up.
+
+### Output fields
+
+| Field | Meaning |
+|---|---|
+| `playerId` | Who played the origin pass |
+| `partnerId` | The other player in the one-two, or the receiver of a single line-breaking pass |
+| `pattern` | `ONE_TWO` or `LINE_BREAKING_PASS` |
+| `bypassedIds` | Opponents taken out by the line-breaking pass |
+
+### Evidence
+
+| Field | Meaning |
+|---|---|
+| `opponentsBypassed` | Number of opponents the line-breaking pass took out |
+| `lineBreakingPassT` | When the line-breaking pass was played (the return, for a one-two) |
+| `passesToShot` | Passes from the origin to the shot, origin included |
+| `progressionM` | Distance gained toward goal from the origin pass to the shot |
+| `secondsBeforeFinalPass` | How long before the assist the chance began |
+| `secondsBeforeShot` | How long before the shot the chance began |
+
+### Confidence
+
+```
+lines    = clip(opponents_bypassed / 3, 0, 1)
+progress = clip(progression_m / 25, 0, 1)
+confidence = 0.6*lines + 0.4*progress
+```
+
+Weights are a v0.1 starting point, like Space Creator's.
+
+### Known limits
+
+- A dribble that beats players is not counted; only passes can bypass opponents until carries are modelled
+  as events.
+- Goalkeepers are never counted as bypassed.
+- One origin per shot; earlier line breaks in the same chain are not reported.

@@ -1,4 +1,4 @@
-import { LOOKBACK_S, nearestOutfield, player, stateAt } from './data.js'
+import { LOOKBACK_S, nearestOutfield, passFor, player, stateAt } from '../data.js'
 
 const TRAIL_STEP_S = 0.1
 
@@ -11,7 +11,8 @@ function trail(id, from, to) {
 
 // Overlay drawn in pitch coordinates (y up). Shows the run, the marker being dragged
 // and the free space around the pass target growing as the marker leaves.
-export default function Highlight({ t, state, insight, pass }) {
+export default function SpaceCreatorOverlay({ t, state, insight }) {
+  const pass = passFor(insight)
   const start = insight.t - LOOKBACK_S
   if (t < start) return null
 
@@ -48,14 +49,3 @@ export default function Highlight({ t, state, insight, pass }) {
     </g>
   )
 }
-
-export function ArrowDef() {
-  return (
-    <defs>
-      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
-        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" />
-      </marker>
-    </defs>
-  )
-}
-

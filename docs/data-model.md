@@ -80,4 +80,28 @@ Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
 }
 ```
 
+A Sequence Origin insight (see `docs/detection-rules.md`) adds who started the move and which opponents
+it took out:
+
+```json
+{
+  "type": "SEQUENCE_ORIGIN",
+  "t": 2.4,
+  "team": "HOME",
+  "playerId": "H8",
+  "partnerId": "H6",
+  "pattern": "ONE_TWO",
+  "bypassedIds": ["A10", "A11"],
+  "confidence": 0.78,
+  "evidence": {
+    "opponentsBypassed": 2,
+    "lineBreakingPassT": 3.1,
+    "passesToShot": 3,
+    "progressionM": 24.0,
+    "secondsBeforeFinalPass": 3.6,
+    "secondsBeforeShot": 5.8
+  }
+}
+```
+
 Every insight must carry numeric evidence so downstream AI can explain it without guessing.
