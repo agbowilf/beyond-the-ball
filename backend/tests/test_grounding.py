@@ -19,16 +19,16 @@ def _explanation(*claims, headline="H10's decoy run opened the space"):
 
 def test_grounded_explanation_passes():
     exp = _explanation(
-        ("H10 ran 14.5 m off the ball and A6 followed.", ["runnerDisplacementM", "markerId"]),
-        ("A6 ended 11.1 m from where H11 received, up from 5.0 m.",
+        ("H10 ran 14.2 m off the ball and A6 followed.", ["runnerDisplacementM", "markerId"]),
+        ("A6 ended 9.3 m from where H11 received, up from 5.4 m.",
          ["markerDistanceToTargetEndM", "markerDistanceToTargetStartM"]),
-        ("The detector is 90% confident.", ["confidence"]),
+        ("The detector is 69% confident.", ["confidence"]),
     )
     assert check(SPACE, exp) == []
 
 
 def test_rounded_numbers_are_allowed():
-    exp = _explanation(("H10 ran about 15 m and A6 about 10 m.", ["runnerDisplacementM", "markerDisplacementM"]))
+    exp = _explanation(("H10 ran about 14 m and A6 about 7 m.", ["runnerDisplacementM", "markerDisplacementM"]))
     assert check(SPACE, exp) == []
 
 
@@ -39,31 +39,31 @@ def test_invented_number_is_rejected():
 
 
 def test_derived_number_is_rejected():
-    # 11.1 - 5.0 = 6.1 is true, but it is not a measured value, so it must not be quoted.
-    exp = _explanation(("A6 ended 6.1 m further from the zone.", ["markerDistanceToTargetEndM"]))
-    assert any("6.1" in p for p in check(SPACE, exp))
+    # 14.2 + 7.2 = 21.4 is true, but it is not a measured value, so it must not be quoted.
+    exp = _explanation(("H10 and A6 covered 21.4 m between them.", ["runnerDisplacementM", "markerDisplacementM"]))
+    assert any("21.4" in p for p in check(SPACE, exp))
 
 
 def test_number_must_come_from_the_cited_fields():
-    # 11.1 is a real value (A6's distance at the pass), but not of the field this claim cites.
-    exp = _explanation(("H10 ran 11.1 m off the ball.", ["runnerDisplacementM"]))
-    assert any("11.1" in p and "fields this claim cites" in p for p in check(SPACE, exp))
+    # 9.3 is a real value (A6's distance at the pass), but not of the field this claim cites.
+    exp = _explanation(("H10 ran 9.3 m off the ball.", ["runnerDisplacementM"]))
+    assert any("9.3" in p and "fields this claim cites" in p for p in check(SPACE, exp))
 
 
 def test_numbers_from_a_cited_field_definition_are_allowed():
     # The 5 s window is part of runnerDisplacementM's definition.
-    exp = _explanation(("H10 ran 14.5 m in the 5 seconds before the pass.", ["runnerDisplacementM"]))
+    exp = _explanation(("H10 ran 14.2 m in the 5 seconds before the pass.", ["runnerDisplacementM"]))
     assert check(SPACE, exp) == []
 
 
 def test_shirt_numbers_of_involved_players_are_not_quantities():
-    exp = _explanation(("North London Red's No. 10 ran 14.5 m and No. 6 followed.",
+    exp = _explanation(("North London Red's No. 10 ran 14.2 m and No. 6 followed.",
                         ["runnerDisplacementM", "markerId"]), headline="No. 10 opens the space")
     assert check(SPACE, exp) == []
 
 
 def test_shirt_number_of_an_uninvolved_player_is_rejected():
-    exp = _explanation(("No. 7 ran 14.5 m off the ball.", ["runnerDisplacementM"]))
+    exp = _explanation(("No. 7 ran 14.2 m off the ball.", ["runnerDisplacementM"]))
     assert any("No. 7 is not a player in this insight" in p for p in check(SPACE, exp))
 
 
@@ -76,8 +76,8 @@ def test_headline_may_not_quote_numbers():
 def test_values_inside_confidence_parts_are_citable():
     exp = _explanation(("The free-space part of the confidence was 1.0.", ["confidenceParts"]))
     assert check(SPACE, exp) == []
-    wrong = _explanation(("The free-space part of the confidence was 0.5.", ["confidenceParts"]))
-    assert any("0.5" in p for p in check(SPACE, wrong))
+    wrong = _explanation(("The free-space part of the confidence was 0.3.", ["confidenceParts"]))
+    assert any("0.3" in p for p in check(SPACE, wrong))
 
 
 def test_claim_without_evidence_is_rejected():
