@@ -9,7 +9,7 @@ const sy = (y) => W - y
 // Label placement per highlighted role, chosen so tags in the same view do not collide.
 const TAG_POS = {
   runner: { x: 0, y: -2.3, anchor: 'middle' },
-  marker: { x: 0, y: 3.4, anchor: 'middle' },
+  marker: { x: 1.9, y: 0.55, anchor: 'start' },
   receiver: { x: -1.9, y: 0.55, anchor: 'end' },
   origin: { x: 0, y: -2.3, anchor: 'middle' },
   partner: { x: 1.9, y: 0.55, anchor: 'start' },

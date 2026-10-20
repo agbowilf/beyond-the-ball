@@ -33,9 +33,9 @@ export default function SpaceCreatorOverlay({ t, state, insight }) {
       <line className="gap" x1={target.x} y1={target.y} x2={nearest.player.x} y2={nearest.player.y} />
       <circle className="target" cx={target.x} cy={target.y} r={1.6} />
       {labelled && (
-        // Inside the shaded space, upright: this layer uses pitch coordinates (y up), so the text is flipped back.
-        // Not on the circle's edge, where the nearest defender always is.
-        <text className="space-label" transform="scale(1 -1)" x={target.x} y={-(target.y + nearest.d * 0.5)}>
+        // Inside the shaded space on the goal side, upright: this layer uses pitch coordinates (y up), so the
+        // text is flipped back. Away from the circle's edge, where the nearest defender always is.
+        <text className="space-label" transform="scale(1 -1)" x={target.x + nearest.d * 0.55} y={-target.y + 0.8}>
           ×{insight.evidence.freeSpaceRatio.toFixed(1)} space
         </text>
       )}
