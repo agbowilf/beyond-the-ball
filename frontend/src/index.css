@@ -364,6 +364,23 @@ main {
   stroke-opacity: 0.7;
   stroke-dasharray: 0.8 0.5;
 }
+.highlight .chain.origin-pass {
+  stroke-width: 0.55;
+  stroke-opacity: 1;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 0.6px var(--pitch-accent));
+}
+.start-tag rect {
+  fill: var(--lime);
+}
+.start-tag text {
+  fill: var(--on-lime);
+  font-family: var(--display);
+  font-size: 1.9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+}
 .highlight .chain.break {
   stroke-width: 0.45;
   stroke-opacity: 1;
@@ -715,51 +732,6 @@ select {
   color: #fff;
   box-shadow: var(--shadow-small);
 }
-.hero-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.72);
-}
-.hero-numbers {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 4px 0 10px;
-  font-family: var(--display);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-.hero-numbers .from {
-  font-size: 30px;
-  color: rgba(255, 255, 255, 0.55);
-}
-.hero-numbers .arrow {
-  font-size: 26px;
-  color: var(--lime);
-}
-.hero-numbers .big {
-  font-size: 56px;
-  line-height: 0.9;
-  color: #fff;
-}
-.hero-numbers .unit {
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.6);
-}
-.hero-chips {
-  display: flex;
-  gap: 6px;
-  margin-left: auto;
-  align-self: center;
-}
-.chip {
-  padding: 3px 10px;
-  border-radius: 999px;
-  border: 1px dashed rgba(255, 255, 255, 0.6);
-  font-family: var(--display);
-  font-size: 16px;
-  font-weight: 700;
-}
 .why-head {
   display: flex;
   justify-content: space-between;
@@ -838,6 +810,36 @@ select {
   font-size: 24px;
   color: var(--lime);
 }
+.why-rule {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.78);
+}
+.why-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.why-stats div {
+  display: flex;
+  flex-direction: column;
+}
+.why-stats dd {
+  order: -1;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+.why-stats dt {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
 .why-rows {
   margin: 0;
   font-size: 12px;
@@ -857,15 +859,6 @@ select {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.hero-sub {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.72);
-}
-.hero-sub b {
-  color: var(--lime);
-  font-variant-numeric: tabular-nums;
 }
 
 .grounded {

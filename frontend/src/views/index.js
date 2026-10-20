@@ -81,9 +81,9 @@ const sequenceOrigin = {
       i.pattern === 'ONE_TWO'
         ? [
             { label: `${i.playerId} lays it off to ${i.partnerId}`, t: i.t },
-            { label: `${i.partnerId}'s return beats ${i.evidence.opponentsBypassed}`, t: breakT },
+            { label: `${i.partnerId}'s return bypasses ${i.evidence.opponentsBypassed}`, t: breakT },
           ]
-        : [{ label: `${i.playerId}'s pass beats ${i.evidence.opponentsBypassed}`, t: i.t }]
+        : [{ label: `${i.playerId}'s pass bypasses ${i.evidence.opponentsBypassed}`, t: i.t }]
     if (assist && assist.t > breakT) steps.push({ label: `${assist.playerId}'s assist`, t: assist.t })
     return [...steps, ...finish()]
   },
@@ -94,12 +94,12 @@ const sequenceOrigin = {
     if (i.pattern === 'ONE_TWO' && t < breakT) return `${i.playerId} lays it off to ${i.partnerId}`
     if (t < receivedAt(breakT)) {
       const passer = i.pattern === 'ONE_TWO' ? i.partnerId : i.playerId
-      return `${passer}'s pass takes ${out} out of play`
+      return `${passer}'s pass bypasses ${out}`
     }
     return null
   },
   labels: {
-    opponentsBypassed: ['Opponents taken out', '', 0],
+    opponentsBypassed: ['Opponents bypassed', '', 0],
     lineBreakingPassT: ['Line-breaking pass at', 's', 1],
     passesToShot: ['Passes from origin to shot', '', 0],
     progressionM: ['Ground gained to the shot', 'm', 1],
@@ -107,7 +107,7 @@ const sequenceOrigin = {
     secondsBeforeShot: ['Began before the shot', 's', 1],
   },
   confidenceParts: {
-    lines: ['Players taken out', '0.6'],
+    lines: ['Opponents bypassed', '0.6'],
     progress: ['Ground gained to the shot', '0.4'],
   },
   Overlay: SequenceOriginOverlay,
