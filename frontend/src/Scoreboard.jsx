@@ -38,7 +38,9 @@ export default function Scoreboard({ t }) {
         </span>
         <span className="match-clock">{`0:${t.toFixed(1).padStart(4, '0')}`}</span>
       </div>
-      <div className="replay-badge">Replay · synthetic data</div>
+      <div className="replay-badge">
+        <i aria-hidden="true" /> Replaying detected moment
+      </div>
     </header>
   )
 }

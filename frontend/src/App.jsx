@@ -77,6 +77,7 @@ export default function App() {
           tabs={tabs}
         />
       </main>
+      <footer className="disclosure">Synthetic match · all clubs, players and data are fictional.</footer>
     </div>
   )
 }
