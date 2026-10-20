@@ -1,9 +1,13 @@
+import { useState } from 'react'
+import Explanation from './Explanation.jsx'
 import { lastEventText } from './data.js'
 
 // Shared panel for every insight type; `view` supplies the type-specific wording and body.
 export default function EvidencePanel({ t, state, insight, view, onSeek, tabs }) {
   const confidence = Math.round(insight.confidence * 100)
   const Body = view.Body
+  const [audience, setAudience] = useState('fan')
+  const [cited, setCited] = useState([])
 
   return (
     <aside className="panel">
@@ -31,6 +35,8 @@ export default function EvidencePanel({ t, state, insight, view, onSeek, tabs })
         ))}
       </div>
 
+      <Explanation insight={insight} labels={view.labels} audience={audience} onAudience={setAudience} onCite={setCited} />
+
       {Body && <Body t={t} state={state} insight={insight} />}
 
       <h3>Evidence</h3>
@@ -38,7 +44,7 @@ export default function EvidencePanel({ t, state, insight, view, onSeek, tabs })
         {Object.entries(insight.evidence).map(([k, v]) => {
           const [label, unit, decimals] = view.labels[k] ?? [k, '', 2]
           return (
-            <div key={k}>
+            <div key={k} className={cited.includes(k) ? 'cited' : undefined}>
               <dt>{label}</dt>
               <dd>
                 {v.toFixed(decimals)}
