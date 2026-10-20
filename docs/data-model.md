@@ -62,32 +62,32 @@ Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
 ```json
 {
   "type": "SPACE_CREATOR",
-  "t": 6.0,
+  "t": 10.0,
   "team": "HOME",
   "playerId": "H10",
   "markerId": "A6",
   "targetZone": "central lane, penalty area",
-  "confidence": 0.9,
+  "confidence": 0.69,
   "confidenceParts": {
-    "pull": 0.76,
-    "follow": 0.99,
-    "free": 1.0
+    "pull": 0.49,
+    "follow": 1.0,
+    "free": 0.65
   },
   "evidence": {
-    "runnerDisplacementM": 14.5,
-    "markerDisplacementM": 9.6,
-    "markerFollowCosine": 0.99,
-    "markerDistanceToTargetStartM": 5.0,
-    "markerDistanceToTargetEndM": 11.1,
-    "nearestDefenderToTargetStartM": 5.0,
-    "nearestDefenderToTargetEndM": 11.1,
+    "runnerDisplacementM": 14.2,
+    "markerDisplacementM": 7.2,
+    "markerFollowCosine": 1.0,
+    "markerDistanceToTargetStartM": 5.4,
+    "markerDistanceToTargetEndM": 9.3,
+    "nearestDefenderToTargetStartM": 5.4,
+    "nearestDefenderToTargetEndM": 9.3,
     "shotSecondsAfterPass": 2.2,
     "runnerTouches": 0,
-    "freeSpaceStartM2": 78,
-    "freeSpaceEndM2": 387,
-    "freeSpaceGainM2": 309,
-    "freeSpaceRatio": 5.0,
-    "markerPullM": 6.1
+    "freeSpaceStartM2": 93,
+    "freeSpaceEndM2": 274,
+    "freeSpaceGainM2": 181,
+    "freeSpaceRatio": 2.9,
+    "markerPullM": 3.9
   }
 }
 ```
@@ -98,7 +98,7 @@ it took out:
 ```json
 {
   "type": "SEQUENCE_ORIGIN",
-  "t": 2.4,
+  "t": 6.4,
   "team": "HOME",
   "playerId": "H8",
   "partnerId": "H6",
@@ -114,7 +114,7 @@ it took out:
   },
   "evidence": {
     "opponentsBypassed": 2,
-    "lineBreakingPassT": 3.1,
+    "lineBreakingPassT": 7.1,
     "passesToShot": 3,
     "progressionM": 24.0,
     "secondsBeforeFinalPass": 3.6,
