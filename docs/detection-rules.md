@@ -41,6 +41,19 @@ The opposing outfield player nearest to the runner at the window start.
 | `markerDistanceToTargetStartM` / `EndM` | Marker distance to the target zone before and after |
 | `nearestDefenderToTargetStartM` / `EndM` | Nearest opposing outfield player to the target zone before and after |
 | `shotSecondsAfterPass` | Delay between pass and shot |
+| `runnerTouches` | Times the runner played, received or shot the ball from the window start to the shot (`PASS`, `RECEIVE`, `SHOT` events) |
+| `freeSpaceStartM2` / `EndM2` | Free space at the target zone before and after: the area of the circle around it, out to the nearest opposing outfield player (`π × nearestDefenderToTarget²`) |
+| `freeSpaceGainM2` | `freeSpaceEndM2 - freeSpaceStartM2` |
+| `freeSpaceRatio` | `freeSpaceEndM2 / freeSpaceStartM2`, from the unrounded areas ("4.9× more receiving space") |
+| `markerPullM` | How much further the marker ended from the target zone: `markerDistanceToTargetEndM - markerDistanceToTargetStartM` |
+
+### Target zone label
+
+`targetZone` names where the pass was received, from the attacking team's point of view, using the standard five
+lanes (split at the penalty-area and goal-area edges, y = 13.84, 24.84, 43.16 and 54.16 m) and the area of the
+pitch: `"<lane>, <area>"`, for example `"central lane, penalty area"`. Lanes are `left wing`, `left half-space`,
+`central lane`, `right half-space` and `right wing`; areas are `penalty area`, `attacking third`, `middle third` or
+`defensive third`. HOME attacks +x, so HOME's left is high y.
 
 ### Confidence
 
@@ -50,6 +63,9 @@ follow = clip(cosine, 0, 1)
 free   = clip((nearest_end - nearest_start) / 6, 0, 1)
 confidence = 0.4*pull + 0.3*follow + 0.3*free
 ```
+
+The three parts are reported as `confidenceParts` (`pull`, `follow`, `free`, each 0 to 1) so a reader can see why
+the score is what it is.
 
 Weights are a v0.1 starting point and will be tuned against more scenarios.
 
@@ -114,6 +130,8 @@ lines    = clip(opponents_bypassed / 3, 0, 1)
 progress = clip(progression_m / 25, 0, 1)
 confidence = 0.6*lines + 0.4*progress
 ```
+
+Reported as `confidenceParts` (`lines`, `progress`).
 
 Weights are a v0.1 starting point, like Space Creator's.
 

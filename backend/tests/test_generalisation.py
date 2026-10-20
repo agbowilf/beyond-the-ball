@@ -66,10 +66,22 @@ def _relabel_insight(insight):
     return out
 
 
+def _swap_sides(insight):
+    """Mirroring across the width swaps the attackers' left and right."""
+    out = copy.deepcopy(insight)
+    if "targetZone" in out:
+        out["targetZone"] = (out["targetZone"].replace("left", "\0").replace("right", "left").replace("\0", "right"))
+    return out
+
+
 def test_same_move_down_the_other_flank():
     scenario = _load_generator().build()
     mirrored = _transform(scenario, lambda x, y: (x, WIDTH - y))
-    assert analyse(mirrored) == analyse(scenario)
+    assert analyse(mirrored) == [_swap_sides(i) for i in analyse(scenario)]
+
+
+def test_side_swap_relabels_off_centre_zones():
+    assert _swap_sides({"targetZone": "left half-space, penalty area"})["targetZone"] == "right half-space, penalty area"
 
 
 def test_same_move_by_the_away_team():

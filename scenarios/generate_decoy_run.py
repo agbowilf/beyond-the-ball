@@ -5,11 +5,13 @@ insight labels; the analysis engine has to find the pattern on its own.
 
 Pitch: 105 x 68 m. HOME attacks toward +x.
 
-Story: HOME work the ball from H6 to H8, who carries it at a 4-4-2 AWAY block. H10, in the pocket in
-front of centre-back A6, checks toward the ball and then spins out into the right channel. A6 follows a
-beat late, which empties the gap between the centre-backs. H9 holds A5 in place and H11 makes a blindside
-run from the left into that gap, timed to stay onside, and scores. Every attacker is level with or behind
-the AWAY back line until the final pass.
+Story: HOME's centre-backs circulate the ball (H4 to H5, then into H6) before H6 finds H8, who beats
+A10's press with a one-two and carries at a 4-4-2 AWAY block. H10, in the pocket in front of
+centre-back A6, checks toward the ball and then spins out into the right channel. A6 follows for a few
+metres, then hands H10 on to full-back A3 and holds, but has already been pulled out of the gap between
+the centre-backs. H9 holds A5 in place and H11 makes a blindside run from the left into that gap, timed
+to stay onside. A7 sprints back to cover but arrives as H11 shoots and scores. Every attacker is level
+with or behind the AWAY back line until the final pass.
 """
 import json
 import math
@@ -18,12 +20,15 @@ import sys
 from pathlib import Path
 
 HZ = 5
-DURATION = 10.0  # seconds
+MOVE_S = 10.0  # the attacking move, from H6's pass to H8 onwards
+BUILD_UP_S = 4.0  # build-up play before it
+DURATION = BUILD_UP_S + MOVE_S  # seconds
 SEED = 7
 NOISE_M = 0.06
 SWAY_M = 0.25  # slow idle drift so nobody stands perfectly still
 
 # Keyframes: player -> list of (t, x, y). Smooth (Catmull-Rom) interpolation through keyframes.
+# Times in HOME and AWAY count from the start of the move; build-up keyframes are added below.
 HOME = {
     "H1": [(0, 40, 34), (6, 43, 34), (10, 46, 34)],
     # Left back overlaps outside H11 to give A2 a second problem
@@ -61,34 +66,59 @@ AWAY = {
     # Held by H9, then tracks H9's far-post run
     "A5": [(0, 84, 27), (2, 84.4, 26), (4, 85.4, 24.5), (6, 86.2, 24), (7.4, 88, 28), (8.2, 90, 29.5),
            (10, 92.5, 32)],
-    # Right centre-back: reacts to H10's check, follows the run a beat late, then lets H10 go wide
-    "A6": [(0, 84, 42), (1, 84, 42.5), (2, 83, 44), (3, 83.5, 46.5), (4, 84.5, 49), (5, 85.3, 50.5),
-           (6, 86, 51.5), (7.4, 88, 50), (10, 89.5, 49)],
-    "A3": [(0, 84, 58), (3, 84.5, 60), (6, 85, 61.5), (8, 89, 59), (10, 92, 57)],  # stays wide with H7
+    # Right centre-back: reacts to H10's check, follows the run for a few metres, then hands H10 on to A3
+    # and holds, already pulled out of the gap
+    "A6": [(0, 84, 42), (1, 84, 42.5), (2, 83, 44), (3, 83.6, 46.3), (4, 84.6, 48.6), (5, 85.3, 49.6), (6, 85.8, 50),
+           (7.4, 87.5, 46.5), (10, 90, 47.5)],
+    "A3": [(0, 84, 58), (3, 84.5, 60), (6, 85.5, 60), (8, 88.5, 58.5), (10, 91, 57)],  # stays wide with H7, then picks up H10
     # Midfield four steps up and narrows on the ball, then sprints back. A4 shades toward H2's overlap
     "A4": [(0, 74, 19), (3, 73.5, 20.5), (6, 74.5, 19), (8, 78, 22), (10, 82, 26)],
     # Screening midfielder steps across to block H8 after the one-two
     "A8": [(0, 74, 30), (2, 72.5, 31.5), (3.9, 73, 33), (5, 73.8, 34.6), (6, 74.6, 35), (8, 77.5, 34), (10, 81, 33.5)],
     # Presses H8 tight, turns to follow the lay-off and is bypassed by the return, then chases
-    "A10": [(0, 75, 41), (1.4, 72, 39), (2.4, 68.8, 37), (2.8, 67.8, 35.2), (3.4, 66.2, 33.2), (4.5, 68.8, 34.3),
+    "A10": [(0, 75, 41), (1.4, 72, 39), (2.4, 69.4, 37.6), (2.8, 67.8, 35.2), (3.4, 66.2, 33.2), (4.5, 68.8, 34.3),
             (6, 71, 35.3), (8, 74.5, 34.5), (10, 78.5, 35)],
-    "A7": [(0, 74, 52), (3, 74, 50), (6, 75, 48.5), (8, 79, 47), (10, 83, 46)],
+    # Spots the space opening and sprints back to cover it, arriving as H11 shoots
+    "A7": [(0, 74, 52), (3, 74, 50), (4.5, 74.8, 48.8), (6, 78, 47.5), (7.4, 86, 43.4), (8.2, 87.6, 43), (10, 88.5, 43.5)],
     # Front two: A9 presses H6 and follows H6's support run
     "A9": [(0, 62.5, 26.5), (0.6, 60.5, 28.5), (2, 61, 26.8), (3.1, 64, 27.5), (6, 66, 28.5), (10, 69, 29.5)],
     # A11 screens H8's side, then closes H8 down after the return
     "A11": [(0, 66, 41), (2, 66.5, 41.5), (4.5, 69, 40.5), (6, 71, 39.8), (10, 72, 40)],
 }
 
-PASS_T, RECEIVE_T, SHOT_T, GOAL_T = 6.0, 7.4, 8.2, 8.9
+# Build-up: absolute times before BUILD_UP_S. H4 plays across to H5, who finds H6; nobody is bypassed.
+# Players without an entry drift from slightly further back (HOME) or higher up (AWAY) into the move.
+BUILD_UP = {
+    "H4": [(0, 46, 25.5), (0.4, 46.3, 25.6), (2.5, 48, 26)],
+    "H5": [(0, 45.5, 42), (1.4, 46.2, 41.6), (2.0, 46.6, 41.3), (3.0, 48.5, 41.8)],
+    "H6": [(0, 52.5, 35), (2.0, 53.5, 33.5), (2.8, 54.8, 32.5), (3.5, 56.5, 31)],
+}
+
+
+def _with_build_up(roster, drift):
+    out = {}
+    for pid, keys in roster.items():
+        _, x0, y0 = keys[0]
+        prefix = BUILD_UP.get(pid, [(0, x0 - drift, y0)])
+        out[pid] = prefix + [(t + BUILD_UP_S, x, y) for t, x, y in keys]
+    return out
+
+
+HOME = _with_build_up(HOME, drift=3)
+AWAY = _with_build_up(AWAY, drift=2)
+
+PASS_T, RECEIVE_T, SHOT_T, GOAL_T = (BUILD_UP_S + t for t in (6.0, 7.4, 8.2, 8.9))
 TARGET = (89.0, 41.0)
 GOAL_POINT = (106.0, 31.2)  # low, across the keeper, inside the far post (y=30.34)
 
 # Ball possession plan: (passer, pass t, receiver, receive t, end point or None for the receiver's feet).
 # Between passes the ball sits at the current holder's feet.
 PASSES = [
-    ("H6", 0.6, "H8", 1.4, None),
-    ("H8", 2.4, "H6", 2.8, None),  # one-two: lay-off under A10's pressure...
-    ("H6", 3.1, "H8", 3.9, None),  # ...and first-time return into H8's run past A10
+    ("H4", 0.4, "H5", 1.4, None),  # build-up across the back...
+    ("H5", 2.0, "H6", 2.8, None),  # ...and into midfield
+    ("H6", BUILD_UP_S + 0.6, "H8", BUILD_UP_S + 1.4, None),
+    ("H8", BUILD_UP_S + 2.4, "H6", BUILD_UP_S + 2.8, None),  # one-two: lay-off under A10's pressure...
+    ("H6", BUILD_UP_S + 3.1, "H8", BUILD_UP_S + 3.9, None),  # ...and first-time return into H8's run past A10
     ("H8", PASS_T, "H11", RECEIVE_T, TARGET),
 ]
 SHOT = ("H11", SHOT_T, GOAL_T, GOAL_POINT)  # shooter, shot t, goal t, where the ball ends

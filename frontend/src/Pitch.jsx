@@ -9,7 +9,7 @@ const sy = (y) => W - y
 // Label placement per highlighted role, chosen so tags in the same view do not collide.
 const TAG_POS = {
   runner: { x: 0, y: -2.3, anchor: 'middle' },
-  marker: { x: 0, y: 3.4, anchor: 'middle' },
+  marker: { x: 1.9, y: 0.55, anchor: 'start' },
   receiver: { x: -1.9, y: 0.55, anchor: 'end' },
   origin: { x: 0, y: -2.3, anchor: 'middle' },
   partner: { x: 1.9, y: 0.55, anchor: 'start' },
@@ -17,7 +17,7 @@ const TAG_POS = {
 }
 
 function Markings() {
-  const line = { fill: 'none', stroke: 'var(--line)', strokeWidth: 0.25 }
+  const line = { fill: 'none', stroke: 'var(--line)', strokeWidth: 0.22 }
   const box = (x, w, h) => <rect x={x} y={(W - h) / 2} width={w} height={h} {...line} />
   return (
     <g>
@@ -34,7 +34,7 @@ function Markings() {
   )
 }
 
-export default function Pitch({ state, focus = {}, children }) {
+export default function Pitch({ state, focus = {}, dimOthers = false, children }) {
   return (
     <svg
       className="pitch"
@@ -44,20 +44,33 @@ export default function Pitch({ state, focus = {}, children }) {
     >
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)" />
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--pitch-accent)" />
         </marker>
+        {/* Floodlit look: brighter centre, darker edges. */}
+        <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+          <stop offset="55%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.45" />
+        </radialGradient>
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="0.35" stdDeviation="0.35" floodColor="#000" floodOpacity="0.55" />
+        </filter>
       </defs>
       <rect x={-PAD} y={-PAD} width={L + 2 * PAD} height={W + 2 * PAD} fill="var(--grass)" />
-      {Array.from({ length: 10 }, (_, i) => (
-        <rect key={i} x={i * (L / 10)} y={0} width={L / 20} height={W} fill="var(--grass-stripe)" />
+      {Array.from({ length: 12 }, (_, i) => (
+        <rect key={i} x={i * (L / 12)} y={0} width={L / 24} height={W} fill="var(--grass-stripe)" />
       ))}
+      <rect x={-PAD} y={-PAD} width={L + 2 * PAD} height={W + 2 * PAD} fill="url(#vignette)" />
       <Markings />
       <g transform={`translate(0 ${W}) scale(1 -1)`}>{children}</g>
       {state.players.map((p) => {
         const role = focus[p.id]
         return (
-          <g key={p.id} transform={`translate(${p.x} ${sy(p.y)})`} className={`player ${p.team} ${role ?? ''}`}>
-            <circle r={role ? 1.5 : 1.15} />
+          <g
+            key={p.id}
+            transform={`translate(${p.x} ${sy(p.y)})`}
+            className={`player ${p.team} ${role ?? (dimOthers ? 'dimmed' : '')}`}
+          >
+            <circle r={role ? 1.5 : 1.15} filter="url(#shadow)" />
             <text y={0.45}>{p.id.slice(1)}</text>
           </g>
         )

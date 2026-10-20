@@ -18,7 +18,7 @@ CONTEXT = {"teams": {"HOME": "North London Red", "AWAY": "South Coast Blue"}}
 GROUNDED = Explanation(headline="No. 10's run opens up the space", claims=[
     Claim(text="North London Red's No. 10 ran off the ball, and South Coast Blue's No. 6 went with them.",
           evidence=["runnerDisplacementM", "markerId", "markerFollowCosine"]),
-    Claim(text="That left the space wide open, with the nearest defender 11.1 m away.",
+    Claim(text="That left the space wide open, with the nearest defender 9.3 m away.",
           evidence=["nearestDefenderToTargetEndM"]),
 ])
 INVENTED = Explanation(headline="H10's run pulled A6 out of the space", claims=[
@@ -64,9 +64,9 @@ def test_explainer_sees_the_evidence_definitions_and_audience():
 
 def test_too_technical_fan_draft_is_sent_back():
     technical = Explanation(headline="H10's run creates space", claims=[
-        Claim(text="H10 ran 14.5 m and A6 followed with a cosine of 0.99.",
+        Claim(text="H10 ran 14.2 m and A6 followed with a cosine of 1.0.",
               evidence=["runnerDisplacementM", "markerFollowCosine"]),
-        Claim(text="A6 ended 11.1 m from the receiving zone.", evidence=["markerDistanceToTargetEndM"]),
+        Claim(text="A6 ended 9.3 m from the receiving zone.", evidence=["markerDistanceToTargetEndM"]),
     ])
     runner = FakeRunner([technical, GROUNDED], [APPROVED, APPROVED])
     result = _explain(runner)

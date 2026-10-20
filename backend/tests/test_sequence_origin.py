@@ -27,6 +27,12 @@ def test_detects_one_two_as_origin():
     assert top["evidence"]["opponentsBypassed"] == 2
 
 
+def test_confidence_is_the_weighted_parts():
+    top = detect_sequence_origins(_load_generator().build())[0]
+    p = top["confidenceParts"]
+    assert abs(top["confidence"] - (0.6 * p["lines"] + 0.4 * p["progress"])) <= 0.01
+
+
 def test_origin_comes_before_the_assist():
     scenario = _load_generator().build()
     final_pass = max(e["t"] for e in scenario["events"] if e["type"] == "PASS")
@@ -38,7 +44,8 @@ def test_origin_comes_before_the_assist():
 def test_single_line_breaking_pass_without_one_two():
     scenario = copy.deepcopy(_load_generator().build())
     # Drop the one-two: the chain becomes H6 -> H8 -> H11, and only the assist breaks a line.
-    scenario["events"] = [e for e in scenario["events"] if not 2.0 < e["t"] < 4.0]
+    one_two = next(e["t"] for e in scenario["events"] if e["type"] == "PASS" and e["playerId"] == "H8")
+    scenario["events"] = [e for e in scenario["events"] if not one_two <= e["t"] < one_two + 1.6]
     top = detect_sequence_origins(scenario)[0]
     assert top["pattern"] == "LINE_BREAKING_PASS"
     assert (top["playerId"], top["partnerId"]) == ("H8", "H11")

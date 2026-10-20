@@ -1,62 +1,93 @@
 import { useState } from 'react'
+import ConfidenceBadge from './ConfidenceBadge.jsx'
 import Explanation from './Explanation.jsx'
-import { lastEventText } from './data.js'
+import { AUDIENCES, explanationFor, explanations } from './data.js'
 
-// Shared panel for every insight type; `view` supplies the type-specific wording and body.
-export default function EvidencePanel({ t, state, insight, view, onSeek, tabs }) {
-  const confidence = Math.round(insight.confidence * 100)
-  const Body = view.Body
-  const [audience, setAudience] = useState('fan')
+// The full evidence table, folded away unless the reader wants the numbers (open by default for analysts).
+// Keyed by audience in the panel, so switching audience resets it to that audience's default.
+function Numbers({ insight, view, cited, defaultOpen, provenance }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <section className={`numbers ${open ? 'open' : ''}`}>
+      <button className="numbers-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
+        Why we detected this
+        <span aria-hidden="true">{open ? '▴' : '▾'}</span>
+      </button>
+      {open && (
+        <>
+          <dl className="evidence">
+            {Object.entries(insight.evidence).map(([k, v]) => {
+              const [label, unit, decimals] = view.labels[k] ?? [k, '', 2]
+              return (
+                <div key={k} className={cited.includes(k) ? 'cited' : undefined}>
+                  <dt>{label}</dt>
+                  <dd>
+                    {v.toFixed(decimals)}
+                    {unit && <small> {unit}</small>}
+                  </dd>
+                </div>
+              )
+            })}
+          </dl>
+          <p className="source">
+            Measured by <code>{view.source}</code> from raw positions and events only.
+            {provenance && (
+              <>
+                {' '}
+                The explanation was written by an Explainer agent and checked by a Fact-checker agent on Microsoft
+                Foundry ({explanations.model}, Microsoft Agent Framework), plus code checks on every claim and number.
+              </>
+            )}
+          </p>
+        </>
+      )}
+    </section>
+  )
+}
+
+// Shared panel for every insight type; `view` supplies the type-specific wording and hero stat.
+export default function EvidencePanel({ t, state, insight, view, audience, onAudience, tabs }) {
   const [cited, setCited] = useState([])
+  const exp = explanationFor(insight, audience)
+  const Hero = view.Hero
 
   return (
     <aside className="panel">
-      {tabs}
-      <div className="panel-head">
-        <span className="badge">{view.label}</span>
-        <span className="conf" title="Detector confidence">
-          {confidence}% confidence
-        </span>
-      </div>
-      <h2>{view.headline(insight)}</h2>
-      <div className="meter" aria-hidden="true">
-        <span style={{ width: `${confidence}%` }} />
-      </div>
-
-      <p className="phase">
-        <span className="clock-chip">{t.toFixed(1)}s</span> {view.phase(t, insight) ?? lastEventText(t) ?? 'Build-up'}
-      </p>
-
-      <div className="jumps">
-        {view.jumps(insight).map((j) => (
-          <button key={j.label} onClick={() => onSeek(j.t)}>
-            {j.label}
-          </button>
-        ))}
+      <div className="panel-top">
+        {tabs}
+        <div className="lens" role="group" aria-label="Watch as">
+          <span>Watch as</span>
+          {AUDIENCES.map((a) => (
+            <button key={a} aria-pressed={a === audience} onClick={() => onAudience(a)}>
+              {a[0].toUpperCase() + a.slice(1)}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <Explanation insight={insight} labels={view.labels} audience={audience} onAudience={setAudience} onCite={setCited} />
+      <div className="kicker">
+        <span className="type">{view.label}</span>
+        <ConfidenceBadge insight={insight} parts={view.confidenceParts} />
+      </div>
+      <h2>{exp?.headline ?? view.headline(insight)}</h2>
 
-      {Body && <Body t={t} state={state} insight={insight} />}
+      {Hero && <Hero t={t} state={state} insight={insight} audience={audience} />}
 
-      <h3>Evidence</h3>
-      <dl className="evidence">
-        {Object.entries(insight.evidence).map(([k, v]) => {
-          const [label, unit, decimals] = view.labels[k] ?? [k, '', 2]
-          return (
-            <div key={k} className={cited.includes(k) ? 'cited' : undefined}>
-              <dt>{label}</dt>
-              <dd>
-                {v.toFixed(decimals)}
-                {unit && <small> {unit}</small>}
-              </dd>
-            </div>
-          )
-        })}
-      </dl>
-      <p className="source">
-        Computed by <code>{view.source}</code> from raw positions and events only.
-      </p>
+      {exp && (
+        <p className="grounded" title="Written by Microsoft Foundry agents; every claim is checked against the measured evidence. Hover a line to see what it relies on.">
+          <span aria-hidden="true">✓</span> AI explanation · grounded in match evidence
+        </p>
+      )}
+      <Explanation key={`${insight.type}-${audience}`} insight={insight} labels={view.labels} exp={exp} onCite={setCited} />
+
+      <Numbers
+        key={audience}
+        insight={insight}
+        view={view}
+        cited={cited}
+        defaultOpen={audience === 'analyst'}
+        provenance={audience === 'analyst'}
+      />
     </aside>
   )
 }

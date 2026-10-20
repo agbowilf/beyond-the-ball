@@ -62,20 +62,32 @@ Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
 ```json
 {
   "type": "SPACE_CREATOR",
-  "t": 6.0,
+  "t": 10.0,
   "team": "HOME",
   "playerId": "H10",
   "markerId": "A6",
-  "confidence": 0.92,
+  "targetZone": "central lane, penalty area",
+  "confidence": 0.69,
+  "confidenceParts": {
+    "pull": 0.49,
+    "follow": 1.0,
+    "free": 0.65
+  },
   "evidence": {
-    "runnerDisplacementM": 15.1,
-    "markerDisplacementM": 10.2,
-    "markerFollowCosine": 0.95,
-    "markerDistanceToTargetStartM": 7.7,
-    "markerDistanceToTargetEndM": 14.7,
-    "nearestDefenderToTargetStartM": 7.7,
-    "nearestDefenderToTargetEndM": 13.4,
-    "shotSecondsAfterPass": 2.2
+    "runnerDisplacementM": 14.2,
+    "markerDisplacementM": 7.2,
+    "markerFollowCosine": 1.0,
+    "markerDistanceToTargetStartM": 5.4,
+    "markerDistanceToTargetEndM": 9.3,
+    "nearestDefenderToTargetStartM": 5.4,
+    "nearestDefenderToTargetEndM": 9.3,
+    "shotSecondsAfterPass": 2.2,
+    "runnerTouches": 0,
+    "freeSpaceStartM2": 93,
+    "freeSpaceEndM2": 274,
+    "freeSpaceGainM2": 181,
+    "freeSpaceRatio": 2.9,
+    "markerPullM": 3.9
   }
 }
 ```
@@ -86,16 +98,23 @@ it took out:
 ```json
 {
   "type": "SEQUENCE_ORIGIN",
-  "t": 2.4,
+  "t": 6.4,
   "team": "HOME",
   "playerId": "H8",
   "partnerId": "H6",
   "pattern": "ONE_TWO",
-  "bypassedIds": ["A10", "A11"],
+  "bypassedIds": [
+    "A10",
+    "A11"
+  ],
   "confidence": 0.78,
+  "confidenceParts": {
+    "lines": 0.67,
+    "progress": 0.96
+  },
   "evidence": {
     "opponentsBypassed": 2,
-    "lineBreakingPassT": 3.1,
+    "lineBreakingPassT": 7.1,
     "passesToShot": 3,
     "progressionM": 24.0,
     "secondsBeforeFinalPass": 3.6,

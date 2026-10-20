@@ -1,4 +1,4 @@
-import { LOOKBACK_S, nearestOutfield, passFor, player, stateAt } from '../data.js'
+import { eventAfter, LOOKBACK_S, nearestOutfield, passFor, player, stateAt } from '../data.js'
 
 const TRAIL_STEP_S = 0.1
 
@@ -10,7 +10,7 @@ function trail(id, from, to) {
 }
 
 // Overlay drawn in pitch coordinates (y up). Shows the run, the marker being dragged
-// and the free space around the pass target growing as the marker leaves.
+// and the receiving space around the pass target growing as the marker leaves.
 export default function SpaceCreatorOverlay({ t, state, insight }) {
   const pass = passFor(insight)
   const start = insight.t - LOOKBACK_S
@@ -24,12 +24,21 @@ export default function SpaceCreatorOverlay({ t, state, insight }) {
   const runner0 = player(start0, insight.playerId)
   const marker0 = player(start0, insight.markerId)
   const passed = t >= pass.t
+  // The gain is measured at the pass, so its label shows only while the ball travels into the space.
+  const labelled = passed && t < (eventAfter('RECEIVE', pass.t)?.t ?? pass.t)
 
   return (
     <g className="highlight">
       <circle className="space" cx={target.x} cy={target.y} r={nearest.d} />
       <line className="gap" x1={target.x} y1={target.y} x2={nearest.player.x} y2={nearest.player.y} />
       <circle className="target" cx={target.x} cy={target.y} r={1.6} />
+      {labelled && (
+        // Inside the shaded space on the goal side, upright: this layer uses pitch coordinates (y up), so the
+        // text is flipped back. Away from the circle's edge, where the nearest defender always is.
+        <text className="space-label" transform="scale(1 -1)" x={target.x + nearest.d * 0.55} y={-target.y + 0.8}>
+          ×{insight.evidence.freeSpaceRatio.toFixed(1)} space
+        </text>
+      )}
 
       <polyline className={`trail ${insight.team}`} points={trail(insight.playerId, start, until)} />
       <polyline className={`trail ${opp}`} points={trail(insight.markerId, start, until)} />

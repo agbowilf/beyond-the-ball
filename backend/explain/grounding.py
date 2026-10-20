@@ -48,10 +48,13 @@ def allowed_numbers(insight, fields):
     allowed = set()
     for field in fields:
         v = _field_value(insight, field)
-        if isinstance(v, (int, float)) and not isinstance(v, bool):
-            allowed |= {round(v, 2), round(v, 1), _whole(v)}
-            if field == "confidence":
-                allowed.add(_whole(v * 100))
+        # A group of numbers, such as confidenceParts, backs each of its values.
+        values = list(v.values()) if isinstance(v, dict) else [v]
+        for x in values:
+            if isinstance(x, (int, float)) and not isinstance(x, bool):
+                allowed |= {round(x, 2), round(x, 1), _whole(x)}
+                if field in ("confidence", "confidenceParts"):
+                    allowed.add(_whole(x * 100))
         allowed |= {float(n) for n in NUMBER.findall(definitions.get(field, ""))}
     return allowed
 

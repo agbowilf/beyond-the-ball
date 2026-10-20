@@ -62,6 +62,12 @@ export function passFor(insight) {
 }
 
 export const shotT = scenario.events.find((e) => e.type === 'SHOT')?.t ?? DURATION
+export const goalT = scenario.events.find((e) => e.type === 'GOAL')?.t ?? null
+
+// First event of `type` after time t, e.g. the RECEIVE that completes a pass.
+export function eventAfter(type, t) {
+  return scenario.events.find((e) => e.type === type && e.t > t) ?? null
+}
 
 // Plain description of the most recent event at time t, for the phase caption.
 export function lastEventText(t) {

@@ -43,7 +43,7 @@ fields that claim cites         speculative
   | Numbers | at most one in total | at most two per sentence | at least one per sentence |
   | Players | "North London Red's No. 10" | ids | ids |
   | Vocabulary | no jargon (marker, receiving zone, bypass, cosine...) | coaching terms that fit the insight type | technical terms |
-  | Sentences | 2–3, under 22 words | exactly 3 | 3–4 |
+  | Sentences | 1–2, under 20 words | exactly 3 | 3–4 |
 
   For every audience: headlines quote no numbers, and there is no praise or criticism (clever, precise...), no player
   positions (midfielder, defensive line...) and no raw field names or codes (markerFollowCosine, ONE_TWO). A shirt
