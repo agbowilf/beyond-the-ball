@@ -55,8 +55,8 @@ export default function EvidencePanel({ t, state, insight, view, audience, onAud
     <aside className="panel">
       <div className="panel-top">
         {tabs}
-        <div className="lens" role="group" aria-label="Explain for">
-          <span>Explain for</span>
+        <div className="lens" role="group" aria-label="Watch as">
+          <span>Watch as</span>
           {AUDIENCES.map((a) => (
             <button key={a} aria-pressed={a === audience} onClick={() => onAudience(a)}>
               {a[0].toUpperCase() + a.slice(1)}
