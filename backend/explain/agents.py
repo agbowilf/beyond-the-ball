@@ -28,7 +28,7 @@ AUDIENCES = {
   not to the ball or the goal.
 - Name players by team and shirt number, for example "North London Red's No. 10", then "No. 10".
 - No praise or criticism such as clever or brilliant; let what happened speak for itself.
-- 2 or 3 short sentences, each under 22 words. A punchy headline of at most 10 words, for example
+- 1 or 2 short sentences, each under 20 words; the replay shows the rest. A punchy headline of at most 10 words, for example
   "No. 10's decoy run opens the door".""",
     "coach": """A coach breaking down the move with their players.
 - Use football coaching language, but only for ideas this insight type measures (see "whatItMeans" and the field

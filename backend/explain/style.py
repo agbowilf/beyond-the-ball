@@ -27,7 +27,7 @@ RAW_TERMS = sorted(
 WORD = re.compile(r"[A-Za-z0-9'’.-]+")
 
 RULES = {
-    "fan": {"claims": (2, 3), "max_words": 22, "headline_words": 10, "max_numbers_total": 1},
+    "fan": {"claims": (1, 2), "max_words": 20, "headline_words": 10, "max_numbers_total": 1},
     "coach": {"claims": (3, 3), "max_words": 30, "headline_words": 12, "max_numbers_per_claim": 2},
     "analyst": {"claims": (3, 4), "max_words": 35, "headline_words": 12, "min_numbers_per_claim": 1},
 }

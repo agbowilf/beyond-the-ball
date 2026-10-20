@@ -1,7 +1,7 @@
 {
   "scenarioId": "01_decoy_run",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-19T15:29:38+00:00",
+  "generatedAt": "2026-10-20T00:04:44+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -12,27 +12,18 @@
       "headline": "No. 10's run pulls defender away from teammate",
       "claims": [
         {
-          "text": "North London Red's No. 10 ran far, dragging the defender marking them well away.",
+          "text": "North London Red's No. 10 ran 14.5 metres, pulling South Coast Blue's No. 6 away from the pass spot.",
           "evidence": [
             "runnerDisplacementM",
-            "markerDisplacementM"
-          ]
-        },
-        {
-          "text": "This opened up a big space where the pass was received.",
-          "evidence": [
+            "markerDisplacementM",
+            "markerFollowCosine",
+            "markerId",
             "markerDistanceToTargetStartM",
             "markerDistanceToTargetEndM"
           ]
-        },
-        {
-          "text": "Just over two seconds after the pass, the teammate took a shot.",
-          "evidence": [
-            "shotSecondsAfterPass"
-          ]
         }
       ],
-      "attempts": 2
+      "attempts": 3
     },
     {
       "insightIndex": 0,
@@ -116,32 +107,19 @@
       "playerId": "H8",
       "status": "approved",
       "audience": "fan",
-      "headline": "No. 8 starts a quick one-two to unlock defence",
+      "headline": "No. 8 and No. 6 cut out two defenders",
       "claims": [
         {
-          "text": "North London Red's No. 8 passed to No. 6 to begin the move.",
+          "text": "North London Red's No. 8 passed to No. 6, who returned the ball cutting out two defenders before the shot.",
           "evidence": [
             "playerId",
             "partnerId",
+            "bypassedIds",
             "team"
-          ]
-        },
-        {
-          "text": "No. 6 returned the ball past two South Coast Blue defenders shortly after.",
-          "evidence": [
-            "partnerId",
-            "bypassedIds"
-          ]
-        },
-        {
-          "text": "The sequence gained 24 metres and led to a shot within six seconds.",
-          "evidence": [
-            "progressionM",
-            "secondsBeforeShot"
           ]
         }
       ],
-      "attempts": 1
+      "attempts": 3
     },
     {
       "insightIndex": 1,
