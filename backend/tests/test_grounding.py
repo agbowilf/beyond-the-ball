@@ -73,6 +73,13 @@ def test_headline_may_not_quote_numbers():
     assert any("headline may not quote numbers" in p for p in check(SPACE, exp))
 
 
+def test_values_inside_confidence_parts_are_citable():
+    exp = _explanation(("The free-space part of the confidence was 1.0.", ["confidenceParts"]))
+    assert check(SPACE, exp) == []
+    wrong = _explanation(("The free-space part of the confidence was 0.5.", ["confidenceParts"]))
+    assert any("0.5" in p for p in check(SPACE, wrong))
+
+
 def test_claim_without_evidence_is_rejected():
     exp = _explanation(("H10 is the best runner in the league.", []))
     assert any("cites no evidence" in p for p in check(SPACE, exp))
