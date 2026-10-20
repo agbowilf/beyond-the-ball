@@ -136,6 +136,8 @@ def detect_space_creators(scenario):
                     "freeSpaceStartM2": round(free0),
                     "freeSpaceEndM2": round(free1),
                     "freeSpaceGainM2": round(free1 - free0),
+                    "freeSpaceRatio": round(free1 / free0, 1) if free0 else None,
+                    "markerPullM": round(pull, 1),
                 },
             })
     return sorted(insights, key=lambda i: -i["confidence"])

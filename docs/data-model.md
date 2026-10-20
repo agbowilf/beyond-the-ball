@@ -85,7 +85,9 @@ Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
     "runnerTouches": 0,
     "freeSpaceStartM2": 78,
     "freeSpaceEndM2": 387,
-    "freeSpaceGainM2": 309
+    "freeSpaceGainM2": 309,
+    "freeSpaceRatio": 5.0,
+    "markerPullM": 6.1
   }
 }
 ```

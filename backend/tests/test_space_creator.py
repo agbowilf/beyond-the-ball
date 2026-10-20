@@ -59,6 +59,12 @@ def test_reports_touches_free_space_and_zone():
     assert abs(ev["freeSpaceEndM2"] - math.pi * ev["nearestDefenderToTargetEndM"] ** 2) <= 0.02 * ev["freeSpaceEndM2"]
 
 
+def test_reports_space_ratio_and_marker_pull():
+    ev = detect_space_creators(_load_generator().build())[0]["evidence"]
+    assert abs(ev["freeSpaceRatio"] - ev["freeSpaceEndM2"] / ev["freeSpaceStartM2"]) <= 0.1
+    assert abs(ev["markerPullM"] - (ev["markerDistanceToTargetEndM"] - ev["markerDistanceToTargetStartM"])) <= 0.1
+
+
 def test_a_runner_touch_is_counted():
     scenario = copy.deepcopy(_load_generator().build())
     scenario["events"].append({"t": 3.0, "type": "RECEIVE", "team": "HOME", "playerId": "H10",

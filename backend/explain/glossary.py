@@ -31,6 +31,9 @@ FIELDS = {
                                 "the circle around it out to the nearest outfield defender",
             "freeSpaceEndM2": "Free space around the receiving spot when the pass was played, in square metres",
             "freeSpaceGainM2": "How much the free space around the receiving spot grew during the run, in square metres",
+            "freeSpaceRatio": "How many times larger the free space around the receiving spot was when the pass was "
+                              "played than at run start",
+            "markerPullM": "How much further from the receiving spot the marker ended up, in metres",
             "targetZone": "Where the pass was received, from the attacking team's point of view (lane and area)",
         },
     },

@@ -44,6 +44,8 @@ The opposing outfield player nearest to the runner at the window start.
 | `runnerTouches` | Times the runner played, received or shot the ball from the window start to the shot (`PASS`, `RECEIVE`, `SHOT` events) |
 | `freeSpaceStartM2` / `EndM2` | Free space at the target zone before and after: the area of the circle around it, out to the nearest opposing outfield player (`π × nearestDefenderToTarget²`) |
 | `freeSpaceGainM2` | `freeSpaceEndM2 - freeSpaceStartM2` |
+| `freeSpaceRatio` | `freeSpaceEndM2 / freeSpaceStartM2`, from the unrounded areas ("4.9× more receiving space") |
+| `markerPullM` | How much further the marker ended from the target zone: `markerDistanceToTargetEndM - markerDistanceToTargetStartM` |
 
 ### Target zone label
 
