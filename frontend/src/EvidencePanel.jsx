@@ -4,12 +4,12 @@ import { AUDIENCES, explanationFor, explanations } from './data.js'
 
 // The full evidence table, folded away unless the reader wants the numbers (open by default for analysts).
 // Keyed by audience in the panel, so switching audience resets it to that audience's default.
-function Numbers({ insight, view, cited, defaultOpen }) {
+function Numbers({ insight, view, cited, defaultOpen, provenance }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
     <section className={`numbers ${open ? 'open' : ''}`}>
       <button className="numbers-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
-        {open ? 'Hide the numbers' : 'Show the numbers'}
+        Why we detected this
         <span aria-hidden="true">{open ? '▴' : '▾'}</span>
       </button>
       {open && (
@@ -30,6 +30,13 @@ function Numbers({ insight, view, cited, defaultOpen }) {
           </dl>
           <p className="source">
             Measured by <code>{view.source}</code> from raw positions and events only.
+            {provenance && (
+              <>
+                {' '}
+                The explanation was written by an Explainer agent and checked by a Fact-checker agent on Microsoft
+                Foundry ({explanations.model}, Microsoft Agent Framework), plus code checks on every claim and number.
+              </>
+            )}
           </p>
         </>
       )}
@@ -38,7 +45,7 @@ function Numbers({ insight, view, cited, defaultOpen }) {
 }
 
 // Shared panel for every insight type; `view` supplies the type-specific wording and hero stat.
-export default function EvidencePanel({ t, state, insight, view, audience, onAudience, onSeek, tabs }) {
+export default function EvidencePanel({ t, state, insight, view, audience, onAudience, tabs }) {
   const [cited, setCited] = useState([])
   const exp = explanationFor(insight, audience)
   const Hero = view.Hero
@@ -68,22 +75,21 @@ export default function EvidencePanel({ t, state, insight, view, audience, onAud
 
       {Hero && <Hero t={t} state={state} insight={insight} />}
 
+      {exp && (
+        <p className="grounded" title="Written by Microsoft Foundry agents; every claim is checked against the measured evidence. Hover a line to see what it relies on.">
+          <span aria-hidden="true">✓</span> AI explanation · grounded in match evidence
+        </p>
+      )}
       <Explanation key={`${insight.type}-${audience}`} insight={insight} labels={view.labels} exp={exp} onCite={setCited} />
 
-      <div className="moments">
-        {view.jumps(insight).map((j) => (
-          <button key={j.label} onClick={() => onSeek(j.t)}>
-            <span aria-hidden="true">▶</span> {j.label}
-          </button>
-        ))}
-      </div>
-
-      <Numbers key={audience} insight={insight} view={view} cited={cited} defaultOpen={audience === 'analyst'} />
-
-      <p className="byline">
-        Written by Microsoft Foundry agents ({explanations.model}), fact-checked against the evidence. Hover a line to
-        see what it relies on.
-      </p>
+      <Numbers
+        key={audience}
+        insight={insight}
+        view={view}
+        cited={cited}
+        defaultOpen={audience === 'analyst'}
+        provenance={audience === 'analyst'}
+      />
     </aside>
   )
 }

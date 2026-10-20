@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ChainStrip from './ChainStrip.jsx'
 import Controls from './Controls.jsx'
 import EvidencePanel from './EvidencePanel.jsx'
 import LowerThird from './LowerThird.jsx'
@@ -51,12 +52,13 @@ export default function App() {
       <main>
         <section className="stage">
           <div className="broadcast">
-            <Pitch state={state} focus={view.focus(insight)}>
+            <Pitch state={state} focus={view.focus(insight)} dimOthers={replay.t >= view.activeFrom(insight)}>
               <OffsideLine state={state} until={finalPassT} />
               <Overlay t={replay.t} state={state} insight={insight} />
             </Pitch>
             <LowerThird key={caption} label={view.label} text={caption} />
           </div>
+          <ChainStrip steps={view.chain(insight)} t={replay.t} onSeek={replay.seek} />
           <Controls replay={replay} marks={view.marks(insight)} />
         </section>
         <EvidencePanel
@@ -66,7 +68,6 @@ export default function App() {
           view={view}
           audience={audience}
           onAudience={setAudience}
-          onSeek={replay.seek}
           tabs={tabs}
         />
       </main>

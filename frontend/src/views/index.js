@@ -1,8 +1,11 @@
-import { LOOKBACK_S, passFor, scenario, shotT } from '../data.js'
+import { eventAfter, goalT, LOOKBACK_S, passFor, scenario, shotT } from '../data.js'
 import SequenceOriginHero from './SequenceOriginHero.jsx'
 import SequenceOriginOverlay from './SequenceOriginOverlay.jsx'
 import SpaceCreatorHero from './SpaceCreatorHero.jsx'
 import SpaceCreatorOverlay from './SpaceCreatorOverlay.jsx'
+
+// The shot and goal close every chain; steps come from the detector output and the event log only.
+const finish = () => [{ label: 'Shot', t: shotT }, ...(goalT === null ? [] : [{ label: 'Goal', t: goalT }])]
 
 // How each insight type is drawn and explained. Labels are [text, unit, decimals].
 const spaceCreator = {
@@ -12,11 +15,17 @@ const spaceCreator = {
   headline: (i) => `${i.playerId}'s run dragged ${i.markerId} out of the zone ${passFor(i).targetPlayerId} received in`,
   focus: (i) => ({ [i.playerId]: 'runner', [i.markerId]: 'marker', [passFor(i).targetPlayerId]: 'receiver' }),
   marks: (i) => [{ key: 'window', from: i.t - LOOKBACK_S, to: i.t, label: 'Off-ball run window' }],
-  jumps: (i) => [
-    { label: 'Run starts', t: i.t - LOOKBACK_S },
-    { label: 'Pass', t: i.t },
-    { label: 'Shot', t: shotT },
-  ],
+  // From the run starting, the other players are dimmed so the run, the marker and the receiver stand out.
+  activeFrom: (i) => i.t - LOOKBACK_S,
+  chain: (i) => {
+    const pass = passFor(i)
+    return [
+      { label: `${i.playerId} runs, ${i.markerId} follows`, t: i.t - LOOKBACK_S },
+      { label: 'Pass into the space', t: i.t },
+      { label: `${pass.targetPlayerId} receives`, t: eventAfter('RECEIVE', i.t)?.t ?? i.t },
+      ...finish(),
+    ]
+  },
   phase(t, i) {
     if (t < i.t - LOOKBACK_S) return 'Build-up'
     if (t < i.t) return `${i.playerId} runs off the ball and ${i.markerId} follows`
@@ -52,17 +61,20 @@ const sequenceOrigin = {
     ...Object.fromEntries(i.bypassedIds.map((id) => [id, 'bypassed'])),
   }),
   marks: (i) => [{ key: 'chain', from: i.t, to: shotT, label: 'From origin to shot' }],
-  jumps: (i) =>
-    i.pattern === 'ONE_TWO'
-      ? [
-          { label: 'One-two', t: i.t },
-          { label: 'Line broken', t: i.evidence.lineBreakingPassT },
-          { label: 'Shot', t: shotT },
-        ]
-      : [
-          { label: 'Origin', t: i.t },
-          { label: 'Shot', t: shotT },
-        ],
+  activeFrom: (i) => i.t,
+  chain: (i) => {
+    const breakT = i.evidence.lineBreakingPassT
+    const assist = [...scenario.events].reverse().find((e) => e.type === 'PASS' && e.t < shotT)
+    const steps =
+      i.pattern === 'ONE_TWO'
+        ? [
+            { label: `${i.playerId} lays it off to ${i.partnerId}`, t: i.t },
+            { label: `${i.partnerId}'s return beats ${i.evidence.opponentsBypassed}`, t: breakT },
+          ]
+        : [{ label: `${i.playerId}'s pass beats ${i.evidence.opponentsBypassed}`, t: i.t }]
+    if (assist && assist.t > breakT) steps.push({ label: `${assist.playerId}'s assist`, t: assist.t })
+    return [...steps, ...finish()]
+  },
   phase(t, i) {
     const breakT = i.evidence.lineBreakingPassT
     const out = i.bypassedIds.join(' and ')

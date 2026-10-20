@@ -34,7 +34,7 @@ function Markings() {
   )
 }
 
-export default function Pitch({ state, focus = {}, children }) {
+export default function Pitch({ state, focus = {}, dimOthers = false, children }) {
   return (
     <svg
       className="pitch"
@@ -65,7 +65,11 @@ export default function Pitch({ state, focus = {}, children }) {
       {state.players.map((p) => {
         const role = focus[p.id]
         return (
-          <g key={p.id} transform={`translate(${p.x} ${sy(p.y)})`} className={`player ${p.team} ${role ?? ''}`}>
+          <g
+            key={p.id}
+            transform={`translate(${p.x} ${sy(p.y)})`}
+            className={`player ${p.team} ${role ?? (dimOthers ? 'dimmed' : '')}`}
+          >
             <circle r={role ? 1.5 : 1.15} filter="url(#shadow)" />
             <text y={0.45}>{p.id.slice(1)}</text>
           </g>
