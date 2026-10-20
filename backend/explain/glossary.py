@@ -25,6 +25,13 @@ FIELDS = {
             "nearestDefenderToTargetStartM": "Nearest outfield defender to the receiving zone at run start, in metres",
             "nearestDefenderToTargetEndM": "Nearest outfield defender to the receiving zone when the pass was played",
             "shotSecondsAfterPass": "Seconds from the moment the pass was played (not received) to the shot",
+            "runnerTouches": "Times the runner played, received or shot the ball from the start of the run to the "
+                             "shot; 0 means the runner never touched the ball",
+            "freeSpaceStartM2": "Free space around the receiving spot at run start, in square metres: the area of "
+                                "the circle around it out to the nearest outfield defender",
+            "freeSpaceEndM2": "Free space around the receiving spot when the pass was played, in square metres",
+            "freeSpaceGainM2": "How much the free space around the receiving spot grew during the run, in square metres",
+            "targetZone": "Where the pass was received, from the attacking team's point of view (lane and area)",
         },
     },
     "SEQUENCE_ORIGIN": {

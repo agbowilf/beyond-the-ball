@@ -1,7 +1,7 @@
 {
   "scenarioId": "01_decoy_run",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-20T00:04:44+00:00",
+  "generatedAt": "2026-10-20T00:13:34+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -9,17 +9,22 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "fan",
-      "headline": "No. 10's run pulls defender away from teammate",
+      "headline": "No. 10\u2019s run dragged defender from pass spot",
       "claims": [
         {
-          "text": "North London Red's No. 10 ran 14.5 metres, pulling South Coast Blue's No. 6 away from the pass spot.",
+          "text": "North London Red\u2019s No. 10 ran 14.5 metres without touching the ball, pulling a defender away from the pass spot.",
           "evidence": [
             "runnerDisplacementM",
             "markerDisplacementM",
-            "markerFollowCosine",
-            "markerId",
-            "markerDistanceToTargetStartM",
-            "markerDistanceToTargetEndM"
+            "runnerTouches"
+          ]
+        },
+        {
+          "text": "This opened much more space for a teammate to get the ball in the central penalty area.",
+          "evidence": [
+            "freeSpaceStartM2",
+            "freeSpaceEndM2",
+            "targetZone"
           ]
         }
       ],
@@ -31,10 +36,10 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "coach",
-      "headline": "The runner\u2019s movement pulled the marker away, creating space for a teammate",
+      "headline": "H10's run pulls A6 away, creating space for a shot",
       "claims": [
         {
-          "text": "H10 made a 14.5-metre run that caused marker A6 to follow over 9.6 metres with a very closely matched direction.",
+          "text": "H10 moved 14.5 metres off the ball, pulling marker A6 who moved 9.6 metres closely matching H10\u2019s run direction.",
           "evidence": [
             "runnerDisplacementM",
             "markerDisplacementM",
@@ -42,21 +47,22 @@
           ]
         },
         {
-          "text": "A6\u2019s distance to the receiving zone increased from 5.0 to 11.1 metres between the start and the moment the ball was played.",
+          "text": "As a result, A6\u2019s distance to the receiving zone increased from 5.0 to 11.1 metres, freeing more space around that zone.",
           "evidence": [
             "markerDistanceToTargetStartM",
             "markerDistanceToTargetEndM"
           ]
         },
         {
-          "text": "This created a space where the nearest defender was 11.1 metres away when the pass was played, leading to a shot 2.2 seconds later.",
+          "text": "This added space grew by 309 m\u00b2, allowing the pass recipient in the central penalty area to shoot 2.2 seconds after the pass.",
           "evidence": [
-            "nearestDefenderToTargetEndM",
+            "freeSpaceGainM2",
+            "targetZone",
             "shotSecondsAfterPass"
           ]
         }
       ],
-      "attempts": 1
+      "attempts": 2
     },
     {
       "insightIndex": 0,
@@ -64,38 +70,43 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "analyst",
-      "headline": "Runner H10 created space by dragging marker A6 from receiving zone",
+      "headline": "H10's off-ball run increased space at pass reception",
       "claims": [
         {
-          "text": "At 6.0 seconds, player H10 moved 14.5 metres over the 5 seconds before the pass with 0.9 confidence from the detector.",
+          "text": "At 6.0 seconds, H10 ran 14.5 metres off-ball, dragging marker A6 who moved 9.6 metres with a movement correlation of 0.99 cosine similarity.",
           "evidence": [
             "t",
             "playerId",
             "runnerDisplacementM",
-            "confidence"
-          ]
-        },
-        {
-          "text": "The marker A6 moved 9.6 metres in the same period following H10 with a marker follow cosine of 0.99, indicating closely matched movement directions.",
-          "evidence": [
             "markerId",
             "markerDisplacementM",
             "markerFollowCosine"
           ]
         },
         {
-          "text": "The marker\u2019s distance to the receiving zone increased from 5.0 metres at the run start to 11.1 metres when the pass was played, creating the space.",
+          "text": "A6's distance to the target zone increased from 5.0 to 11.1 metres during the run, enlarging the space for the teammate receiving the ball.",
           "evidence": [
             "markerDistanceToTargetStartM",
             "markerDistanceToTargetEndM"
           ]
         },
         {
-          "text": "The nearest defender to the receiving zone also moved from 5.0 metres to 11.1 metres during this time, and the shot occurred 2.2 seconds after the pass.",
+          "text": "The free space around the reception zone grew by 309 square metres, from 78 to 387 square metres, with an overall detector confidence of 0.9 and a free space confidence of 1.0.",
           "evidence": [
-            "nearestDefenderToTargetStartM",
+            "freeSpaceStartM2",
+            "freeSpaceEndM2",
+            "freeSpaceGainM2",
+            "confidence",
+            "confidenceParts"
+          ]
+        },
+        {
+          "text": "The nearest defender was 11.1 metres from the reception zone when the pass was played at 6.0 seconds, and 2.2 seconds later a shot occurred without H10 touching the ball.",
+          "evidence": [
             "nearestDefenderToTargetEndM",
-            "shotSecondsAfterPass"
+            "shotSecondsAfterPass",
+            "runnerTouches",
+            "t"
           ]
         }
       ],
