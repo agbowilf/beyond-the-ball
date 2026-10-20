@@ -760,31 +760,105 @@ select {
   font-size: 16px;
   font-weight: 700;
 }
-.hero-track {
-  position: relative;
-  height: 6px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.16);
+.why-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lime);
 }
-.hero-track .fill {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: 3px;
-  background: var(--lime);
-  opacity: 0.55;
+.why-headline {
+  margin: 4px 0 10px;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.85);
 }
-.hero-track .dot {
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--lime);
-  border: 2px solid var(--accent);
-  transform: translate(-50%, -50%);
+.why-headline big {
+  font-size: 44px;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
 }
+.why-headline.analyst big {
+  font-size: 32px;
+  white-space: nowrap;
+}
+.before-after {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 4px 0 8px;
+}
+.before-after figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+.before-after svg {
+  display: block;
+}
+.before-after circle {
+  fill: rgba(255, 255, 255, 0.12);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+.before-after .after circle {
+  fill: color-mix(in srgb, var(--lime) 28%, transparent);
+  stroke: var(--lime);
+  stroke-dasharray: none;
+}
+.before-after circle.spot {
+  fill: #fff;
+  stroke: none;
+}
+.before-after figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.before-after figcaption b {
+  font-family: var(--display);
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.ba-arrow {
+  font-size: 24px;
+  color: var(--lime);
+}
+.why-rows {
+  margin: 0;
+  font-size: 12px;
+}
+.why-rows div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+.why-rows dt {
+  color: rgba(255, 255, 255, 0.72);
+}
+.why-rows dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .hero-sub {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.72);

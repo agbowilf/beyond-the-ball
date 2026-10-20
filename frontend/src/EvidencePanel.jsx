@@ -71,7 +71,7 @@ export default function EvidencePanel({ t, state, insight, view, audience, onAud
       </div>
       <h2>{exp?.headline ?? view.headline(insight)}</h2>
 
-      {Hero && <Hero t={t} state={state} insight={insight} />}
+      {Hero && <Hero t={t} state={state} insight={insight} audience={audience} />}
 
       {exp && (
         <p className="grounded" title="Written by Microsoft Foundry agents; every claim is checked against the measured evidence. Hover a line to see what it relies on.">

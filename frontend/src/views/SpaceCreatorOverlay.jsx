@@ -10,7 +10,7 @@ function trail(id, from, to) {
 }
 
 // Overlay drawn in pitch coordinates (y up). Shows the run, the marker being dragged
-// and the free space around the pass target growing as the marker leaves.
+// and the receiving space around the pass target growing as the marker leaves.
 export default function SpaceCreatorOverlay({ t, state, insight }) {
   const pass = passFor(insight)
   const start = insight.t - LOOKBACK_S
@@ -36,7 +36,7 @@ export default function SpaceCreatorOverlay({ t, state, insight }) {
         // Inside the shaded space, upright: this layer uses pitch coordinates (y up), so the text is flipped back.
         // Not on the circle's edge, where the nearest defender always is.
         <text className="space-label" transform="scale(1 -1)" x={target.x} y={-(target.y + nearest.d * 0.5)}>
-          +{insight.evidence.freeSpaceGainM2} m²
+          ×{insight.evidence.freeSpaceRatio.toFixed(1)} space
         </text>
       )}
 

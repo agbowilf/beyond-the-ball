@@ -20,10 +20,16 @@ const initialIndex = () => {
   return Number.isInteger(v) && v >= 0 && v < shown.length ? v : 0
 }
 
+// Optional ?audience=coach in the URL opens that explanation lens.
+const initialAudience = () => {
+  const a = new URLSearchParams(window.location.search).get('audience')
+  return ['fan', 'coach', 'analyst'].includes(a) ? a : 'fan'
+}
+
 export default function App() {
   const replay = useReplay()
   const [index, setIndex] = useState(initialIndex)
-  const [audience, setAudience] = useState('fan')
+  const [audience, setAudience] = useState(initialAudience)
   const state = stateAt(replay.t)
   const insight = shown[index]
   const view = VIEWS[insight.type]

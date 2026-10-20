@@ -4,6 +4,9 @@ export default function SequenceOriginHero({ insight }) {
   const by = insight.pattern === 'ONE_TWO' ? `${insight.partnerId}'s return` : `${insight.playerId}'s pass`
   return (
     <div className="hero-stat">
+      <div className="why-head">
+        <span>Why this move mattered</span>
+      </div>
       <div className="hero-label">Taken out of play by {by}</div>
       <div className="hero-numbers">
         <span className="big">{ev.opponentsBypassed}</span>
