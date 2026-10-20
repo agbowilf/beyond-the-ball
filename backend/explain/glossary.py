@@ -18,7 +18,8 @@ FIELDS = {
             "playerId": "The runner whose movement created the space",
             "markerId": "The defender who followed the run",
             "runnerDisplacementM": "How far the runner moved over the 5 s before the pass, in metres",
-            "markerDisplacementM": "How far the marker moved over the same window, in metres",
+            "markerDisplacementM": "How far the marker moved in total over the same window, in metres. This is NOT how much "
+                                   "further from the receiving spot the marker ended up; that is markerPullM",
             "markerFollowCosine": "How closely the marker's movement matched the run's direction (1 = exactly)",
             "markerDistanceToTargetStartM": "Marker's distance to where the pass was received, at run start, in metres",
             "markerDistanceToTargetEndM": "Marker's distance to where the pass was received, when the pass was played",
@@ -27,14 +28,15 @@ FIELDS = {
             "shotSecondsAfterPass": "Seconds from the moment the pass was played (not received) to the shot",
             "runnerTouches": "Times the runner played, received or shot the ball from the start of the run to the "
                              "shot; 0 means the runner never touched the ball",
-            "freeSpaceStartM2": "Free space around the receiving spot at run start, in square metres: the area of "
-                                "the circle around it out to the nearest outfield defender",
-            "freeSpaceEndM2": "Free space around the receiving spot when the pass was played, in square metres",
-            "freeSpaceGainM2": "How much the free space around the receiving spot grew during the run, in square metres",
-            "freeSpaceRatio": "How many times larger the free space around the receiving spot was when the pass was "
-                              "played than at run start",
-            "markerPullM": "How much further from the receiving spot the marker ended up, in metres",
-            "targetZone": "Where the pass was received, from the attacking team's point of view (lane and area)",
+            "freeSpaceStartM2": "Receiving space at run start, in square metres: the free area around the receiving "
+                                "spot, out to the nearest outfield defender. Call it receiving space",
+            "freeSpaceEndM2": "Receiving space when the pass was played, in square metres",
+            "freeSpaceGainM2": "How much the receiving space grew during the run, in square metres",
+            "freeSpaceRatio": "How many times larger the receiving space was when the pass was played than at run start",
+            "markerPullM": "How much further from the receiving spot the marker ended up, in metres (not the total "
+                           "distance the marker moved, which is markerDisplacementM)",
+            "targetZone": "Lane and area of the spot where the pass was received, from the attacking team's point of "
+                          "view. It describes the receiving spot only, not where any other player was",
         },
     },
     "SEQUENCE_ORIGIN": {
@@ -47,12 +49,14 @@ FIELDS = {
             "partnerId": "The other player in the one-two, who played the line-breaking return pass; "
                          "or the receiver of a single line-breaking pass",
             "pattern": "ONE_TWO or LINE_BREAKING_PASS",
-            "bypassedIds": "Opponents taken out of play by the line-breaking pass, not by the origin pass",
-            "opponentsBypassed": "Number of opponents taken out of play by the line-breaking pass",
+            "bypassedIds": "Opponents bypassed by the line-breaking pass (goal-side of the ball when it was played, not "
+                           "when it was received), not by the origin pass. Call them opponents or players, not "
+                           "defenders: their positions were not measured, and say bypassed, not taken out of play",
+            "opponentsBypassed": "Number of opponents bypassed by the line-breaking pass",
             "lineBreakingPassT": "When the line-breaking pass was played, in seconds",
             "passesToShot": "Passes from the origin to the shot, origin included",
             "progressionM": "Ground gained toward goal from the origin pass to the shot, in metres",
-            "secondsBeforeFinalPass": "How long before the assist the chance began, in seconds",
+            "secondsBeforeFinalPass": "How long before the assist was played (not received) the chance began, in seconds",
             "secondsBeforeShot": "How long before the shot the chance began, in seconds",
         },
     },
