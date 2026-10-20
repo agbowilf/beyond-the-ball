@@ -66,16 +66,26 @@ Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
   "team": "HOME",
   "playerId": "H10",
   "markerId": "A6",
-  "confidence": 0.92,
+  "targetZone": "central lane, penalty area",
+  "confidence": 0.9,
+  "confidenceParts": {
+    "pull": 0.76,
+    "follow": 0.99,
+    "free": 1.0
+  },
   "evidence": {
-    "runnerDisplacementM": 15.1,
-    "markerDisplacementM": 10.2,
-    "markerFollowCosine": 0.95,
-    "markerDistanceToTargetStartM": 7.7,
-    "markerDistanceToTargetEndM": 14.7,
-    "nearestDefenderToTargetStartM": 7.7,
-    "nearestDefenderToTargetEndM": 13.4,
-    "shotSecondsAfterPass": 2.2
+    "runnerDisplacementM": 14.5,
+    "markerDisplacementM": 9.6,
+    "markerFollowCosine": 0.99,
+    "markerDistanceToTargetStartM": 5.0,
+    "markerDistanceToTargetEndM": 11.1,
+    "nearestDefenderToTargetStartM": 5.0,
+    "nearestDefenderToTargetEndM": 11.1,
+    "shotSecondsAfterPass": 2.2,
+    "runnerTouches": 0,
+    "freeSpaceStartM2": 78,
+    "freeSpaceEndM2": 387,
+    "freeSpaceGainM2": 309
   }
 }
 ```
@@ -91,8 +101,15 @@ it took out:
   "playerId": "H8",
   "partnerId": "H6",
   "pattern": "ONE_TWO",
-  "bypassedIds": ["A10", "A11"],
+  "bypassedIds": [
+    "A10",
+    "A11"
+  ],
   "confidence": 0.78,
+  "confidenceParts": {
+    "lines": 0.67,
+    "progress": 0.96
+  },
   "evidence": {
     "opponentsBypassed": 2,
     "lineBreakingPassT": 3.1,

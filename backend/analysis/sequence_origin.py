@@ -77,7 +77,8 @@ def detect_sequence_origins(scenario):
                 origin, pattern, partner = prev, "ONE_TWO", ps["playerId"]
 
             progression = sign * (shot["location"]["x"] - origin["start"]["x"])
-            confidence = 0.6 * _clip(len(bypassed) / 3) + 0.4 * _clip(progression / 25)
+            parts = {"lines": _clip(len(bypassed) / 3), "progress": _clip(progression / 25)}
+            confidence = 0.6 * parts["lines"] + 0.4 * parts["progress"]
             insights.append({
                 "type": "SEQUENCE_ORIGIN",
                 "t": origin["t"],
@@ -87,6 +88,7 @@ def detect_sequence_origins(scenario):
                 "pattern": pattern,
                 "bypassedIds": bypassed,
                 "confidence": round(confidence, 2),
+                "confidenceParts": {k: round(v, 2) for k, v in parts.items()},
                 "evidence": {
                     "opponentsBypassed": len(bypassed),
                     "lineBreakingPassT": ps["t"],

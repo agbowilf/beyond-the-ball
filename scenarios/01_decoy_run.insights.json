@@ -5,7 +5,13 @@
     "team": "HOME",
     "playerId": "H10",
     "markerId": "A6",
+    "targetZone": "central lane, penalty area",
     "confidence": 0.9,
+    "confidenceParts": {
+      "pull": 0.76,
+      "follow": 0.99,
+      "free": 1.0
+    },
     "evidence": {
       "runnerDisplacementM": 14.5,
       "markerDisplacementM": 9.6,
@@ -14,7 +20,11 @@
       "markerDistanceToTargetEndM": 11.1,
       "nearestDefenderToTargetStartM": 5.0,
       "nearestDefenderToTargetEndM": 11.1,
-      "shotSecondsAfterPass": 2.2
+      "shotSecondsAfterPass": 2.2,
+      "runnerTouches": 0,
+      "freeSpaceStartM2": 78,
+      "freeSpaceEndM2": 387,
+      "freeSpaceGainM2": 309
     }
   },
   {
@@ -29,6 +39,10 @@
       "A11"
     ],
     "confidence": 0.78,
+    "confidenceParts": {
+      "lines": 0.67,
+      "progress": 0.96
+    },
     "evidence": {
       "opponentsBypassed": 2,
       "lineBreakingPassT": 3.1,

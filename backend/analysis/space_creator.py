@@ -43,6 +43,34 @@ def _cos(u, v):
     return (u[0] * v[0] + u[1] * v[1]) / (nu * nv)
 
 
+LENGTH, WIDTH = 105.0, 68.0
+# Lane edges across the pitch (penalty-area and goal-area edges), low y to high y.
+LANE_EDGES = (13.84, 24.84, 43.16, 54.16)
+LANES_HIGH_Y_IS_LEFT = ("right wing", "right half-space", "central lane", "left half-space", "left wing")
+
+
+def target_zone(point, team):
+    """Lane and area of the pitch for `point`, from `team`'s attacking point of view. HOME attacks +x."""
+    x, y = point
+    if team != "HOME":  # AWAY attacks -x: rotate so the same rules apply
+        x, y = LENGTH - x, WIDTH - y
+    lane = LANES_HIGH_Y_IS_LEFT[sum(y > edge for edge in LANE_EDGES)]
+    if x >= LENGTH - 16.5 and LANE_EDGES[0] <= y <= LANE_EDGES[-1]:
+        area = "penalty area"
+    elif x >= LENGTH * 2 / 3:
+        area = "attacking third"
+    elif x >= LENGTH / 3:
+        area = "middle third"
+    else:
+        area = "defensive third"
+    return f"{lane}, {area}"
+
+
+def _touches(events, player_id, t0, t1):
+    return sum(1 for e in events
+               if e["type"] in ("PASS", "RECEIVE", "SHOT") and e["playerId"] == player_id and t0 <= e["t"] <= t1)
+
+
 def detect_space_creators(scenario):
     frames, events = scenario["frames"], scenario["events"]
     insights = []
@@ -82,7 +110,9 @@ def detect_space_creators(scenario):
 
             near0 = min(_dist((d["x"], d["y"]), target) for d in defenders0)
             near1 = min(_dist((d["x"], d["y"]), target) for d in _outfield(f1, opp))
-            confidence = (0.4 * _clip(pull / 8) + 0.3 * _clip(cosine) + 0.3 * _clip((near1 - near0) / 6))
+            parts = {"pull": _clip(pull / 8), "follow": _clip(cosine), "free": _clip((near1 - near0) / 6)}
+            confidence = 0.4 * parts["pull"] + 0.3 * parts["follow"] + 0.3 * parts["free"]
+            free0, free1 = math.pi * near0**2, math.pi * near1**2
 
             insights.append({
                 "type": "SPACE_CREATOR",
@@ -90,7 +120,9 @@ def detect_space_creators(scenario):
                 "team": team,
                 "playerId": p["id"],
                 "markerId": marker["id"],
+                "targetZone": target_zone(target, team),
                 "confidence": round(confidence, 2),
+                "confidenceParts": {k: round(v, 2) for k, v in parts.items()},
                 "evidence": {
                     "runnerDisplacementM": round(r_disp, 1),
                     "markerDisplacementM": round(m_disp, 1),
@@ -100,6 +132,10 @@ def detect_space_creators(scenario):
                     "nearestDefenderToTargetStartM": round(near0, 1),
                     "nearestDefenderToTargetEndM": round(near1, 1),
                     "shotSecondsAfterPass": round(shot["t"] - ps["t"], 1),
+                    "runnerTouches": _touches(events, p["id"], ps["t"] - LOOKBACK_S, shot["t"]),
+                    "freeSpaceStartM2": round(free0),
+                    "freeSpaceEndM2": round(free1),
+                    "freeSpaceGainM2": round(free1 - free0),
                 },
             })
     return sorted(insights, key=lambda i: -i["confidence"])
