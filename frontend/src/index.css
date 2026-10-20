@@ -370,6 +370,17 @@ main {
   stroke-dasharray: none;
 }
 
+.space-label {
+  fill: var(--pitch-space);
+  font-family: var(--display);
+  font-size: 2.2px;
+  font-weight: 800;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.6);
+  stroke-width: 0.45;
+}
+
 .offside line {
   stroke: #fff;
   stroke-opacity: 0.45;
@@ -634,7 +645,52 @@ select {
   text-transform: uppercase;
   color: var(--accent);
 }
+.conf-wrap {
+  position: relative;
+}
+.conf-pop {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 5;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  width: 240px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+.conf-wrap:hover .conf-pop,
+.conf-wrap:focus-within .conf-pop {
+  display: flex;
+}
+.conf-pop small {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+}
+.conf-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.conf-bar {
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.16);
+}
+.conf-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--lime);
+}
 .kicker .conf {
+  border: 0;
+  cursor: help;
   padding: 2px 8px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 10%, transparent);

@@ -40,6 +40,16 @@ const spaceCreator = {
     nearestDefenderToTargetStartM: ['Nearest defender to zone, run start', 'm', 1],
     nearestDefenderToTargetEndM: ['Nearest defender to zone, at pass', 'm', 1],
     shotSecondsAfterPass: ['Shot after pass', 's', 1],
+    runnerTouches: ['Runner touches during the move', '', 0],
+    freeSpaceStartM2: ['Free space at receiving spot, run start', 'm²', 0],
+    freeSpaceEndM2: ['Free space at receiving spot, at pass', 'm²', 0],
+    freeSpaceGainM2: ['Free space gained', 'm²', 0],
+  },
+  // Confidence parts in plain words, with their weights (docs/detection-rules.md).
+  confidenceParts: {
+    pull: ['Defender pulled away', '0.4'],
+    follow: ['Defender tracked the run', '0.3'],
+    free: ['Space opened', '0.3'],
   },
   Overlay: SpaceCreatorOverlay,
   Hero: SpaceCreatorHero,
@@ -93,6 +103,10 @@ const sequenceOrigin = {
     progressionM: ['Ground gained to the shot', 'm', 1],
     secondsBeforeFinalPass: ['Began before the assist', 's', 1],
     secondsBeforeShot: ['Began before the shot', 's', 1],
+  },
+  confidenceParts: {
+    lines: ['Players taken out', '0.6'],
+    progress: ['Ground gained to the shot', '0.4'],
   },
   Overlay: SequenceOriginOverlay,
   Hero: SequenceOriginHero,

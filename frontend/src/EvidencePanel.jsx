@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ConfidenceBadge from './ConfidenceBadge.jsx'
 import Explanation from './Explanation.jsx'
 import { AUDIENCES, explanationFor, explanations } from './data.js'
 
@@ -49,7 +50,6 @@ export default function EvidencePanel({ t, state, insight, view, audience, onAud
   const [cited, setCited] = useState([])
   const exp = explanationFor(insight, audience)
   const Hero = view.Hero
-  const confidence = Math.round(insight.confidence * 100)
 
   return (
     <aside className="panel">
@@ -67,9 +67,7 @@ export default function EvidencePanel({ t, state, insight, view, audience, onAud
 
       <div className="kicker">
         <span className="type">{view.label}</span>
-        <span className="conf" title="Detector confidence">
-          {confidence}% confident
-        </span>
+        <ConfidenceBadge insight={insight} parts={view.confidenceParts} />
       </div>
       <h2>{exp?.headline ?? view.headline(insight)}</h2>
 
