@@ -91,7 +91,8 @@ first broke a line of the opponent's shape, after which the attack kept moving t
 
 Starting from a `SHOT`, walk back through completed `PASS` events by the same team: the pass whose
 `targetPlayerId` is the current holder, then the pass to that pass's `playerId`, and so on, looking back at
-most **15 s** before the shot. Each pass is received at the receiver's next `RECEIVE` event.
+most **15 s** before the shot, and never past the last `POSSESSION_CHANGE` won by the defending team (a chance
+begins only after the attackers last won the ball). Each pass is received at the receiver's next `RECEIVE` event.
 
 ### Opponents bypassed
 

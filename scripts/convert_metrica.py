@@ -3,13 +3,14 @@
 Source: https://github.com/metrica-sports/sample-data (anonymised; "if you use it for anything public, please
 acknowledge the source"). Raw files are downloaded into external-data/ (git-ignored) and never committed.
 
-One clip per shot: the 15 s before it plus 2 s after, from the same half, downsampled from 25 Hz to 5 Hz and
+One clip per shot: the 25 s before it plus 2 s after, from the same half, downsampled from 25 Hz to 5 Hz and
 mapped to our format (docs/data-model.md):
 
 - metres on a 105 x 68 m pitch with y pointing up (Metrica's origin is the top left, y pointing down);
 - the shooting team is labelled HOME and the clip is rotated so it attacks +x, as our format requires;
 - each team's goalkeeper becomes shirt 1 (detectors exclude H1/A1), other players 2, 3, ... by Metrica number;
-- passes become PASS plus RECEIVE events, shots become SHOT (plus GOAL when scored).
+- passes become PASS plus RECEIVE events, shots become SHOT (plus GOAL when scored), recoveries become
+  POSSESSION_CHANGE (the team that won the ball).
 
 Standard library only. Usage:
     python3 -I scripts/convert_metrica.py external-data/metrica/sample_game_2 external-data/metrica/clips
@@ -22,7 +23,8 @@ from pathlib import Path
 
 SOURCE_HZ = 25
 STEP = 5  # keep every 5th frame: 25 Hz -> 5 Hz
-BEFORE_S, AFTER_S = 15.0, 2.0
+# Longer than the Sequence Origin look-back (15 s), so a chain is never cut off by the clip start.
+BEFORE_S, AFTER_S = 25.0, 2.0
 LENGTH, WIDTH = 105.0, 68.0
 MIN_PRESENCE = 0.95  # players on the pitch for less of the clip (substitutions) are left out
 
@@ -145,6 +147,9 @@ def convert_clip(index, shot, tracking, events, team_players):
                                "end": pt(e["End X"], e["End Y"]), "outcome": "COMPLETE"})
             out_events.append({"t": t(e["End Frame"]), "type": "RECEIVE", "team": team, "playerId": ids[e["To"]],
                                "location": pt(e["End X"], e["End Y"])})
+        elif e["Type"] == "RECOVERY":
+            # The team that won the ball; Sequence Origin never looks back past the last time the attackers lost it.
+            out_events.append({"t": t(e["Start Frame"]), "type": "POSSESSION_CHANGE", "team": team})
         elif e["Type"] == "SHOT" and e["From"] in ids and pt(e["Start X"], e["Start Y"]):
             result = outcome(e["Subtype"])
             out_events.append({"t": t(e["Start Frame"]), "type": "SHOT", "team": team, "playerId": ids[e["From"]],
