@@ -2,6 +2,8 @@ import { scenario } from './data.js'
 
 const short = (name) =>
   name
+    .replace(/\(.*\)/, '')
+    .trim()
     .split(/\s+/)
     .map((w) => w[0])
     .join('')

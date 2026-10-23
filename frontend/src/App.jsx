@@ -26,7 +26,47 @@ const initialAudience = () => {
   return ['fan', 'coach', 'analyst'].includes(a) ? a : 'fan'
 }
 
+// Says where the data comes from: synthetic for the demo match, credited real data for review clips.
+function Disclosure() {
+  return (
+    <footer className="disclosure">
+      {scenario.source
+        ? `Real tracking data · ${scenario.source.dataset} · teams and players anonymised.`
+        : 'Synthetic match · all clubs, players and data are fictional.'}
+    </footer>
+  )
+}
+
+// A clip where no detector fired: show the replay alone.
+function NoInsight() {
+  const replay = useReplay()
+  const state = stateAt(replay.t)
+  return (
+    <div className="app">
+      <Scoreboard t={replay.t} />
+      <main>
+        <section className="stage">
+          <div className="broadcast">
+            <Pitch state={state} />
+            <LowerThird label="Replay" text={lastEventText(replay.t) ?? 'Build-up'} />
+          </div>
+          <Controls replay={replay} />
+        </section>
+        <aside className="panel">
+          <h2>No insight detected</h2>
+          <p className="source">None of the detectors found a pattern in this clip.</p>
+        </aside>
+      </main>
+      <Disclosure />
+    </div>
+  )
+}
+
 export default function App() {
+  return shown.length ? <Replay /> : <NoInsight />
+}
+
+function Replay() {
   const replay = useReplay()
   const [index, setIndex] = useState(initialIndex)
   const [audience, setAudience] = useState(initialAudience)
@@ -39,7 +79,7 @@ export default function App() {
   const tabs = shown.length > 1 && (
     <div className="tabs" role="tablist">
       {shown.map((i, k) => (
-        <button key={`${i.type}-${i.t}`} role="tab" aria-selected={k === index} onClick={() => setIndex(k)}>
+        <button key={`${i.type}-${i.playerId}-${k}`} role="tab" aria-selected={k === index} onClick={() => setIndex(k)}>
           <span className="tab-icon" aria-hidden="true">
             {VIEWS[i.type].icon}
           </span>
@@ -77,7 +117,7 @@ export default function App() {
           tabs={tabs}
         />
       </main>
-      <footer className="disclosure">Synthetic match · all clubs, players and data are fictional.</footer>
+      <Disclosure />
     </div>
   )
 }

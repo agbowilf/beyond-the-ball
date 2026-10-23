@@ -1,8 +1,18 @@
-import scenario from '../../scenarios/01_decoy_run.json'
-import insights from '../../scenarios/01_decoy_run.insights.json'
-import explanations from '../../scenarios/01_decoy_run.explanations.json'
+import decoyScenario from '../../scenarios/01_decoy_run.json'
+import decoyInsights from '../../scenarios/01_decoy_run.insights.json'
+import decoyExplanations from '../../scenarios/01_decoy_run.explanations.json'
 
-export { scenario, insights, explanations }
+// For reviewing real-data clips locally: ?scenario=metrica_g2_shot_12 loads that clip and its insights from the
+// git-ignored external-data/ folder (see docs/real-data.md). Elsewhere, such as the deployed site, the folder is
+// absent, so these are empty and the decoy run is shown.
+const localClips = import.meta.glob('../../external-data/metrica/clips/*.json', { eager: true, import: 'default' })
+const clipId = new URLSearchParams(window.location.search).get('scenario')
+const clip = clipId && localClips[`../../external-data/metrica/clips/${clipId}.json`]
+const clipInsights = clip && localClips[`../../external-data/metrica/clips/${clipId}.insights.json`]
+
+export const scenario = clip || decoyScenario
+export const insights = clip ? clipInsights || [] : decoyInsights
+export const explanations = clip ? { model: null, explanations: [] } : decoyExplanations
 
 export const AUDIENCES = ['fan', 'coach', 'analyst']
 
