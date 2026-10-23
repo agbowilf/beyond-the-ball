@@ -81,7 +81,7 @@ export function eventAfter(type, t) {
 
 // Plain description of the most recent event at time t, for the phase caption.
 export function lastEventText(t) {
-  const e = [...scenario.events].reverse().find((ev) => ev.t <= t)
+  const e = [...scenario.events].reverse().find((ev) => ev.t <= t && ev.playerId)
   if (!e) return null
   const verbs = {
     PASS: `passes to ${e.targetPlayerId}`,
