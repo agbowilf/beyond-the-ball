@@ -38,6 +38,13 @@ async def main():
     insights = json.loads(args.insights.read_text())
     scenario = json.loads(Path(str(args.insights).replace(".insights.json", ".json")).read_text())
     context = {"teams": {k: v["name"] for k, v in scenario["teams"].items()}}
+    if "source" in scenario:
+        # Real data: player numbers are labels assigned by our converter, not shirt numbers.
+        context["realData"] = True
+        context["notes"] = [
+            "This is real, anonymised match tracking data. Player ids such as H10 are labels, not shirt numbers: "
+            "refer to players by id (for example 'H10' or 'player H10'), never as 'No. 10', for every audience."
+        ]
     run = FoundryRunner()
 
     out = Path(str(args.insights).replace(".insights.json", ".explanations.json"))

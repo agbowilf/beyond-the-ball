@@ -14,7 +14,7 @@ FAN_JARGON = ("cosine", "displacement", "progression", "bypass", "coefficient", 
 # Praise or criticism is a judgement the detectors never made, so no audience may use it.
 JUDGEMENT = ("clever", "brilliant", "great", "superb", "smart", "excellent", "perfect", "genius", "world-class",
              "poor", "lazy", "sloppy", "terrible", "effectively", "masterful", "inch-perfect", "significant",
-             "precise", "perfectly")
+             "significantly", "precise", "perfectly", "dramatically", "massively")
 # Positions are never measured; "defender" alone is fine, as it only says which side a player was on.
 ROLES = ("midfield", "midfielder", "centre-back", "center-back", "full-back", "fullback", "winger", "striker",
          "defensive line", "back line", "back four", "duo")
@@ -37,8 +37,11 @@ def _words(text):
     return len(WORD.findall(text))
 
 
-def check_style(audience, explanation):
-    """Return a list of style problems for this audience; empty means it fits."""
+def check_style(audience, explanation, real_data=False):
+    """Return a list of style problems for this audience; empty means it fits.
+
+    For real data, player numbers are converter labels, so shirt-number phrasing ("No. 10") is rejected.
+    """
     rules = RULES[audience]
     problems = []
     claims = [c.text for c in explanation.claims]
@@ -71,7 +74,7 @@ def check_style(audience, explanation):
             problems.append(f"A fan explanation may quote at most one number in total; this one quotes {numbers}. "
                             "Describe the rest in plain words.")
         for text in [explanation.headline] + claims:
-            jargon = [w for w in FAN_JARGON if w in text.lower()]
+            jargon = [w for w in FAN_JARGON if re.search(rf"\b{re.escape(w)}\b", text.lower())]
             if jargon:
                 problems.append(f'Avoid jargon a casual fan would not use ({", ".join(jargon)}): "{text}"')
     if audience == "coach":
@@ -84,4 +87,8 @@ def check_style(audience, explanation):
         for text in claims:
             if len(quantities(text)) < rules["min_numbers_per_claim"]:
                 problems.append(f'Each analyst sentence should quote at least one measurement: "{text}"')
+    if real_data:
+        for text in [explanation.headline] + claims:
+            if re.search(r"\b(?:No\.|number|#)\s?\d", text, re.IGNORECASE):
+                problems.append(f'Player numbers here are labels, not shirt numbers; use ids such as H10: "{text}"')
     return problems

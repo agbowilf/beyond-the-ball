@@ -59,6 +59,7 @@ Rules:
 - For every claim, list in `evidence` the exact field names it relies on, taken from the field definitions.
 - Quote numbers exactly as they appear in the insight, or rounded to a whole number. Never compute new numbers such as differences or totals.
 - Be precise about who did what: attribute each action to the player and pass the field definitions say.
+- Follow any notes in the insight's brief; they override the audience guide.
 - Refer to players by their ids, for example H10 or A6, and never with gendered pronouns. Never write field names
   such as markerFollowCosine in the text.
 - Keep each time span's exact start and end as defined (for example, played versus received).
@@ -81,6 +82,7 @@ def brief(insight, context):
         "insightType": insight["type"],
         "whatItMeans": spec["summary"],
         "teams": context.get("teams", {}),
+        "notes": context.get("notes", []),
         "fieldDefinitions": {**COMMON_FIELDS, **spec["fields"]},
         "insight": insight,
     }, indent=2)
@@ -93,7 +95,7 @@ async def explain(insight, context, audience, run, max_revisions=2):
     draft = await run("explainer", prompt, Explanation)
 
     for attempt in range(1, max_revisions + 2):
-        problems = check(insight, draft) + check_style(audience, draft)
+        problems = check(insight, draft) + check_style(audience, draft, real_data=context.get("realData", False))
         review = await run("fact_checker", f"Insight:\n{facts}\n\nDraft:\n{draft.model_dump_json(indent=2)}", Review)
         issues = problems + ([] if review.approved else review.issues or ["The fact-checker did not approve."])
         if not issues:
