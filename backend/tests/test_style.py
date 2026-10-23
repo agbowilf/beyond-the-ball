@@ -77,3 +77,14 @@ def test_long_headline_feedback_gives_the_count():
 
 def test_claim_counts_differ_by_audience():
     assert any("Use exactly 3 claims" in p for p in check_style("coach", FAN))
+
+
+def test_real_data_rejects_shirt_number_phrasing():
+    exp = _exp("Metrica Away's No. 10 ran 21.5 m.", "The space opened.", headline="H10's run opens space")
+    assert check_style("fan", exp) == []
+    assert any("labels, not shirt numbers" in p for p in check_style("fan", exp, real_data=True))
+
+
+def test_jargon_matches_whole_words_only():
+    exp = _exp("Metrica Away's H10 ran far.", "The space opened.", headline="H10's run opens space")
+    assert check_style("fan", exp) == []
