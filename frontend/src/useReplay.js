@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { DURATION } from './data.js'
+import { DURATION, START_T } from './data.js'
 
 // Drives the replay clock with requestAnimationFrame.
-// Optional ?t=6 in the URL opens the replay at that time.
+// Optional ?t=6 in the URL opens the replay at that time; otherwise it opens at the scenario's start time.
 const initialT = () => {
-  const v = Number(new URLSearchParams(window.location.search).get('t'))
-  return Number.isFinite(v) ? Math.min(Math.max(v, 0), DURATION) : 0
+  const raw = new URLSearchParams(window.location.search).get('t')
+  const v = raw === null ? START_T : Number(raw)
+  return Number.isFinite(v) ? Math.min(Math.max(v, 0), DURATION) : START_T
 }
 
 export function useReplay() {
@@ -38,7 +39,7 @@ export function useReplay() {
   }, [playing, speed])
 
   const toggle = () => {
-    if (!playing && t >= DURATION) setT(0)
+    if (!playing && t >= DURATION) setT(START_T)
     setPlaying((p) => !p)
   }
   const seek = (v) => {

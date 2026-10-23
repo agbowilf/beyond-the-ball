@@ -5,6 +5,7 @@ import EvidencePanel from './EvidencePanel.jsx'
 import LowerThird from './LowerThird.jsx'
 import OffsideLine from './OffsideLine.jsx'
 import Pitch from './Pitch.jsx'
+import ScenarioSwitch from './ScenarioSwitch.jsx'
 import Scoreboard from './Scoreboard.jsx'
 import { insights, lastEventText, scenario, stateAt } from './data.js'
 import { useReplay } from './useReplay.js'
@@ -30,9 +31,17 @@ const initialAudience = () => {
 function Disclosure() {
   return (
     <footer className="disclosure">
-      {scenario.source
-        ? `Real tracking data · ${scenario.source.dataset} · teams and players anonymised.`
-        : 'Synthetic match · all clubs, players and data are fictional.'}
+      {scenario.source ? (
+        <>
+          Real tracking data from{' '}
+          <a href="https://github.com/metrica-sports/sample-data" target="_blank" rel="noreferrer">
+            Metrica Sports sample data
+          </a>{' '}
+          (game 2, anonymised; used with thanks). Player labels such as H10 are ours, not shirt numbers.
+        </>
+      ) : (
+        'Synthetic match · all clubs, players and data are fictional.'
+      )}
     </footer>
   )
 }
@@ -44,6 +53,7 @@ function NoInsight() {
   return (
     <div className="app">
       <Scoreboard t={replay.t} />
+      <ScenarioSwitch />
       <main>
         <section className="stage">
           <div className="broadcast">
@@ -95,6 +105,7 @@ function Replay() {
   return (
     <div className="app">
       <Scoreboard t={replay.t} />
+      <ScenarioSwitch />
       <main>
         <section className="stage">
           <div className="broadcast">
