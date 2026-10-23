@@ -25,10 +25,10 @@ export default function Controls({ replay, marks = [] }) {
               className={`tick ${e.type}`}
               style={{ left: `${(e.t / DURATION) * 100}%` }}
               onClick={() => seek(e.t)}
-              title={`${LABELS[e.type] ?? e.type} · ${e.playerId} · ${e.t.toFixed(1)}s`}
+              title={`${LABELS[e.type] ?? 'Possession won'} · ${e.playerId ?? e.team} · ${e.t.toFixed(1)}s`}
             >
-              {/* Every pass implies a receive, so receives get a tick but no label. */}
-              {e.type !== 'RECEIVE' && <span>{LABELS[e.type] ?? e.type}</span>}
+              {/* Only passes, shots and goals are labelled; receives and possession changes get a tick only. */}
+              {LABELS[e.type] && e.type !== 'RECEIVE' && <span>{LABELS[e.type]}</span>}
             </button>
           ))}
         </div>

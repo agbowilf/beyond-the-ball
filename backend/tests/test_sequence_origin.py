@@ -65,3 +65,14 @@ def test_no_origin_without_shot():
     scenario = copy.deepcopy(_load_generator().build())
     scenario["events"] = [e for e in scenario["events"] if e["type"] not in ("SHOT", "GOAL")]
     assert detect_sequence_origins(scenario) == []
+
+
+def test_origin_never_comes_before_a_turnover():
+    scenario = copy.deepcopy(_load_generator().build())
+    one_two = next(e["t"] for e in scenario["events"] if e["type"] == "PASS" and e["playerId"] == "H8")
+    # The defenders win the ball just after the lay-off and lose it straight back: the one-two no longer counts.
+    scenario["events"] += [{"t": one_two + 0.2, "type": "POSSESSION_CHANGE", "team": "AWAY"},
+                           {"t": one_two + 0.3, "type": "POSSESSION_CHANGE", "team": "HOME"}]
+    scenario["events"].sort(key=lambda e: e["t"])
+    for origin in detect_sequence_origins(scenario):
+        assert origin["t"] > one_two + 0.2

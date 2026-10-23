@@ -8,3 +8,6 @@ node_modules/
 .claude/
 CLAUDE.md
 .venv/
+
+# Third-party raw data, downloaded locally and never committed (see docs/real-data.md)
+external-data/

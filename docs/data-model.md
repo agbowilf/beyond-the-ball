@@ -54,8 +54,9 @@ Events are sparse and timestamped on the same clock as frames (`t` in seconds).
 | `RECEIVE` | `t`, `team`, `playerId`, `location{x,y}` |
 | `SHOT` | `t`, `team`, `playerId`, `location{x,y}`, `outcome` (`GOAL`, `SAVED`, `MISSED`) |
 | `GOAL` | `t`, `team`, `playerId` |
+| `POSSESSION_CHANGE` | `t`, `team` (the team that won the ball) |
 
-Planned later: `TACKLE`, `PRESSURE`, `POSSESSION_CHANGE`, `SUBSTITUTION`.
+Planned later: `TACKLE`, `PRESSURE`, `SUBSTITUTION`.
 
 ## Insight output (produced by the analysis engine)
 

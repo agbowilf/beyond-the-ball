@@ -22,9 +22,14 @@ def _attack_sign(team):
 
 
 def _chain(events, shot):
-    """Completed passes that moved the ball, holder to holder, to the shooter."""
+    """Completed passes that moved the ball, holder to holder, to the shooter, within the current possession."""
+    # A chance can only begin after the attacking team last won the ball.
+    won = [e["t"] for e in events
+           if e["type"] == "POSSESSION_CHANGE" and e["team"] != shot["team"] and e["t"] < shot["t"]]
+    since = max(won, default=float("-inf"))
     passes = [e for e in events
-              if e["type"] == "PASS" and e["team"] == shot["team"] and e.get("outcome") == "COMPLETE"]
+              if e["type"] == "PASS" and e["team"] == shot["team"] and e.get("outcome") == "COMPLETE"
+              and e["t"] > since]
     chain, holder, before = [], shot["playerId"], shot["t"]
     while True:
         prev = [p for p in passes
