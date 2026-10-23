@@ -30,6 +30,13 @@ The opposing outfield player nearest to the runner at the window start.
 1. Marker displacement over the window is at least **4 m**.
 2. Cosine similarity between runner and marker displacement vectors is at least **0.5** (the marker tracked the run).
 3. The marker's distance to the target zone grew by at least **3 m** over the window.
+4. The marker was guarding the target zone: at the window start it was within **2 m** of the nearest opposing
+   outfield player to the zone (so pulling away a defender who was not covering the space earns no credit).
+5. The free space at the target zone grew by at least **1.5×** (`freeSpaceRatio`); if no space opened, no space was
+   created.
+
+Checks 4 and 5 were added after running the detector on real tracking data, where they removed false positives
+caused by long switches of play and by a second defender already covering the spot (see `docs/real-data.md`).
 
 ### Evidence
 

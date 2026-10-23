@@ -10,6 +10,10 @@ MIN_RUNNER_DISP_M = 6.0
 MIN_MARKER_DISP_M = 4.0
 MIN_FOLLOW_COSINE = 0.5
 MIN_MARKER_PULL_M = 3.0
+# Added after testing on real tracking data (docs/real-data.md): the dragged defender must have been guarding the
+# receiving spot, and the space there must actually grow.
+MAX_COVER_GAP_M = 2.0
+MIN_SPACE_RATIO = 1.5
 
 
 def _clip(v, lo=0.0, hi=1.0):
@@ -110,6 +114,8 @@ def detect_space_creators(scenario):
 
             near0 = min(_dist((d["x"], d["y"]), target) for d in defenders0)
             near1 = min(_dist((d["x"], d["y"]), target) for d in _outfield(f1, opp))
+            if m_d0 - near0 > MAX_COVER_GAP_M or near1**2 < MIN_SPACE_RATIO * near0**2:
+                continue
             parts = {"pull": _clip(pull / 8), "follow": _clip(cosine), "free": _clip((near1 - near0) / 6)}
             confidence = 0.4 * parts["pull"] + 0.3 * parts["follow"] + 0.3 * parts["free"]
             free0, free1 = math.pi * near0**2, math.pi * near1**2

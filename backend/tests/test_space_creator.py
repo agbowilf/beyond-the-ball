@@ -86,3 +86,29 @@ def test_target_zone_lanes_and_areas():
     assert target_zone((20, 34), "HOME") == "central lane, defensive third"
     # AWAY attacks -x, so its left is low y.
     assert target_zone((10, 20), "AWAY") == "left half-space, penalty area"
+
+
+def test_no_insight_when_the_space_does_not_grow():
+    scenario = copy.deepcopy(_load_generator().build())
+    # Park a covering defender on the receiving spot for the whole clip: A6 is still pulled, but no space opens.
+    target = next(e for e in scenario["events"] if e["type"] == "PASS" and e["playerId"] == "H8"
+                  and e["targetPlayerId"] == "H11")["end"]
+    for f in scenario["frames"]:
+        for p in f["players"]:
+            if p["id"] == "A4":
+                p["x"], p["y"] = target["x"] + 1.0, target["y"]
+    assert detect_space_creators(scenario) == []
+
+
+def test_no_credit_for_dragging_a_defender_who_was_not_covering_the_spot():
+    scenario = copy.deepcopy(_load_generator().build())
+    # A second defender sits much closer to the receiving spot at the start of the run, then steps away,
+    # so A6 was not the one guarding it.
+    t_pass = next(e["t"] for e in scenario["events"] if e["type"] == "PASS" and e["targetPlayerId"] == "H11")
+    target = next(e["end"] for e in scenario["events"] if e["type"] == "PASS" and e["targetPlayerId"] == "H11")
+    for f in scenario["frames"]:
+        for p in f["players"]:
+            if p["id"] == "A4":
+                near = f["t"] <= t_pass - 5 + 0.3
+                p["x"], p["y"] = (target["x"] - 1.0, target["y"]) if near else (60.0, 10.0)
+    assert detect_space_creators(scenario) == []
