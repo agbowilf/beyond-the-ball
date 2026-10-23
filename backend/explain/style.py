@@ -14,7 +14,7 @@ FAN_JARGON = ("cosine", "displacement", "progression", "bypass", "coefficient", 
 # Praise or criticism is a judgement the detectors never made, so no audience may use it.
 JUDGEMENT = ("clever", "brilliant", "great", "superb", "smart", "excellent", "perfect", "genius", "world-class",
              "poor", "lazy", "sloppy", "terrible", "effectively", "masterful", "inch-perfect", "significant",
-             "precise", "perfectly")
+             "significantly", "precise", "perfectly", "dramatically", "massively")
 # Positions are never measured; "defender" alone is fine, as it only says which side a player was on.
 ROLES = ("midfield", "midfielder", "centre-back", "center-back", "full-back", "fullback", "winger", "striker",
          "defensive line", "back line", "back four", "duo")

@@ -1,0 +1,32 @@
+[
+  {
+    "type": "SPACE_CREATOR",
+    "t": 22.56,
+    "team": "HOME",
+    "playerId": "H10",
+    "markerId": "A3",
+    "targetZone": "left half-space, attacking third",
+    "confidence": 0.97,
+    "confidenceParts": {
+      "pull": 1.0,
+      "follow": 0.97,
+      "free": 0.95
+    },
+    "evidence": {
+      "runnerDisplacementM": 21.5,
+      "markerDisplacementM": 18.3,
+      "markerFollowCosine": 0.97,
+      "markerDistanceToTargetStartM": 3.3,
+      "markerDistanceToTargetEndM": 15.1,
+      "nearestDefenderToTargetStartM": 3.3,
+      "nearestDefenderToTargetEndM": 9.0,
+      "shotSecondsAfterPass": 2.3,
+      "runnerTouches": 0,
+      "freeSpaceStartM2": 34,
+      "freeSpaceEndM2": 252,
+      "freeSpaceGainM2": 218,
+      "freeSpaceRatio": 7.5,
+      "markerPullM": 11.8
+    }
+  }
+]

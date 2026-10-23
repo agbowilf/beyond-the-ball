@@ -1,0 +1,113 @@
+{
+  "scenarioId": "metrica_g2_shot_12",
+  "model": "gpt-4.1-mini",
+  "generatedAt": "2026-10-23T16:56:30+00:00",
+  "explanations": [
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H10",
+      "status": "approved",
+      "audience": "fan",
+      "headline": "H10\u2019s run pulled defender away creating big space",
+      "claims": [
+        {
+          "text": "Metrica Home's H10 ran far without touching the ball and pulled a defender away from a teammate's spot.",
+          "evidence": [
+            "runnerDisplacementM",
+            "runnerTouches",
+            "markerPullM"
+          ]
+        },
+        {
+          "text": "This left much more room for the teammate to receive the pass and take a shot soon after.",
+          "evidence": [
+            "freeSpaceEndM2",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    },
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H10",
+      "status": "approved",
+      "audience": "coach",
+      "headline": "H10\u2019s run pulls marker A3 away, opening space for a teammate",
+      "claims": [
+        {
+          "text": "Player H10 ran 21.5 metres while marker A3 followed closely over 18 metres, matching H10\u2019s run direction very closely.",
+          "evidence": [
+            "runnerDisplacementM",
+            "markerDisplacementM",
+            "markerFollowCosine"
+          ]
+        },
+        {
+          "text": "This movement pulled marker A3 11.8 metres from the receiving zone, greatly increasing the space there.",
+          "evidence": [
+            "markerPullM",
+            "freeSpaceStartM2",
+            "freeSpaceEndM2"
+          ]
+        },
+        {
+          "text": "The nearest defender to the receiving spot moved further away, allowing a teammate to receive the ball and shoot 2.3 seconds after the pass.",
+          "evidence": [
+            "nearestDefenderToTargetStartM",
+            "nearestDefenderToTargetEndM",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 3
+    },
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H10",
+      "status": "approved",
+      "audience": "analyst",
+      "headline": "Off-ball run pulls defender away, increasing space for teammate",
+      "claims": [
+        {
+          "text": "Player H10 made an off-ball run covering 21.5 metres over 5 seconds before the pass at 22.56 seconds with a detector confidence of 0.97.",
+          "evidence": [
+            "t",
+            "playerId",
+            "runnerDisplacementM",
+            "confidence"
+          ]
+        },
+        {
+          "text": "Defender A3 followed H10's run with a cosine similarity of 0.97 and was pulled 11.8 metres away from the target receiving zone.",
+          "evidence": [
+            "markerId",
+            "markerFollowCosine",
+            "markerPullM"
+          ]
+        },
+        {
+          "text": "Receiving space in the left half-space of the attacking third increased from 34 to 252 square metres, representing a 7.5-fold gain at the time the pass was played.",
+          "evidence": [
+            "freeSpaceStartM2",
+            "freeSpaceEndM2",
+            "freeSpaceRatio",
+            "targetZone"
+          ]
+        },
+        {
+          "text": "The nearest defender to the receiving spot was 3.3 metres away at run start and 9.0 metres away when the pass was played; the shot occurred 2.3 seconds after the pass.",
+          "evidence": [
+            "nearestDefenderToTargetStartM",
+            "nearestDefenderToTargetEndM",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    }
+  ]
+}
