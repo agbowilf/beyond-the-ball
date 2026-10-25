@@ -15,7 +15,7 @@ import os
 
 from .glossary import COMMON_FIELDS, FIELDS
 from .grounding import check
-from .style import check_style
+from .style import check_style, check_team_names
 from .models import Explanation, Review
 
 AUDIENCES = {
@@ -60,6 +60,8 @@ Rules:
 - Quote numbers exactly as they appear in the insight, or rounded to a whole number. Never compute new numbers such as differences or totals.
 - Be precise about who did what: attribute each action to the player and pass the field definitions say.
 - Follow any notes in the insight's brief; they override the audience guide.
+- If backLineDropM is 5 or more, include it in football language (for example "the back line dropped deep as H10 ran in
+  behind"), citing backLineDropM. Describe it as happening during the run, never as caused or forced by the runner.
 - Refer to players by their ids, for example H10 or A6, and never with gendered pronouns. Never write field names
   such as markerFollowCosine in the text.
 - Keep each time span's exact start and end as defined (for example, played versus received).
@@ -81,10 +83,15 @@ def brief(insight, context):
     return json.dumps({
         "insightType": insight["type"],
         "whatItMeans": spec["summary"],
-        "teams": context.get("teams", {}),
+        # Named by role: in real clips the attacking team is labelled HOME whatever its real name, which misled agents.
+        "teams": {
+            "attacking (made the play)": context.get("teams", {}).get(insight["team"]),
+            "defending": context.get("teams", {}).get("AWAY" if insight["team"] == "HOME" else "HOME"),
+        },
         "notes": context.get("notes", []),
         "fieldDefinitions": {**COMMON_FIELDS, **spec["fields"]},
-        "insight": insight,
+        # The team label (HOME/AWAY) is replaced by the attacking team's real name, so it cannot be misread as one.
+        "insight": {**insight, "team": context.get("teams", {}).get(insight["team"], insight["team"])},
     }, indent=2)
 
 
@@ -95,7 +102,8 @@ async def explain(insight, context, audience, run, max_revisions=2):
     draft = await run("explainer", prompt, Explanation)
 
     for attempt in range(1, max_revisions + 2):
-        problems = check(insight, draft) + check_style(audience, draft, real_data=context.get("realData", False))
+        problems = (check(insight, draft) + check_style(audience, draft, real_data=context.get("realData", False))
+                    + check_team_names(draft, context.get("teams", {}), insight["team"]))
         review = await run("fact_checker", f"Insight:\n{facts}\n\nDraft:\n{draft.model_dump_json(indent=2)}", Review)
         issues = problems + ([] if review.approved else review.issues or ["The fact-checker did not approve."])
         if not issues:

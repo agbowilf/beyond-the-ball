@@ -14,10 +14,12 @@ FAN_JARGON = ("cosine", "displacement", "progression", "bypass", "coefficient", 
 # Praise or criticism is a judgement the detectors never made, so no audience may use it.
 JUDGEMENT = ("clever", "brilliant", "great", "superb", "smart", "excellent", "perfect", "genius", "world-class",
              "poor", "lazy", "sloppy", "terrible", "effectively", "masterful", "inch-perfect", "significant",
-             "significantly", "precise", "perfectly", "dramatically", "massively")
-# Positions are never measured; "defender" alone is fine, as it only says which side a player was on.
+             "significantly", "precise", "perfectly", "dramatically", "massively",
+             "substantial", "substantially", "huge", "hugely")
+# Positions are never measured; "defender" alone is fine, as it only says which side a player was on, and so is
+# "back line" / "defensive line", which backLineDropM measures.
 ROLES = ("midfield", "midfielder", "centre-back", "center-back", "full-back", "fullback", "winger", "striker",
-         "defensive line", "back line", "back four", "duo")
+         "back four", "duo")  # "back line" is measured (backLineDropM), so it is allowed
 # Raw field names (camelCase) and enum codes belong in the data, not the text. Plain-word field names
 # such as "confidence" or "pattern" are ordinary English and allowed.
 RAW_TERMS = sorted(
@@ -37,6 +39,29 @@ def _words(text):
     return len(WORD.findall(text))
 
 
+def check_team_names(explanation, teams, attacking):
+    """Teams must be named by their real names, and players credited to the right team.
+
+    `teams` maps our labels (HOME/AWAY) to real names; `attacking` is the label of the team that made the play.
+    """
+    names = {label: name.split(" (")[0] for label, name in teams.items() if name}
+    defending = "AWAY" if attacking == "HOME" else "HOME"
+    attackers, defenders = ("H", "A") if attacking == "HOME" else ("A", "H")
+    problems = []
+    for text in [explanation.headline] + [c.text for c in explanation.claims]:
+        rest = text
+        for name in sorted(names.values(), key=len, reverse=True):
+            rest = rest.replace(name, "")
+        # Capitalised "Home"/"Away" (as in "Home's H10") or "home/away team/side"; ordinary "away from" is fine.
+        if re.search(r"\b(Home|Away)\b", rest) or re.search(r"\b(home|away) (team|side)\b", rest, re.IGNORECASE):
+            problems.append(f'Use the team names ({" / ".join(names.values())}), not "home" or "away": "{text}"')
+        for label, wrong in ((defending, attackers), (attacking, defenders)):
+            name = names.get(label)
+            if name and re.search(rf"{re.escape(name)}[’']s\s+(?:player\s+|defender\s+)?{wrong}\d", text):
+                problems.append(f'Player credited to the wrong team ({name}): "{text}"')
+    return problems
+
+
 def check_style(audience, explanation, real_data=False):
     """Return a list of style problems for this audience; empty means it fits.
 
@@ -54,6 +79,8 @@ def check_style(audience, explanation, real_data=False):
         problems.append(f"The headline has {_words(explanation.headline)} words; a {audience} headline may have at "
                         f'most {rules["headline_words"]}: "{explanation.headline}"')
     for text in claims:
+        if not text.rstrip().endswith((".", "!", "?")):
+            problems.append(f'Each claim must be a complete sentence ending with a full stop: "{text}"')
         if _words(text) > rules["max_words"]:
             problems.append(f'This sentence has {_words(text)} words; use at most {rules["max_words"]} for a '
                             f'{audience}: "{text}"')

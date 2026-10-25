@@ -98,3 +98,18 @@ def test_explanation_is_withheld_if_both_revisions_still_fail():
     assert result["status"] == "withheld" and result["attempts"] == 3
     assert "headline" not in result
     assert any("Number 20" in p for p in result["problems"])
+
+
+def test_teams_are_named_by_role_not_label():
+    runner = FakeRunner([GROUNDED], [APPROVED])
+    _explain(runner)
+    prompt = runner.calls[0][1]
+    assert '"attacking (made the play)": "North London Red"' in prompt
+    assert '"defending": "South Coast Blue"' in prompt
+
+
+def test_insight_shows_the_team_name_not_the_label():
+    runner = FakeRunner([GROUNDED], [APPROVED])
+    _explain(runner)
+    prompt = runner.calls[0][1]
+    assert '"team": "North London Red"' in prompt and '"team": "HOME"' not in prompt
