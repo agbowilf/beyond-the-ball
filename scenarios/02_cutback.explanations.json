@@ -1,0 +1,233 @@
+{
+  "scenarioId": "02_cutback",
+  "model": "gpt-4.1-mini",
+  "generatedAt": "2026-10-25T11:22:39+00:00",
+  "explanations": [
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H9",
+      "status": "approved",
+      "audience": "fan",
+      "headline": "No. 9\u2019s run pulled a defender away from the ball",
+      "claims": [
+        {
+          "text": "North London Red\u2019s No. 9 ran over 12 metres without touching the ball, dragging South Coast Blue\u2019s No. 5 away.",
+          "evidence": [
+            "playerId",
+            "runnerDisplacementM",
+            "runnerTouches",
+            "markerId",
+            "markerPullM"
+          ]
+        },
+        {
+          "text": "This gave a teammate much more space to get the pass and take a shot soon after.",
+          "evidence": [
+            "freeSpaceEndM2",
+            "targetZone",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 3
+    },
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H9",
+      "status": "approved",
+      "audience": "coach",
+      "headline": "H9\u2019s run pulled defender A5 away, creating central space for a teammate",
+      "claims": [
+        {
+          "text": "H9 ran 12.2 metres off the ball, dragging defender A5 who followed the run very closely in the same direction.",
+          "evidence": [
+            "runnerDisplacementM",
+            "markerFollowCosine"
+          ]
+        },
+        {
+          "text": "As a result, A5 ended up 7.5 metres further from the receiving spot than at the start of the run.",
+          "evidence": [
+            "markerPullM"
+          ]
+        },
+        {
+          "text": "The space around the receiving zone expanded from 34 to 188 square metres, increasing more than fivefold.",
+          "evidence": [
+            "freeSpaceStartM2",
+            "freeSpaceEndM2",
+            "freeSpaceRatio"
+          ]
+        },
+        {
+          "text": "Meanwhile, the defending back line dropped 8.6 metres deeper, and H9 never touched the ball before a shot was taken 1.4 seconds after the pass.",
+          "evidence": [
+            "backLineDropM",
+            "runnerTouches",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    },
+    {
+      "insightIndex": 0,
+      "type": "SPACE_CREATOR",
+      "playerId": "H9",
+      "status": "approved",
+      "audience": "analyst",
+      "headline": "H9's off-ball run created central space for a teammate",
+      "claims": [
+        {
+          "text": "At 9.4 seconds, H9 ran 12.2 metres off the ball, dragging defender A5 who moved 11.7 metres with a 0.99 directional match, measured at 0.89 detector confidence.",
+          "evidence": [
+            "t",
+            "playerId",
+            "runnerDisplacementM",
+            "markerId",
+            "markerDisplacementM",
+            "markerFollowCosine",
+            "confidence"
+          ]
+        },
+        {
+          "text": "Space in the central lane of the attacking third grew from 34 to 188 square metres\u2014a 5.5 times increase\u2014while A5 moved 7.5 metres further from that spot.",
+          "evidence": [
+            "targetZone",
+            "freeSpaceStartM2",
+            "freeSpaceEndM2",
+            "freeSpaceRatio",
+            "markerPullM"
+          ]
+        },
+        {
+          "text": "The nearest defender to the receiving zone increased distance from 3.3 to 7.7 metres, while the back line dropped 8.6 metres toward its own goal during the run and pass.",
+          "evidence": [
+            "nearestDefenderToTargetStartM",
+            "nearestDefenderToTargetEndM",
+            "backLineDropM"
+          ]
+        },
+        {
+          "text": "H9 made no touches from the start of the run until 1.4 seconds after the pass was played, when the shot occurred.",
+          "evidence": [
+            "runnerTouches",
+            "shotSecondsAfterPass"
+          ]
+        }
+      ],
+      "attempts": 2
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H6",
+      "status": "approved",
+      "audience": "fan",
+      "headline": "No. 6\u2019s single pass beat six opponents to No. 8",
+      "claims": [
+        {
+          "text": "North London Red\u2019s No. 6 made a single pass to No. 8 that bypassed six opponents.",
+          "evidence": [
+            "playerId",
+            "partnerId",
+            "bypassedIds",
+            "pattern"
+          ]
+        },
+        {
+          "text": "No. 8 received the pass that started the attack toward the shot.",
+          "evidence": [
+            "partnerId",
+            "pattern",
+            "passesToShot"
+          ]
+        }
+      ],
+      "attempts": 3
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H6",
+      "status": "approved",
+      "audience": "coach",
+      "headline": "H6's line-breaking pass bypassed six opponents to start the attack",
+      "claims": [
+        {
+          "text": "H6 played the origin and line-breaking pass to H8 at 4.6 seconds, bypassing six opponents.",
+          "evidence": [
+            "lineBreakingPassT",
+            "bypassedIds"
+          ]
+        },
+        {
+          "text": "No one-two occurred because H8 received the pass without returning it.",
+          "evidence": [
+            "partnerId",
+            "pattern"
+          ]
+        },
+        {
+          "text": "The attack included three passes from the origin to the shot, covering 29 metres toward goal.",
+          "evidence": [
+            "passesToShot",
+            "progressionM"
+          ]
+        },
+        {
+          "text": "The chance began 6.2 seconds before the shot and 4.8 seconds before the final pass.",
+          "evidence": [
+            "secondsBeforeShot",
+            "secondsBeforeFinalPass"
+          ]
+        }
+      ],
+      "attempts": 1
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H6",
+      "status": "approved",
+      "audience": "analyst",
+      "headline": "H6's pass initiates a six-opponent line break and key attack",
+      "claims": [
+        {
+          "text": "At 4.6 seconds, player H6 from North London Red played the origin and line-breaking pass to H8 with detector confidence 1.0.",
+          "evidence": [
+            "t",
+            "team",
+            "playerId",
+            "partnerId",
+            "confidence"
+          ]
+        },
+        {
+          "text": "This single pass bypassed 6 opponents (A4, A7, A8, A9, A10, A11).",
+          "evidence": [
+            "bypassedIds",
+            "opponentsBypassed"
+          ]
+        },
+        {
+          "text": "From this origin pass, the attack included 3 passes leading to the shot and gained 29.0 metres progression toward goal.",
+          "evidence": [
+            "passesToShot",
+            "progressionM"
+          ]
+        },
+        {
+          "text": "The chance began 6.2 seconds before the shot and 4.8 seconds before the final pass.",
+          "evidence": [
+            "secondsBeforeShot",
+            "secondsBeforeFinalPass"
+          ]
+        }
+      ],
+      "attempts": 1
+    }
+  ]
+}
