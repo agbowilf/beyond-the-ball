@@ -1092,3 +1092,39 @@ select {
     border-radius: 12px;
   }
 }
+
+/* First-visit guide */
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: -4px 0 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.intro p {
+  flex: 1;
+  margin: 0;
+}
+.intro b {
+  color: var(--lime);
+  font-weight: 700;
+}
+.intro p > b:first-child {
+  color: #fff;
+}
+.intro button {
+  flex: none;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--on-lime);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}

@@ -101,6 +101,9 @@ python3 backend/run_analysis.py scenarios/01_decoy_run.json
 # Agent explanations (needs a Microsoft Foundry project and `az login`)
 cp .env.example .env                              # set FOUNDRY_PROJECT_ENDPOINT and FOUNDRY_MODEL
 .venv/bin/python -m backend.explain scenarios/01_decoy_run.insights.json
+
+# Watch the agents work: every draft, code check, Fact-checker verdict and revision, without saving
+.venv/bin/python -m backend.explain scenarios/01_decoy_run.insights.json --only SPACE_CREATOR:fan --trace --no-save
 ```
 
 Useful replay links: `?scenario=real`, `?insight=1` (second insight), `?audience=coach`, `?t=10` (start time).
@@ -132,3 +135,6 @@ The demo match is **synthetic**: all clubs, players and data are fictional. The 
 excerpt of [Metrica Sports' sample data](https://github.com/metrica-sports/sample-data) (game 2), which is anonymised
 and used with thanks; player labels such as H10 are ours, not shirt numbers. The rest of Metrica's data is not part of
 this repository.
+
+The code is released under the [MIT License](LICENSE). The Metrica excerpt in `scenarios/real/` is not covered by it
+and remains subject to Metrica's own terms.

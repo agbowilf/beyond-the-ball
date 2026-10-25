@@ -107,28 +107,39 @@ def brief(insight, context):
     }, indent=2)
 
 
-async def explain(insight, context, audience, run, max_revisions=2):
-    """Draft, check and if needed revise an explanation. `run(role, prompt, schema)` calls an agent."""
+async def explain(insight, context, audience, run, max_revisions=2, log=None):
+    """Draft, check and if needed revise an explanation. `run(role, prompt, schema)` calls an agent.
+
+    `log(step, detail)`, if given, is called at each step (used by `--trace` to show the loop working).
+    """
+    log = log or (lambda step, detail: None)
     facts = brief(insight, context)
     prompt = f"Audience: {AUDIENCES[audience]}\n\nInsight:\n{facts}"
     draft = await run("explainer", prompt, Explanation)
+    log("draft", draft)
 
     for attempt in range(1, max_revisions + 2):
         problems = (check(insight, draft) + check_style(audience, draft, real_data=context.get("realData", False))
                     + check_team_names(draft, context.get("teams", {}), insight["team"])
                     + check_pattern(insight, draft))
+        log("code checks", problems)
         review = await run("fact_checker", f"Insight:\n{facts}\n\nDraft:\n{draft.model_dump_json(indent=2)}", Review)
+        log("fact-checker", review)
         issues = problems + ([] if review.approved else review.issues or ["The fact-checker did not approve."])
         if not issues:
+            log("approved", attempt)
             return {"status": "approved", "audience": audience, **draft.model_dump(), "attempts": attempt}
         if attempt > max_revisions:
+            log("withheld", issues)
             return {"status": "withheld", "audience": audience, "attempts": attempt, "problems": issues}
+        log("revise", issues)
         feedback = "\n".join(f"- {i}" for i in issues)
         draft = await run(
             "explainer",
             f"{prompt}\n\nYour previous draft:\n{draft.model_dump_json(indent=2)}\n\nFix these problems:\n{feedback}",
             Explanation,
         )
+        log("draft", draft)
 
 
 class FoundryRunner:
