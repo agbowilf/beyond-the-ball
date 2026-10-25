@@ -76,3 +76,22 @@ def test_origin_never_comes_before_a_turnover():
     scenario["events"].sort(key=lambda e: e["t"])
     for origin in detect_sequence_origins(scenario):
         assert origin["t"] > one_two + 0.2
+
+
+def test_a_cut_back_assist_does_not_cancel_the_origin():
+    scenario = copy.deepcopy(_load_generator().build())
+    # Turn the assist into a cut-back: it now travels 8 m backwards to the receiver.
+    assist = max((e for e in scenario["events"] if e["type"] == "PASS"), key=lambda e: e["t"])
+    assist["end"] = {"x": assist["start"]["x"] - 8.0, "y": assist["end"]["y"]}
+    top = detect_sequence_origins(scenario)
+    assert top and (top[0]["playerId"], top[0]["partnerId"]) == ("H8", "H6")
+
+
+def test_a_backward_pass_before_the_assist_still_breaks_the_chain():
+    scenario = copy.deepcopy(_load_generator().build())
+    passes = sorted((e for e in scenario["events"] if e["type"] == "PASS"), key=lambda e: e["t"])
+    # The pass between the one-two and the assist goes 8 m backwards: the attack did not keep progressing.
+    one_two_return = passes[-2]
+    one_two_return["end"] = {"x": one_two_return["start"]["x"] - 8.0, "y": one_two_return["end"]["y"]}
+    origins = detect_sequence_origins(scenario)
+    assert origins and all(origin["t"] > one_two_return["t"] for origin in origins)

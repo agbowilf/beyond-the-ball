@@ -106,7 +106,9 @@ played and not goal-side in the frame when it is received.
 The origin is the **earliest** pass in the chain that:
 
 1. bypasses at least **2** opponents (it breaks a line), and
-2. is followed only by passes that do not go backward by more than **2 m**, so the attack keeps progressing
+2. is followed only by passes that do not go backward by more than **2 m**, so the attack keeps progressing. The
+   assist itself is exempt, because a cut-back into space is a common final ball (found on real data: see
+   `docs/real-data.md`)
    to the shot.
 
 If that pass is the return of a wall pass (the previous pass in the chain went from its receiver to its

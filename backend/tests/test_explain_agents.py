@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from backend.explain.agents import explain  # noqa: E402
+from backend.explain.agents import explain, who_did_what  # noqa: E402
 from backend.explain.models import Claim, Explanation, Review  # noqa: E402
 
 INSIGHT = next(i for i in json.loads((ROOT / "scenarios" / "01_decoy_run.insights.json").read_text())
@@ -113,3 +113,12 @@ def test_insight_shows_the_team_name_not_the_label():
     _explain(runner)
     prompt = runner.calls[0][1]
     assert '"team": "North London Red"' in prompt and '"team": "HOME"' not in prompt
+
+
+def test_who_did_what_distinguishes_the_two_patterns():
+    one_two = {"type": "SEQUENCE_ORIGIN", "playerId": "H8", "partnerId": "H6", "pattern": "ONE_TWO",
+               "evidence": {"opponentsBypassed": 2}}
+    single = {**one_two, "pattern": "LINE_BREAKING_PASS", "partnerId": "H5", "evidence": {"opponentsBypassed": 5}}
+    assert "H6 passed back to H8" in who_did_what(one_two)
+    assert "no one-two" in who_did_what(single) and "did not pass back" in who_did_what(single)
+    assert who_did_what({"type": "SPACE_CREATOR"}) is None

@@ -8,7 +8,7 @@ sys.path.insert(0, str(ROOT))
 
 from backend.explain.grounding import check  # noqa: E402
 from backend.explain.models import Explanation  # noqa: E402
-from backend.explain.style import check_style, check_team_names  # noqa: E402
+from backend.explain.style import check_pattern, check_style, check_team_names  # noqa: E402
 
 
 EXPLANATIONS = sorted((ROOT / "scenarios").rglob("*.explanations.json"))
@@ -29,5 +29,6 @@ def test_committed_explanations_pass_every_check():
             exp = Explanation(headline=e["headline"], claims=e["claims"])
             teams = {label: t["name"] for label, t in scenario["teams"].items()}
             problems = (check(insights[e["insightIndex"]], exp) + check_style(e["audience"], exp, real_data=real)
-                        + check_team_names(exp, teams, insights[e["insightIndex"]]["team"]))
+                        + check_team_names(exp, teams, insights[e["insightIndex"]]["team"])
+                        + check_pattern(insights[e["insightIndex"]], exp))
             assert problems == [], f"{path.name} {e['type']}/{e['audience']}: {problems}"

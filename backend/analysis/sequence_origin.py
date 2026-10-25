@@ -71,7 +71,8 @@ def detect_sequence_origins(scenario):
             if t_recv is None:
                 continue
             bypassed = _bypassed(frames, ps, t_recv, sign)
-            forward_after = all(sign * (p["end"]["x"] - p["start"]["x"]) >= -MAX_BACKWARD_M for p in chain[i:])
+            # The assist (the last pass) is exempt: a cut-back into space is a common final ball, not a retreat.
+            forward_after = all(sign * (p["end"]["x"] - p["start"]["x"]) >= -MAX_BACKWARD_M for p in chain[i:-1])
             if len(bypassed) < MIN_BYPASSED or not forward_after:
                 continue
 

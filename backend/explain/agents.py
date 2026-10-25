@@ -15,7 +15,7 @@ import os
 
 from .glossary import COMMON_FIELDS, FIELDS
 from .grounding import check
-from .style import check_style, check_team_names
+from .style import check_pattern, check_style, check_team_names
 from .models import Explanation, Review
 
 AUDIENCES = {
@@ -77,6 +77,18 @@ it must keep what was measured: for example, a distance to where the pass was re
 ball. Do not rewrite the draft."""
 
 
+def who_did_what(insight):
+    """Plain statement of each player's action, generated from the insight so agents cannot misread the pattern."""
+    if insight["type"] != "SEQUENCE_ORIGIN":
+        return None
+    p, q, n = insight["playerId"], insight["partnerId"], insight["evidence"]["opponentsBypassed"]
+    if insight["pattern"] == "ONE_TWO":
+        return (f"One-two: {p} passed to {q} (the origin pass), then {q} passed back to {p}; that return pass is the "
+                f"line-breaking pass that bypassed {n} opponents.")
+    return (f"Single pass, no one-two: {p}'s pass to {q} is both the origin and the line-breaking pass; it bypassed "
+            f"{n} opponents. {q} received it and did not pass back.")
+
+
 def brief(insight, context):
     """Everything an agent may know about one insight, as JSON."""
     spec = FIELDS[insight["type"]]
@@ -88,7 +100,7 @@ def brief(insight, context):
             "attacking (made the play)": context.get("teams", {}).get(insight["team"]),
             "defending": context.get("teams", {}).get("AWAY" if insight["team"] == "HOME" else "HOME"),
         },
-        "notes": context.get("notes", []),
+        "notes": context.get("notes", []) + [x for x in [who_did_what(insight)] if x],
         "fieldDefinitions": {**COMMON_FIELDS, **spec["fields"]},
         # The team label (HOME/AWAY) is replaced by the attacking team's real name, so it cannot be misread as one.
         "insight": {**insight, "team": context.get("teams", {}).get(insight["team"], insight["team"])},
@@ -103,7 +115,8 @@ async def explain(insight, context, audience, run, max_revisions=2):
 
     for attempt in range(1, max_revisions + 2):
         problems = (check(insight, draft) + check_style(audience, draft, real_data=context.get("realData", False))
-                    + check_team_names(draft, context.get("teams", {}), insight["team"]))
+                    + check_team_names(draft, context.get("teams", {}), insight["team"])
+                    + check_pattern(insight, draft))
         review = await run("fact_checker", f"Insight:\n{facts}\n\nDraft:\n{draft.model_dump_json(indent=2)}", Review)
         issues = problems + ([] if review.approved else review.issues or ["The fact-checker did not approve."])
         if not issues:

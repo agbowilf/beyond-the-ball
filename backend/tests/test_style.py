@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from backend.explain.models import Claim, Explanation  # noqa: E402
-from backend.explain.style import check_style, check_team_names  # noqa: E402
+from backend.explain.style import check_pattern, check_style, check_team_names  # noqa: E402
 
 
 def _exp(*texts, headline="No. 10's run opens up the space"):
@@ -107,3 +107,17 @@ def test_players_must_be_credited_to_their_own_team():
 def test_claims_must_be_complete_sentences():
     exp = _exp("H10 ran 14.2 m during the run,", "The space opened.", "The shot came 2.2 s after the pass.")
     assert any("complete sentence" in p for p in check_style("coach", exp))
+
+
+def test_single_line_breaking_pass_is_not_described_as_a_one_two():
+    single = {"type": "SEQUENCE_ORIGIN", "pattern": "LINE_BREAKING_PASS"}
+    assert check_pattern(single, _exp("H8's pass to H5 bypassed five opponents.", "The attack moved on.")) == []
+    wrong = _exp("H5 returned the ball to H8, bypassing five opponents.", "The attack moved on.")
+    assert any("no return or one-two" in p for p in check_pattern(single, wrong))
+    one_two = {"type": "SEQUENCE_ORIGIN", "pattern": "ONE_TWO"}
+    assert check_pattern(one_two, _exp("H6 returned the ball to H8.", "It bypassed 2 opponents.")) == []
+
+
+def test_bypassed_players_are_opponents_not_defenders():
+    single = {"type": "SEQUENCE_ORIGIN", "pattern": "LINE_BREAKING_PASS"}
+    assert any("opponents" in p for p in check_pattern(single, _exp("H8's pass cut out five defenders.", "Then a shot.")))
