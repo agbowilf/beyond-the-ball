@@ -74,6 +74,11 @@ async def main():
         ]
     run = FoundryRunner()
 
+    known = {(i["type"], a) for i in insights for a in args.audience}
+    unknown = sorted(":".join(o) for o in only if o not in known)
+    if unknown:
+        parser.error(f"--only matches nothing: {', '.join(unknown)} (use TYPE:AUDIENCE, e.g. SPACE_CREATOR:coach)")
+
     out = Path(str(args.insights).replace(".insights.json", ".explanations.json"))
     kept = json.loads(out.read_text())["explanations"] if only and out.exists() else []
 

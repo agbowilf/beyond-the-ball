@@ -76,7 +76,7 @@ def test_long_headline_feedback_gives_the_count():
 
 
 def test_claim_counts_differ_by_audience():
-    assert any("Use exactly 3 claims" in p for p in check_style("coach", FAN))
+    assert any("Use 3 to 4 claims" in p for p in check_style("coach", FAN))
 
 
 def test_real_data_rejects_shirt_number_phrasing():
@@ -114,6 +114,8 @@ def test_single_line_breaking_pass_is_not_described_as_a_one_two():
     assert check_pattern(single, _exp("H8's pass to H5 bypassed five opponents.", "The attack moved on.")) == []
     wrong = _exp("H5 returned the ball to H8, bypassing five opponents.", "The attack moved on.")
     assert any("no return or one-two" in p for p in check_pattern(single, wrong))
+    negated = _exp("H6's pass to H8 started the chance with no one-two.", "It was not returned.")
+    assert check_pattern(single, negated) == []
     one_two = {"type": "SEQUENCE_ORIGIN", "pattern": "ONE_TWO"}
     assert check_pattern(one_two, _exp("H6 returned the ball to H8.", "It bypassed 2 opponents.")) == []
 

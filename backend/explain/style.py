@@ -30,7 +30,7 @@ WORD = re.compile(r"[A-Za-z0-9'’.-]+")
 
 RULES = {
     "fan": {"claims": (1, 2), "max_words": 20, "headline_words": 10, "max_numbers_total": 1},
-    "coach": {"claims": (3, 3), "max_words": 30, "headline_words": 12, "max_numbers_per_claim": 2},
+    "coach": {"claims": (3, 4), "max_words": 30, "headline_words": 12, "max_numbers_per_claim": 2},
     "analyst": {"claims": (3, 4), "max_words": 35, "headline_words": 12, "min_numbers_per_claim": 1},
 }
 
@@ -69,8 +69,10 @@ def check_pattern(insight, explanation):
     problems = []
     for text in [explanation.headline] + [c.text for c in explanation.claims]:
         low = text.lower()
+        # Negated mentions ("no one-two", "without a return") correctly describe a single pass.
+        affirmed = re.sub(r"\b(no|not|without|rather than|instead of)\b[^.,;]{0,25}", "", low)
         if insight.get("pattern") == "LINE_BREAKING_PASS" and re.search(
-                r"\breturn(ed|s)?\b|one-two|one two|passed back|played back|sent back|back to", low):
+                r"\breturn(ed|s)?\b|one-two|one two|passed back|played back|sent back|back to", affirmed):
             problems.append(f'This was a single pass with no return or one-two; describe only that pass: "{text}"')
         if re.search(r"\bdefenders?\b", low):
             problems.append(f'Bypassed players were opponents in any position; say opponents or players: "{text}"')

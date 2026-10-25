@@ -39,7 +39,7 @@ AUDIENCES = {
 - Explain the mechanism: what the attacker did, how the defender reacted, and what that opened up.
 - Use only the numbers that make the point, at most two per sentence, with units.
 - Name players by id, for example H10 or A6.
-- Exactly 3 sentences.""",
+- 3 or 4 sentences; use the fourth rather than packing more than two numbers into one.""",
     "analyst": """A performance analyst writing a match report.
 - Precise and measured. Every sentence quotes at least one measurement with its unit.
 - Include the timings and the detector confidence where relevant.
