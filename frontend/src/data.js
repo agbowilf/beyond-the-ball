@@ -1,10 +1,14 @@
 import decoyScenario from '../../scenarios/01_decoy_run.json'
 import decoyInsights from '../../scenarios/01_decoy_run.insights.json'
 import decoyExplanations from '../../scenarios/01_decoy_run.explanations.json'
+import cutbackScenario from '../../scenarios/02_cutback.json'
+import cutbackInsights from '../../scenarios/02_cutback.insights.json'
+import cutbackExplanations from '../../scenarios/02_cutback.explanations.json'
 
 // The scenarios the site offers, chosen with ?scenario=<id>.
 export const SCENARIOS = [
-  { id: 'demo', label: 'Demo match', note: 'Synthetic', data: [decoyScenario, decoyInsights, decoyExplanations] },
+  { id: 'demo', label: 'Decoy run', note: 'Moment 1', data: [decoyScenario, decoyInsights, decoyExplanations] },
+  { id: 'cutback', label: 'Cut-back', note: 'Moment 2', data: [cutbackScenario, cutbackInsights, cutbackExplanations] },
 ]
 
 // For reviewing real-data validation clips locally (never deployed): ?scenario=metrica_g2_shot_05 loads that clip and its insights from

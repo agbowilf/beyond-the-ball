@@ -1,0 +1,62 @@
+[
+  {
+    "type": "SPACE_CREATOR",
+    "t": 9.4,
+    "team": "HOME",
+    "playerId": "H9",
+    "markerId": "A5",
+    "targetZone": "central lane, attacking third",
+    "confidence": 0.89,
+    "confidenceParts": {
+      "pull": 0.94,
+      "follow": 0.99,
+      "free": 0.74
+    },
+    "evidence": {
+      "runnerDisplacementM": 12.2,
+      "markerDisplacementM": 11.7,
+      "markerFollowCosine": 0.99,
+      "markerDistanceToTargetStartM": 3.3,
+      "markerDistanceToTargetEndM": 10.8,
+      "nearestDefenderToTargetStartM": 3.3,
+      "nearestDefenderToTargetEndM": 7.7,
+      "shotSecondsAfterPass": 1.4,
+      "runnerTouches": 0,
+      "freeSpaceStartM2": 34,
+      "freeSpaceEndM2": 188,
+      "freeSpaceGainM2": 154,
+      "freeSpaceRatio": 5.5,
+      "markerPullM": 7.5,
+      "backLineDropM": 8.6
+    }
+  },
+  {
+    "type": "SEQUENCE_ORIGIN",
+    "t": 4.6,
+    "team": "HOME",
+    "playerId": "H6",
+    "partnerId": "H8",
+    "pattern": "LINE_BREAKING_PASS",
+    "bypassedIds": [
+      "A4",
+      "A7",
+      "A8",
+      "A9",
+      "A10",
+      "A11"
+    ],
+    "confidence": 1.0,
+    "confidenceParts": {
+      "lines": 1.0,
+      "progress": 1.0
+    },
+    "evidence": {
+      "opponentsBypassed": 6,
+      "lineBreakingPassT": 4.6,
+      "passesToShot": 3,
+      "progressionM": 29.0,
+      "secondsBeforeFinalPass": 4.8,
+      "secondsBeforeShot": 6.2
+    }
+  }
+]

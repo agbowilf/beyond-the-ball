@@ -26,7 +26,8 @@ export default function Intro() {
     <aside className="intro" aria-label="How to use this replay">
       <p>
         <b>Beyond the Ball finds the off-ball work that stats miss.</b> Press <span aria-hidden="true">▶</span> play,
-        then switch <b>Watch as Fan / Coach / Analyst</b> and hover any line to see its evidence.
+        then switch <b>Watch as Fan / Coach / Analyst</b> and hover any line to see its evidence. Two moments from a
+        synthetic match: try both.
       </p>
       <button onClick={dismiss}>
         Got it
