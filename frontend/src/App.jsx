@@ -2,6 +2,7 @@ import { useState } from 'react'
 import ChainStrip from './ChainStrip.jsx'
 import Controls from './Controls.jsx'
 import EvidencePanel from './EvidencePanel.jsx'
+import Intro from './Intro.jsx'
 import LowerThird from './LowerThird.jsx'
 import OffsideLine from './OffsideLine.jsx'
 import Pitch from './Pitch.jsx'
@@ -106,6 +107,7 @@ function Replay() {
     <div className="app">
       <Scoreboard t={replay.t} />
       <ScenarioSwitch />
+      <Intro />
       <main>
         <section className="stage">
           <div className="broadcast">
