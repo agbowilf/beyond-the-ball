@@ -122,3 +122,11 @@ def test_who_did_what_distinguishes_the_two_patterns():
     assert "H6 passed back to H8" in who_did_what(one_two)
     assert "no one-two" in who_did_what(single) and "did not pass back" in who_did_what(single)
     assert who_did_what({"type": "SPACE_CREATOR"}) is None
+
+
+def test_log_sees_each_step_including_a_revision():
+    steps = []
+    runner = FakeRunner([INVENTED, GROUNDED], [APPROVED, APPROVED])
+    asyncio.run(explain(INSIGHT, CONTEXT, "fan", runner, log=lambda step, detail: steps.append(step)))
+    assert steps == ["draft", "code checks", "fact-checker", "revise", "draft", "code checks", "fact-checker",
+                     "approved"]

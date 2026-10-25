@@ -2,6 +2,8 @@
 
 Usage: python -m backend.explain scenarios/01_decoy_run.insights.json [--audience fan coach analyst]
        [--only SEQUENCE_ORIGIN:coach ...]   regenerate just these, keeping the rest of the existing file
+       [--trace]                            print every agent step: drafts, code checks, fact-checker, revisions
+       [--no-save]                          do not write the file (for demos; committed explanations stay reviewed)
 
 Needs FOUNDRY_PROJECT_ENDPOINT and FOUNDRY_MODEL (in the environment or .env) and `az login`.
 """
@@ -15,6 +17,29 @@ from pathlib import Path
 from .agents import AUDIENCES, FoundryRunner, explain
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def trace(step, detail):
+    """Readable view of the agent loop, for showing it working."""
+    rule = "-" * 72
+    if step == "draft":
+        print(f"\n{rule}\nEXPLAINER draft\n  # {detail.headline}")
+        for c in detail.claims:
+            print(f"  - {c.text}\n      cites: {', '.join(c.evidence)}")
+    elif step == "code checks":
+        print("CODE CHECKS (grounding, style, teams, pattern): " + ("pass" if not detail else ""))
+        for p in detail:
+            print(f"  x {p}")
+    elif step == "fact-checker":
+        print("FACT-CHECKER agent: " + ("approved" if detail.approved else "rejected"))
+        for issue in detail.issues:
+            print(f"  x {issue}")
+    elif step == "revise":
+        print(">> sent back to the Explainer with these problems")
+    elif step == "approved":
+        print(f"\nAPPROVED after {detail} attempt(s)\n{rule}")
+    elif step == "withheld":
+        print(f"\nWITHHELD: never shown\n{rule}")
 
 
 def load_env(path=ROOT / ".env"):
@@ -31,6 +56,8 @@ async def main():
     parser.add_argument("--audience", nargs="+", choices=list(AUDIENCES), default=list(AUDIENCES))
     parser.add_argument("--only", nargs="+", metavar="TYPE:AUDIENCE", default=[],
                         help="regenerate only these explanations and keep the rest of the existing file")
+    parser.add_argument("--trace", action="store_true", help="print every agent step")
+    parser.add_argument("--no-save", action="store_true", help="do not write the explanations file")
     args = parser.parse_args()
     only = {tuple(o.split(":")) for o in args.only}
 
@@ -56,10 +83,15 @@ async def main():
             if only and (insight["type"], audience) not in only:
                 results += [e for e in kept if e["insightIndex"] == index and e["audience"] == audience]
                 continue
-            result = await explain(insight, context, audience, run)
+            if args.trace:
+                print(f"\n=== {insight['type']} · {insight['playerId']} · for a {audience} ===")
+            result = await explain(insight, context, audience, run, log=trace if args.trace else None)
             results.append({"insightIndex": index, "type": insight["type"], "playerId": insight["playerId"], **result})
             print(f"{insight['type']:<16} {audience:<8} {result['status']} after {result['attempts']} attempt(s)")
 
+    if args.no_save:
+        print("not saved (--no-save)")
+        return
     out.write_text(json.dumps({
         "scenarioId": scenario["scenarioId"],
         "model": run.model,
