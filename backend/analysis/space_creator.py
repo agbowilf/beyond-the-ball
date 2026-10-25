@@ -70,6 +70,13 @@ def target_zone(point, team):
     return f"{lane}, {area}"
 
 
+def _back_line_depth(frame, defending, attacking_team):
+    """How deep the defending back line sits: mean of its four deepest outfield players along the attack direction."""
+    sign = 1 if attacking_team == "HOME" else -1  # HOME attacks +x
+    depths = sorted((sign * p["x"] for p in _outfield(frame, defending)), reverse=True)[:4]
+    return sum(depths) / len(depths)
+
+
 def _touches(events, player_id, t0, t1):
     return sum(1 for e in events
                if e["type"] in ("PASS", "RECEIVE", "SHOT") and e["playerId"] == player_id and t0 <= e["t"] <= t1)
@@ -144,6 +151,7 @@ def detect_space_creators(scenario):
                     "freeSpaceGainM2": round(free1 - free0),
                     "freeSpaceRatio": round(free1 / free0, 1) if free0 else None,
                     "markerPullM": round(pull, 1),
+                    "backLineDropM": round(_back_line_depth(f1, opp, team) - _back_line_depth(f0, opp, team), 1),
                 },
             })
     return sorted(insights, key=lambda i: -i["confidence"])

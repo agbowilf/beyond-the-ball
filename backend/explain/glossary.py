@@ -35,6 +35,9 @@ FIELDS = {
             "freeSpaceRatio": "How many times larger the receiving space was when the pass was played than at run start",
             "markerPullM": "How much further from the receiving spot the marker ended up, in metres (not the total "
                            "distance the marker moved, which is markerDisplacementM)",
+            "backLineDropM": "How far the defending back line dropped towards its own goal during the run, in metres "
+                             "(negative means it stepped up). It happened during the run; it does NOT show the run "
+                             "alone caused it, so never say the runner pushed or forced the line back",
             "targetZone": "Lane and area of the spot where the pass was received, from the attacking team's point of "
                           "view. It describes the receiving spot only, not where any other player was",
         },

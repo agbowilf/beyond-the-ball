@@ -4,7 +4,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from backend.explain.models import Claim, Explanation  # noqa: E402
-from backend.explain.style import check_style  # noqa: E402
+from backend.explain.style import check_style, check_team_names  # noqa: E402
 
 
 def _exp(*texts, headline="No. 10's run opens up the space"):
@@ -88,3 +88,22 @@ def test_real_data_rejects_shirt_number_phrasing():
 def test_jargon_matches_whole_words_only():
     exp = _exp("Metrica Away's H10 ran far.", "The space opened.", headline="H10's run opens space")
     assert check_style("fan", exp) == []
+
+
+def test_home_and_away_labels_are_not_team_names():
+    teams = {"HOME": "Metrica Away (anonymised)", "AWAY": "Metrica Home (anonymised)"}
+    assert check_team_names(_exp("Metrica Away's H10 ran far.", "The space opened."), teams, "HOME") == []
+    assert check_team_names(_exp("H10 pulled A3 away from the spot.", "The space opened."), teams, "HOME") == []
+    assert check_team_names(_exp("Home's H10 ran far.", "The space opened."), teams, "HOME") != []
+    assert check_team_names(_exp("H10 ran for the away team.", "The space opened."), teams, "HOME") != []
+
+
+def test_players_must_be_credited_to_their_own_team():
+    teams = {"HOME": "Metrica Away (anonymised)", "AWAY": "Metrica Home (anonymised)"}
+    wrong = _exp("Metrica Home’s H10 ran far.", "The space opened.")
+    assert any("wrong team" in p for p in check_team_names(wrong, teams, "HOME"))
+
+
+def test_claims_must_be_complete_sentences():
+    exp = _exp("H10 ran 14.2 m during the run,", "The space opened.", "The shot came 2.2 s after the pass.")
+    assert any("complete sentence" in p for p in check_style("coach", exp))

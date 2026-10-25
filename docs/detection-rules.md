@@ -53,6 +53,7 @@ caused by long switches of play and by a second defender already covering the sp
 | `freeSpaceGainM2` | `freeSpaceEndM2 - freeSpaceStartM2` |
 | `freeSpaceRatio` | `freeSpaceEndM2 / freeSpaceStartM2`, from the unrounded areas ("4.9× more receiving space") |
 | `markerPullM` | How much further the marker ended from the target zone: `markerDistanceToTargetEndM - markerDistanceToTargetStartM` |
+| `backLineDropM` | How far the defending back line dropped towards its own goal over the window: change in the mean depth of its four deepest outfield players (negative if it stepped up). It describes the line during the run; it does not say the run alone caused it |
 
 ### Target zone label
 

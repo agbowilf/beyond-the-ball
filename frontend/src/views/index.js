@@ -46,6 +46,7 @@ const spaceCreator = {
     freeSpaceGainM2: ['Receiving space gained', 'm²', 0],
     freeSpaceRatio: ['Receiving space grew by', '×', 1],
     markerPullM: ['Marker pulled further away', 'm', 1],
+    backLineDropM: ['Back line dropped during the run', 'm', 1],
   },
   // Confidence parts in plain words, with their weights (docs/detection-rules.md).
   confidenceParts: {

@@ -1,7 +1,7 @@
 {
   "scenarioId": "metrica_g2_shot_12",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-23T16:56:30+00:00",
+  "generatedAt": "2026-10-25T09:51:12+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -9,10 +9,10 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "fan",
-      "headline": "H10\u2019s run pulled defender away creating big space",
+      "headline": "H10\u2019s run pulled defender away to open space",
       "claims": [
         {
-          "text": "Metrica Home's H10 ran far without touching the ball and pulled a defender away from a teammate's spot.",
+          "text": "Metrica Away\u2019s H10 ran far without touching the ball, drawing the defender away from the receiving spot.",
           "evidence": [
             "runnerDisplacementM",
             "runnerTouches",
@@ -20,10 +20,11 @@
           ]
         },
         {
-          "text": "This left much more room for the teammate to receive the pass and take a shot soon after.",
+          "text": "This created a much bigger space for a teammate to receive the ball in the left half-space.",
           "evidence": [
+            "freeSpaceStartM2",
             "freeSpaceEndM2",
-            "shotSecondsAfterPass"
+            "targetZone"
           ]
         }
       ],
@@ -35,30 +36,26 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "coach",
-      "headline": "H10\u2019s run pulls marker A3 away, opening space for a teammate",
+      "headline": "H10's run pulls defender A3 away and enlarges space for a teammate",
       "claims": [
         {
-          "text": "Player H10 ran 21.5 metres while marker A3 followed closely over 18 metres, matching H10\u2019s run direction very closely.",
+          "text": "H10 ran 21.5 metres while defender A3 followed closely with a marker follow cosine of 0.97.",
           "evidence": [
             "runnerDisplacementM",
-            "markerDisplacementM",
             "markerFollowCosine"
           ]
         },
         {
-          "text": "This movement pulled marker A3 11.8 metres from the receiving zone, greatly increasing the space there.",
+          "text": "This movement pulled A3 11.8 metres away from the receiving spot.",
           "evidence": [
-            "markerPullM",
-            "freeSpaceStartM2",
-            "freeSpaceEndM2"
+            "markerPullM"
           ]
         },
         {
-          "text": "The nearest defender to the receiving spot moved further away, allowing a teammate to receive the ball and shoot 2.3 seconds after the pass.",
+          "text": "The receiving space expanded to 252 square metres, which is 7.5 times larger when the pass was played.",
           "evidence": [
-            "nearestDefenderToTargetStartM",
-            "nearestDefenderToTargetEndM",
-            "shotSecondsAfterPass"
+            "freeSpaceEndM2",
+            "freeSpaceRatio"
           ]
         }
       ],
@@ -70,40 +67,40 @@
       "playerId": "H10",
       "status": "approved",
       "audience": "analyst",
-      "headline": "Off-ball run pulls defender away, increasing space for teammate",
+      "headline": "H10's run pulled defender A3 away to enlarge space in left half-space",
       "claims": [
         {
-          "text": "Player H10 made an off-ball run covering 21.5 metres over 5 seconds before the pass at 22.56 seconds with a detector confidence of 0.97.",
+          "text": "At 22.56 seconds, player H10 had moved 21.5 metres over the preceding 5 seconds, pulling marker A3 11.8 metres away from the target zone.",
           "evidence": [
             "t",
             "playerId",
             "runnerDisplacementM",
-            "confidence"
-          ]
-        },
-        {
-          "text": "Defender A3 followed H10's run with a cosine similarity of 0.97 and was pulled 11.8 metres away from the target receiving zone.",
-          "evidence": [
             "markerId",
-            "markerFollowCosine",
             "markerPullM"
           ]
         },
         {
-          "text": "Receiving space in the left half-space of the attacking third increased from 34 to 252 square metres, representing a 7.5-fold gain at the time the pass was played.",
+          "text": "Marker A3\u2019s movement closely followed H10\u2019s run direction, with a marker follow cosine of 0.97.",
+          "evidence": [
+            "markerFollowCosine"
+          ]
+        },
+        {
+          "text": "The free space around the receiving spot in the left half-space of the attacking third increased from 34 to 252 square metres, a 7.5-fold increase by 22.56 seconds.",
           "evidence": [
             "freeSpaceStartM2",
             "freeSpaceEndM2",
             "freeSpaceRatio",
-            "targetZone"
+            "targetZone",
+            "t"
           ]
         },
         {
-          "text": "The nearest defender to the receiving spot was 3.3 metres away at run start and 9.0 metres away when the pass was played; the shot occurred 2.3 seconds after the pass.",
+          "text": "The defending back line dropped 18.0 metres during H10\u2019s run, as measured over the run period leading up to 22.56 seconds; the detector confidence for this space creation insight is 0.97.",
           "evidence": [
-            "nearestDefenderToTargetStartM",
-            "nearestDefenderToTargetEndM",
-            "shotSecondsAfterPass"
+            "backLineDropM",
+            "t",
+            "confidence"
           ]
         }
       ],

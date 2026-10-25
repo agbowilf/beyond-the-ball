@@ -1,7 +1,7 @@
 {
   "scenarioId": "01_decoy_run",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-20T14:29:54+00:00",
+  "generatedAt": "2026-10-25T09:50:21+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -168,41 +168,42 @@
       "playerId": "H8",
       "status": "approved",
       "audience": "analyst",
-      "headline": "Home team started chance with a one-two sequence bypassing opponents",
+      "headline": "A one-two sequence started North London Red's forward chance",
       "claims": [
         {
-          "text": "Player H8 initiated the chance with a pass at 6.4 seconds into the clip.",
+          "text": "At 6.4 seconds, player H8 of North London Red played the origin pass initiating the sequence with a detector confidence of 0.78.",
           "evidence": [
             "t",
-            "playerId"
+            "team",
+            "playerId",
+            "confidence"
           ]
         },
         {
-          "text": "Player H6 played the line-breaking return pass at 7.1 seconds, bypassing 2 opponents, A10 and A11.",
+          "text": "Player H6 returned the line-breaking pass at 7.1 seconds, bypassing 2 opponents: A10 and A11.",
           "evidence": [
+            "partnerId",
             "lineBreakingPassT",
             "bypassedIds",
-            "opponentsBypassed",
-            "partnerId"
+            "opponentsBypassed"
           ]
         },
         {
-          "text": "The sequence included 3 passes from the origin to the shot, covering a progression of 24.0 metres.",
+          "text": "The sequence included 3 passes leading to the shot and gained 24.0 metres toward goal from the origin pass to the shot.",
           "evidence": [
             "passesToShot",
             "progressionM"
           ]
         },
         {
-          "text": "The chance began 5.8 seconds before the shot with a detector confidence of 0.78, including 0.67 confidence for lines and 0.96 for progression.",
+          "text": "The chance began 3.6 seconds before the final pass and 5.8 seconds before the shot was taken.",
           "evidence": [
-            "secondsBeforeShot",
-            "confidence",
-            "confidenceParts"
+            "secondsBeforeFinalPass",
+            "secondsBeforeShot"
           ]
         }
       ],
-      "attempts": 2
+      "attempts": 1
     }
   ]
 }

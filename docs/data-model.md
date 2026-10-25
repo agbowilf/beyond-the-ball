@@ -88,7 +88,8 @@ Planned later: `TACKLE`, `PRESSURE`, `SUBSTITUTION`.
     "freeSpaceEndM2": 274,
     "freeSpaceGainM2": 181,
     "freeSpaceRatio": 2.9,
-    "markerPullM": 3.9
+    "markerPullM": 3.9,
+    "backLineDropM": 1.6
   }
 }
 ```
