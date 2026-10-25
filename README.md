@@ -24,7 +24,8 @@ confidence badge to see the evidence behind it.
 | **Sequence Origin** | Where did this chance really begin? | The H8–H6 one-two bypasses 2 opponents, 3.6 s before the assist |
 
 In the **real match**, Space Creator finds H10 dragging A3 11.8 m from the receiving spot as the back line drops
-18.0 m, with receiving space growing 34 → 252 m² (7.5×), again without H10 touching the ball.
+18.0 m, with receiving space growing 34 → 252 m² (7.5×), again without H10 touching the ball; Sequence Origin finds
+the chance began with H8's pass bypassing 5 opponents, 6.5 s before the shot.
 
 ## How it works
 
@@ -63,19 +64,21 @@ reviewed.
 ## Tested on real tracking data
 
 The detectors were built on synthetic scenarios, then run unchanged on a full real match (Metrica Sports sample game 2,
-all 24 shots). Reviewing what they found exposed blind spots the synthetic data could not, and led to two rule fixes:
+all 24 shots). Reviewing what they found exposed blind spots the synthetic data could not, and led to three rule
+fixes:
 
 - **Space Creator** credited runners after long switches of play and for space that never opened. It now requires the
   dragged defender to have been guarding the receiving spot and the space to grow at least 1.5× (9 → 2 detections,
   including a clear decoy run).
-- **Sequence Origin** once credited a pass from before a turnover. A chance can now only begin after the attackers last
-  won the ball (12 → 11).
+- **Sequence Origin** once credited a pass from before a turnover, and rejected every move ending in a cut-back (the
+  assist goes backwards). A chance can now only begin after the attackers last won the ball, and the assist is exempt
+  from the "keep moving forward" check (12 → 15, all one continuous possession).
 
 Method, per-clip verdicts and known limits: [`docs/real-data.md`](docs/real-data.md).
 
 ## Quality
 
-- **67 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
+- **72 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
   mirrored and away-team versions of the move, the grounding guard and style rules, the agent loop with a scripted
   fake model, and a re-check of every committed explanation against all current rules.
 - **CI** on every push and pull request: tests, a check that committed scenario data matches the generator and
