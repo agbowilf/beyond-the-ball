@@ -31,6 +31,8 @@ jobs:
       # The frontend renders the committed JSON, so it must match the generator and detectors.
       - run: python scenarios/generate_decoy_run.py
       - run: python backend/run_analysis.py scenarios/01_decoy_run.json > scenarios/01_decoy_run.insights.json
+      - run: python scenarios/generate_cutback.py
+      - run: python backend/run_analysis.py scenarios/02_cutback.json > scenarios/02_cutback.insights.json
       - run: git diff --exit-code scenarios/
 
   frontend:
