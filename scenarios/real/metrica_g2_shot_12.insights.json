@@ -29,5 +29,33 @@
       "markerPullM": 11.8,
       "backLineDropM": 18.0
     }
+  },
+  {
+    "type": "SEQUENCE_ORIGIN",
+    "t": 18.4,
+    "team": "HOME",
+    "playerId": "H8",
+    "partnerId": "H5",
+    "pattern": "LINE_BREAKING_PASS",
+    "bypassedIds": [
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+      "A9"
+    ],
+    "confidence": 0.9,
+    "confidenceParts": {
+      "lines": 1.0,
+      "progress": 0.76
+    },
+    "evidence": {
+      "opponentsBypassed": 5,
+      "lineBreakingPassT": 18.4,
+      "passesToShot": 2,
+      "progressionM": 19.0,
+      "secondsBeforeFinalPass": 4.2,
+      "secondsBeforeShot": 6.5
+    }
   }
 ]

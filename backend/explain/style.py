@@ -62,6 +62,21 @@ def check_team_names(explanation, teams, attacking):
     return problems
 
 
+def check_pattern(insight, explanation):
+    """Wording that contradicts the measured pattern of a Sequence Origin insight."""
+    if insight.get("type") != "SEQUENCE_ORIGIN":
+        return []
+    problems = []
+    for text in [explanation.headline] + [c.text for c in explanation.claims]:
+        low = text.lower()
+        if insight.get("pattern") == "LINE_BREAKING_PASS" and re.search(
+                r"\breturn(ed|s)?\b|one-two|one two|passed back|played back|sent back|back to", low):
+            problems.append(f'This was a single pass with no return or one-two; describe only that pass: "{text}"')
+        if re.search(r"\bdefenders?\b", low):
+            problems.append(f'Bypassed players were opponents in any position; say opponents or players: "{text}"')
+    return problems
+
+
 def check_style(audience, explanation, real_data=False):
     """Return a list of style problems for this audience; empty means it fits.
 

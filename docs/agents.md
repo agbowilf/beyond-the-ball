@@ -61,6 +61,11 @@ Both were fixed by sharpening the field definitions and instructions, not by edi
 Making the audiences distinct surfaced more of the same kind: invented locations ("near the line"), speeds
 ("sprinted"), positions ("midfield duo"), praise ("precise timing") and a derived figure in a headline ("over 6
 metres of space"). Each was turned into a rule in the guard or style checks, so it cannot come back unnoticed.
+Real data surfaced more: a player credited to the wrong team (the attacking team is labelled HOME whatever its real
+name, which the model read as "Metrica Home"), and a single line-breaking pass described as a one-two. Agents now see
+teams by role and real name only, get a code-generated "who did what" line for each pattern, and code checks reject
+"Home"/"Away" as team names, players credited to the wrong team, and one-two wording for a single pass.
+
 `backend/tests/test_explanations_file.py` re-checks every committed explanation against all current rules in CI.
 
 To regenerate one explanation without touching the others:

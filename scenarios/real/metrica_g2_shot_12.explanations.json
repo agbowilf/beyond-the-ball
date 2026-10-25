@@ -1,7 +1,7 @@
 {
   "scenarioId": "metrica_g2_shot_12",
   "model": "gpt-4.1-mini",
-  "generatedAt": "2026-10-25T09:51:12+00:00",
+  "generatedAt": "2026-10-25T10:21:59+00:00",
   "explanations": [
     {
       "insightIndex": 0,
@@ -105,6 +105,104 @@
         }
       ],
       "attempts": 2
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H8",
+      "status": "approved",
+      "audience": "fan",
+      "headline": "H8\u2019s pass bypassed five opponents",
+      "claims": [
+        {
+          "text": "Metrica Away\u2019s H8 played a single pass to H5 that bypassed five opponents.",
+          "evidence": [
+            "playerId",
+            "partnerId",
+            "bypassedIds"
+          ]
+        },
+        {
+          "text": "Their attack moved forward about 19 metres before the shot after that pass.",
+          "evidence": [
+            "progressionM"
+          ]
+        }
+      ],
+      "attempts": 3
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H8",
+      "status": "approved",
+      "audience": "coach",
+      "headline": "H8's key pass bypassed five opponents to start the chance",
+      "claims": [
+        {
+          "text": "H8 played a line-breaking pass to H5 that bypassed 5 opponents at 18.4 seconds into the clip.",
+          "evidence": [
+            "bypassedIds",
+            "lineBreakingPassT"
+          ]
+        },
+        {
+          "text": "This origin pass began a move that included 2 passes from the origin to the shot and progressed 19.0 metres toward goal.",
+          "evidence": [
+            "passesToShot",
+            "progressionM"
+          ]
+        },
+        {
+          "text": "The chance started 6.5 seconds before the shot and 4.2 seconds before the final pass was played.",
+          "evidence": [
+            "secondsBeforeShot",
+            "secondsBeforeFinalPass"
+          ]
+        }
+      ],
+      "attempts": 1
+    },
+    {
+      "insightIndex": 1,
+      "type": "SEQUENCE_ORIGIN",
+      "playerId": "H8",
+      "status": "approved",
+      "audience": "analyst",
+      "headline": "H8's line-breaking pass bypassed five opponents to start a scoring chance",
+      "claims": [
+        {
+          "text": "At 18.4 seconds, player H8 made the origin and line-breaking pass to H5 with 0.9 confidence.",
+          "evidence": [
+            "lineBreakingPassT",
+            "playerId",
+            "partnerId",
+            "confidence"
+          ]
+        },
+        {
+          "text": "The pass bypassed 5 opponents: A5, A6, A7, A8, and A9.",
+          "evidence": [
+            "bypassedIds",
+            "opponentsBypassed"
+          ]
+        },
+        {
+          "text": "The sequence included 2 passes from the origin to the shot and gained 19 metres toward goal.",
+          "evidence": [
+            "passesToShot",
+            "progressionM"
+          ]
+        },
+        {
+          "text": "The chance began 6.5 seconds before the shot and 4.2 seconds before the final pass.",
+          "evidence": [
+            "secondsBeforeShot",
+            "secondsBeforeFinalPass"
+          ]
+        }
+      ],
+      "attempts": 1
     }
   ]
 }
