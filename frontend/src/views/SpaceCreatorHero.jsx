@@ -1,6 +1,7 @@
 import { passFor } from '../data.js'
 
 const MAX_R = 40 // radius of the larger circle, in px
+const LINE_DROP_SHOWN_M = 5 // smaller back-line movements are left to the evidence table
 
 // Circle whose area is to scale: radius in proportion to the nearest-defender distance.
 function SpaceCircle({ distance, max, label, area, after }) {
@@ -70,6 +71,12 @@ export default function SpaceCreatorHero({ insight, audience }) {
             {ev.markerDistanceToTargetStartM.toFixed(1)} → {ev.markerDistanceToTargetEndM.toFixed(1)} m
           </dd>
         </div>
+        {ev.backLineDropM >= LINE_DROP_SHOWN_M && (
+          <div>
+            <dt>Back line dropped during the run</dt>
+            <dd>{ev.backLineDropM.toFixed(1)} m deeper</dd>
+          </div>
+        )}
         <div>
           <dt>Where</dt>
           <dd>{insight.targetZone.replace(', ', ' · ')}</dd>
