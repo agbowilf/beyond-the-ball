@@ -24,6 +24,9 @@ export default function SpaceCreatorOverlay({ t, state, insight }) {
   const runner0 = player(start0, insight.playerId)
   const marker0 = player(start0, insight.markerId)
   const passed = t >= pass.t
+  const away = { x: target.x - nearest.player.x, y: target.y - nearest.player.y }
+  const len = Math.hypot(away.x, away.y) || 1
+  const labelAt = { x: target.x + (away.x / len) * nearest.d * 0.55, y: target.y + (away.y / len) * nearest.d * 0.55 }
   // The gain is measured at the pass, so its label shows only while the ball travels into the space.
   const labelled = passed && t < (eventAfter('RECEIVE', pass.t)?.t ?? pass.t)
 
@@ -33,9 +36,16 @@ export default function SpaceCreatorOverlay({ t, state, insight }) {
       <line className="gap" x1={target.x} y1={target.y} x2={nearest.player.x} y2={nearest.player.y} />
       <circle className="target" cx={target.x} cy={target.y} r={1.6} />
       {labelled && (
-        // Inside the shaded space on the goal side, upright: this layer uses pitch coordinates (y up), so the
-        // text is flipped back. Away from the circle's edge, where the nearest defender always is.
-        <text className="space-label" transform="scale(1 -1)" x={target.x + nearest.d * 0.55} y={-target.y + 0.8}>
+        // Inside the shaded space, on the side opposite the nearest defender (who sits on the circle's edge), upright:
+        // this layer uses pitch coordinates (y up), so the text is flipped back.
+        <text
+          className="space-label"
+          transform="scale(1 -1)"
+          x={labelAt.x}
+          y={-labelAt.y + 0.8}
+          // Grow away from the centre, where the receiver arrives.
+          style={{ textAnchor: away.x >= 0 ? 'start' : 'end' }}
+        >
           ×{insight.evidence.freeSpaceRatio.toFixed(1)} space
         </text>
       )}

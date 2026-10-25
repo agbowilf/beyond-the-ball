@@ -8,18 +8,24 @@ Built for the Microsoft x Premier League **Inside the Game** developer hackathon
 
 **Try it:** [red-dune-0148df00f.1.azurestaticapps.net](https://red-dune-0148df00f.1.azurestaticapps.net)
 
-The demo is a synthetic 14 s move: a one-two beats the press, No. 10's decoy run drags a centre-back away, and No. 11
-scores. All match data in the product is synthetic and football-realistic, as the challenge requires.
+Two moments from a synthetic match, each 14 s, switchable at the top of the page:
+
+| Moment | What happens |
+|---|---|
+| [Decoy run](https://red-dune-0148df00f.1.azurestaticapps.net/?scenario=demo) | A one-two beats the press, No. 10's decoy run drags a centre-back away, No. 11 scores |
+| [Cut-back](https://red-dune-0148df00f.1.azurestaticapps.net/?scenario=cutback) | A single pass breaks the midfield line, No. 9's near-post run takes their marker and the back line drops deep, No. 11 cuts back to No. 10, who scores |
+
+All match data in the product is synthetic and football-realistic, as the challenge requires.
 
 Press play, then switch **Watch as Fan / Coach / Analyst**, open the other insight tab, and hover a sentence or the
 confidence badge to see the evidence behind it.
 
 ## What it finds
 
-| Insight | Question it answers | In the demo match |
-|---|---|---|
-| **Space Creator** | Who created the space, without the ball? | H10's run pulls A6 3.9 m further from the receiving spot; receiving space grows 93 → 274 m² (2.9×); H10 never touches the ball |
-| **Sequence Origin** | Where did this chance really begin? | The H8–H6 one-two bypasses 2 opponents, 3.6 s before the assist |
+| Insight | Question it answers | Decoy run | Cut-back |
+|---|---|---|---|
+| **Space Creator** | Who created the space, without the ball? | H10's run pulls A6 3.9 m further from the receiving spot; receiving space 93 → 274 m² (2.9×); H10 never touches the ball | H9's near-post run pulls A5 7.5 m away as the back line drops 8.6 m; space at the cut-back spot 34 → 188 m² (5.5×) |
+| **Sequence Origin** | Where did this chance really begin? | The H8–H6 one-two bypasses 2 opponents, 3.6 s before the assist | H6's single pass bypasses 6 opponents, 4.8 s before the cut-back |
 
 ## How it works
 
@@ -73,8 +79,8 @@ Method, per-clip verdicts and known limits: [`docs/real-data.md`](docs/real-data
 
 ## Quality
 
-- **70 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
-  mirrored and away-team versions of the move, the grounding guard and style rules, the agent loop with a scripted
+- **78 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
+  realism checks on every scenario, mirrored and away-team versions of the move, the grounding guard and style rules, the agent loop with a scripted
   fake model, and a re-check of every committed explanation against all current rules.
 - **CI** on every push and pull request: tests, a check that committed scenario data matches the generator and
   detectors, and the frontend lint and build. CI never calls Azure.
@@ -90,8 +96,8 @@ cd frontend && npm install && npm run dev        # http://localhost:5173
 # Detectors and tests (Python 3.10+)
 python3 -m venv .venv && .venv/bin/pip install -r backend/requirements.txt pytest
 .venv/bin/python -m pytest backend/tests
-python3 scenarios/generate_decoy_run.py
-python3 backend/run_analysis.py scenarios/01_decoy_run.json
+python3 scenarios/generate_decoy_run.py && python3 scenarios/generate_cutback.py
+python3 backend/run_analysis.py scenarios/02_cutback.json
 
 # Agent explanations (needs a Microsoft Foundry project and `az login`)
 cp .env.example .env                              # set FOUNDRY_PROJECT_ENDPOINT and FOUNDRY_MODEL
@@ -109,7 +115,7 @@ Useful replay links: `?insight=1` (second insight), `?audience=coach`, `?t=10` (
 backend/analysis/   detectors: Space Creator, Sequence Origin
 backend/explain/    Foundry agents, grounding guard, audience style rules
 backend/tests/      pytest suite
-scenarios/          synthetic scenario generator and data
+scenarios/          synthetic scenario generators and data (decoy run, cut-back)
 scripts/            converter and batch analysis used to validate on public tracking data
 frontend/           Vite + React broadcast-style replay
 docs/               architecture, data model, detection rules, agents, validation results
@@ -118,7 +124,7 @@ docs/               architecture, data model, detection rules, agents, validatio
 ## Roadmap
 
 - **Pressing Contributor**: positioning that removes a passing option and forces a turnover ([#3](https://github.com/agbowilf/beyond-the-ball/issues/3)).
-- **Near-miss scenarios and an all-detectors check** across every scenario ([#6](https://github.com/agbowilf/beyond-the-ball/issues/6)).
+- **Near-miss scenarios** where the defence handles the run, to show detectors stay quiet ([#6](https://github.com/agbowilf/beyond-the-ball/issues/6)).
 - **More validation**: more matches, and sharper rules for the known limits (a space figure inflated by switches of
   play; "bypassed" counting distant opponents).
 - **Match Shift**: a material change in how the teams behave over a match, which needs match-length data.
