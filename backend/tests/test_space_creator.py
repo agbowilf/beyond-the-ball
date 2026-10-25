@@ -112,3 +112,20 @@ def test_no_credit_for_dragging_a_defender_who_was_not_covering_the_spot():
                 near = f["t"] <= t_pass - 5 + 0.3
                 p["x"], p["y"] = (target["x"] - 1.0, target["y"]) if near else (60.0, 10.0)
     assert detect_space_creators(scenario) == []
+
+
+def test_reports_how_far_the_back_line_dropped():
+    scenario = _load_generator().build()
+    top = detect_space_creators(scenario)[0]
+    drop = top["evidence"]["backLineDropM"]
+    assert -1.0 < drop < 5.0  # the demo back line holds its height while A6 is dragged
+    # Push every defender 6 m deeper at the pass: the reported drop grows by about 6 m.
+    t_pass = top["t"]
+    deeper = copy.deepcopy(scenario)
+    for f in deeper["frames"]:
+        if abs(f["t"] - t_pass) < 1e-6:
+            for p in f["players"]:
+                if p["team"] == "AWAY" and p["id"] != "A1":
+                    p["x"] += 6.0
+    moved = detect_space_creators(deeper)
+    assert moved and abs(moved[0]["evidence"]["backLineDropM"] - (drop + 6.0)) <= 0.2

@@ -26,7 +26,8 @@
       "freeSpaceEndM2": 252,
       "freeSpaceGainM2": 218,
       "freeSpaceRatio": 7.5,
-      "markerPullM": 11.8
+      "markerPullM": 11.8,
+      "backLineDropM": 18.0
     }
   }
 ]
