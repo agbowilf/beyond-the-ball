@@ -14,10 +14,6 @@ from backend.explain.style import check_pattern, check_style, check_team_names  
 EXPLANATIONS = sorted((ROOT / "scenarios").rglob("*.explanations.json"))
 
 
-def test_every_scenario_with_explanations_is_checked():
-    assert {p.parent.name for p in EXPLANATIONS} >= {"scenarios", "real"}
-
-
 def test_committed_explanations_pass_every_check():
     for path in EXPLANATIONS:
         insights = json.loads(Path(str(path).replace(".explanations.json", ".insights.json")).read_text())

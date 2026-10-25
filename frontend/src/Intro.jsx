@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { currentScenarioId } from './data.js'
 
 const KEY = 'btb-intro-dismissed'
 
@@ -28,7 +27,6 @@ export default function Intro() {
       <p>
         <b>Beyond the Ball finds the off-ball work that stats miss.</b> Press <span aria-hidden="true">▶</span> play,
         then switch <b>Watch as Fan / Coach / Analyst</b> and hover any line to see its evidence.
-        {currentScenarioId === 'demo' ? ' Then open the Real match to see it on real tracking data.' : ''}
       </p>
       <button onClick={dismiss}>
         Got it

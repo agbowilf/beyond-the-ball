@@ -28,7 +28,7 @@ const initialAudience = () => {
   return ['fan', 'coach', 'analyst'].includes(a) ? a : 'fan'
 }
 
-// Says where the data comes from: synthetic for the demo match, credited real data for review clips.
+// Says where the data comes from: synthetic for the product, credited real data for local validation clips.
 function Disclosure() {
   return (
     <footer className="disclosure">

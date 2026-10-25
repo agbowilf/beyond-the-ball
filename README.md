@@ -8,10 +8,8 @@ Built for the Microsoft x Premier League **Inside the Game** developer hackathon
 
 **Try it:** [red-dune-0148df00f.1.azurestaticapps.net](https://red-dune-0148df00f.1.azurestaticapps.net)
 
-| | |
-|---|---|
-| [Demo match](https://red-dune-0148df00f.1.azurestaticapps.net/?scenario=demo) | A synthetic 14 s move: a one-two beats the press, No. 10's decoy run drags a centre-back away, No. 11 scores |
-| [Real match](https://red-dune-0148df00f.1.azurestaticapps.net/?scenario=real) | The same pattern found automatically in real tracking data ([Metrica Sports](https://github.com/metrica-sports/sample-data), anonymised) |
+The demo is a synthetic 14 s move: a one-two beats the press, No. 10's decoy run drags a centre-back away, and No. 11
+scores. All match data in the product is synthetic and football-realistic, as the challenge requires.
 
 Press play, then switch **Watch as Fan / Coach / Analyst**, open the other insight tab, and hover a sentence or the
 confidence badge to see the evidence behind it.
@@ -22,10 +20,6 @@ confidence badge to see the evidence behind it.
 |---|---|---|
 | **Space Creator** | Who created the space, without the ball? | H10's run pulls A6 3.9 m further from the receiving spot; receiving space grows 93 → 274 m² (2.9×); H10 never touches the ball |
 | **Sequence Origin** | Where did this chance really begin? | The H8–H6 one-two bypasses 2 opponents, 3.6 s before the assist |
-
-In the **real match**, Space Creator finds H10 dragging A3 11.8 m from the receiving spot as the back line drops
-18.0 m, with receiving space growing 34 → 252 m² (7.5×), again without H10 touching the ball; Sequence Origin finds
-the chance began with H8's pass bypassing 5 opponents, 6.5 s before the shot.
 
 ## How it works
 
@@ -61,11 +55,12 @@ The agents authenticate with `az login` (Azure CLI credentials), so no API keys 
 generated ahead of time and committed, so the public site needs no Azure credentials and judges see exactly what was
 reviewed.
 
-## Tested on real tracking data
+## Validated against public tracking data
 
-The detectors were built on synthetic scenarios, then run unchanged on a full real match (Metrica Sports sample game 2,
-all 24 shots). Reviewing what they found exposed blind spots the synthetic data could not, and led to three rule
-fixes:
+The product runs on synthetic data. To check the detectors were not just tuned to our own scenarios, we also ran them,
+unchanged, on a public anonymised tracking dataset (Metrica Sports sample game 2, all 24 shots) as a test. That data is
+not part of the product or this repository. Reviewing what the detectors found exposed blind spots our synthetic data
+could not, and led to three rule fixes:
 
 - **Space Creator** credited runners after long switches of play and for space that never opened. It now requires the
   dragged defender to have been guarding the receiving spot and the space to grow at least 1.5× (9 → 2 detections,
@@ -78,7 +73,7 @@ Method, per-clip verdicts and known limits: [`docs/real-data.md`](docs/real-data
 
 ## Quality
 
-- **72 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
+- **70 tests** (pytest): detectors, scenario realism (nobody offside, human speeds, no pass through an opponent),
   mirrored and away-team versions of the move, the grounding guard and style rules, the agent loop with a scripted
   fake model, and a re-check of every committed explanation against all current rules.
 - **CI** on every push and pull request: tests, a check that committed scenario data matches the generator and
@@ -106,7 +101,7 @@ cp .env.example .env                              # set FOUNDRY_PROJECT_ENDPOINT
 .venv/bin/python -m backend.explain scenarios/01_decoy_run.insights.json --only SPACE_CREATOR:fan --trace --no-save
 ```
 
-Useful replay links: `?scenario=real`, `?insight=1` (second insight), `?audience=coach`, `?t=10` (start time).
+Useful replay links: `?insight=1` (second insight), `?audience=coach`, `?t=10` (start time).
 
 ## Repository
 
@@ -114,27 +109,25 @@ Useful replay links: `?scenario=real`, `?insight=1` (second insight), `?audience
 backend/analysis/   detectors: Space Creator, Sequence Origin
 backend/explain/    Foundry agents, grounding guard, audience style rules
 backend/tests/      pytest suite
-scenarios/          synthetic generator and data; scenarios/real/ holds the one real-match excerpt
-scripts/            Metrica converter and batch analysis for real data
+scenarios/          synthetic scenario generator and data
+scripts/            converter and batch analysis used to validate on public tracking data
 frontend/           Vite + React broadcast-style replay
-docs/               architecture, data model, detection rules, agents, real-data results
+docs/               architecture, data model, detection rules, agents, validation results
 ```
 
 ## Roadmap
 
 - **Pressing Contributor**: positioning that removes a passing option and forces a turnover ([#3](https://github.com/agbowilf/beyond-the-ball/issues/3)).
 - **Near-miss scenarios and an all-detectors check** across every scenario ([#6](https://github.com/agbowilf/beyond-the-ball/issues/6)).
-- **More real data**: more matches, and sharper rules for the known limits (a space figure inflated by switches of
+- **More validation**: more matches, and sharper rules for the known limits (a space figure inflated by switches of
   play; "bypassed" counting distant opponents).
 - **Match Shift**: a material change in how the teams behave over a match, which needs match-length data.
 - **Live explanations**: an API so new insights are explained on demand rather than ahead of time.
 
 ## Data and credits
 
-The demo match is **synthetic**: all clubs, players and data are fictional. The real match is a short converted
-excerpt of [Metrica Sports' sample data](https://github.com/metrica-sports/sample-data) (game 2), which is anonymised
-and used with thanks; player labels such as H10 are ours, not shirt numbers. The rest of Metrica's data is not part of
-this repository.
+All match data in the product is **synthetic**: clubs, players and events are fictional. Validation used
+[Metrica Sports' public sample data](https://github.com/metrica-sports/sample-data) (anonymised), with thanks; it is
+downloaded locally for testing and is not included in this repository or the live site.
 
-The code is released under the [MIT License](LICENSE). The Metrica excerpt in `scenarios/real/` is not covered by it
-and remains subject to Metrica's own terms.
+The code is released under the [MIT License](LICENSE).
