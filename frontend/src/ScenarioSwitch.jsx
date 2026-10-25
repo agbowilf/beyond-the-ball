@@ -1,8 +1,8 @@
 import { currentScenarioId, SCENARIOS } from './data.js'
 
-// Switches between the synthetic demo and the real-match clip. A plain link per scenario, so each view has its own
-// shareable URL.
+// Switches between the synthetic scenarios. A plain link per scenario, so each view has its own shareable URL.
 export default function ScenarioSwitch() {
+  if (SCENARIOS.length < 2) return null
   return (
     <nav className="scenario-switch" aria-label="Match">
       {SCENARIOS.map((s) => (

@@ -1,7 +1,9 @@
-# Testing on real tracking data
+# Validation on public tracking data
 
-The detectors were built on a scripted synthetic scenario. To check they were not just tuned to it, we ran them on
-real match tracking data, reviewed what they found, and fixed the rules where review showed they were wrong.
+**The product uses synthetic data only**, as the hackathon requires. The detectors were built on scripted synthetic
+scenarios. To check they were not just tuned to them, we also ran them on a public anonymised tracking dataset as a
+test, reviewed what they found, and fixed the rules where review showed they were wrong. That data was used for testing
+only: it is not part of the product, the live site or this repository.
 
 ## Data
 
@@ -50,7 +52,7 @@ played back 8–14 m from near the byline to a teammate at the edge of the box. 
 | Clip | Detection | Verdict |
 |---|---|---|
 | shot 16 | H5's long pass up the right channel bypasses 6 opponents, 3.6 s before the shot | **Plausible origin** |
-| shot 12 | H8's pass bypasses 5 opponents 6.5 s before the shot; the move ends with H5's cut-back to H8 into the space H10's run opened | **Plausible origin**, shown on the live site alongside the Space Creator insight |
+| shot 12 | H8's pass bypasses 5 opponents 6.5 s before the shot; the move ends with H5's cut-back to H8 into the space H10's run opened | **Plausible origin** |
 | shot 08 | H3's forward pass into H10 between the lines bypasses 3, 12.4 s before the shot | **Plausible but generous**: one bypassed opponent was far across the pitch |
 
 ## Known limits

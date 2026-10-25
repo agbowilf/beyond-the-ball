@@ -1,18 +1,13 @@
 import decoyScenario from '../../scenarios/01_decoy_run.json'
 import decoyInsights from '../../scenarios/01_decoy_run.insights.json'
 import decoyExplanations from '../../scenarios/01_decoy_run.explanations.json'
-import realScenario from '../../scenarios/real/metrica_g2_shot_12.json'
-import realInsights from '../../scenarios/real/metrica_g2_shot_12.insights.json'
-import realExplanations from '../../scenarios/real/metrica_g2_shot_12.explanations.json'
 
 // The scenarios the site offers, chosen with ?scenario=<id>.
 export const SCENARIOS = [
   { id: 'demo', label: 'Demo match', note: 'Synthetic', data: [decoyScenario, decoyInsights, decoyExplanations] },
-  // The real clip has 25 s of history before the shot; it opens a few seconds before the run starts.
-  { id: 'real', label: 'Real match', note: 'Metrica tracking data', data: [realScenario, realInsights, realExplanations], startT: 14 },
 ]
 
-// For reviewing other real-data clips locally: ?scenario=metrica_g2_shot_05 loads that clip and its insights from
+// For reviewing real-data validation clips locally (never deployed): ?scenario=metrica_g2_shot_05 loads that clip and its insights from
 // the git-ignored external-data/ folder (see docs/real-data.md). On the deployed site that folder is absent.
 const localClips = import.meta.glob('../../external-data/metrica/clips/*.json', { eager: true, import: 'default' })
 const requested = new URLSearchParams(window.location.search).get('scenario')
