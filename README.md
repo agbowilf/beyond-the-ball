@@ -132,3 +132,6 @@ The demo match is **synthetic**: all clubs, players and data are fictional. The 
 excerpt of [Metrica Sports' sample data](https://github.com/metrica-sports/sample-data) (game 2), which is anonymised
 and used with thanks; player labels such as H10 are ours, not shirt numbers. The rest of Metrica's data is not part of
 this repository.
+
+The code is released under the [MIT License](LICENSE). The Metrica excerpt in `scenarios/real/` is not covered by it
+and remains subject to Metrica's own terms.
