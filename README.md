@@ -6,7 +6,7 @@ agents explain it for a fan, a coach or an analyst, with every claim checked aga
 
 Built for the Microsoft x Premier League **Inside the Game** developer hackathon.
 
-**Try it:** [red-dune-0148df00f.1.azurestaticapps.net](https://red-dune-0148df00f.1.azurestaticapps.net)
+**Try it:** [red-dune-0148df00f.1.azurestaticapps.net](https://red-dune-0148df00f.1.azurestaticapps.net) · **Watch the demo:** [2-minute video](https://youtu.be/5Kuj1nJYhsU)
 
 Two moments from a synthetic match, each 14 s, switchable at the top of the page:
 
